@@ -157,14 +157,19 @@ svg.ic{display:block}
 .sceneinfo span{font:700 12px var(--tc);padding:4px 10px;border-radius:8px;background:rgba(6,14,10,.85);border:1px solid #3a5e4b}
 .sceneinfo span.lv{border-color:var(--teal);color:var(--teal)}
 .empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:700 16px var(--tc);color:var(--mute)}
-/* 擴充 */
-.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;padding:10px;align-content:start}
-.ad{display:flex;align-items:center;gap:6px;padding:5px 5px 5px 8px;border-radius:12px;background:#0a1912;border:1.5px solid #21402f;min-width:0;cursor:pointer}
-.ad.trap{border-color:rgba(255,79,69,.45)}.ad.lock{opacity:.4}
-.ad .nm{font:700 12.5px/1.25 var(--tc);flex:1;min-width:0}.ad .nm small{white-space:nowrap}.ad .nm small{display:block;font:600 11px var(--mono);color:var(--mute)}
-.ad .nm .why{display:block;margin-top:4px;font:600 11.5px/1.5 var(--tc);color:#c8d6cd;white-space:normal}
-.ad .ct{display:flex;align-items:center;gap:4px}.ad .ct b{width:18px;text-align:center;font:800 16px var(--game)}
-.ad .ct button{width:38px;height:38px;border-radius:10px;background:#163a2b;border:1px solid #2f5541;font:900 20px var(--game);line-height:1}
+/* 擴充：和選板型一樣的方形牌卡 */
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding:10px;align-content:start}
+.ad{position:relative;display:flex;flex-direction:column;padding:9px 10px;border-radius:12px;background:linear-gradient(180deg,#0f2419,#08160f);border:1.5px solid #24443a;min-width:0;cursor:pointer;transition:all .12s;text-align:left}
+.ad:hover:not(.lock){border-color:#3f7a62;transform:translateY(-2px)}
+.ad.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal),0 0 24px rgba(63,224,187,.4);background:linear-gradient(180deg,#14402f,#0a1d14)}
+.ad.trap{border-color:rgba(255,79,69,.45)}.ad.lock{opacity:.4;cursor:not-allowed}
+.ad .h{display:flex;align-items:center;gap:6px}.ad .h b{font:800 13px var(--tc)}
+.ad .box{height:46px;margin:7px 0 6px;display:grid;place-items:center;border-radius:8px;background:#06120c}
+.ad .nm small{display:block;font:600 11px var(--mono);color:var(--mute)}
+.ad .why{display:block;margin-top:4px;font:600 11.5px/1.5 var(--tc);color:#c8d6cd;white-space:normal}
+.ad .ct{display:flex;align-items:center;gap:4px;margin-top:8px}
+.ad .ct b{min-width:20px;text-align:center;font:800 16px var(--game)}
+.ad .ct button{flex:1;height:34px;border-radius:8px;background:#163a2b;border:1px solid #2f5541;font:900 18px var(--game);line-height:1;color:var(--ink)}
 .ad .ct button:disabled{opacity:.3;cursor:not-allowed}
 /* 分級 */
 .tiers .hd,.ffbox .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}.tiers .hd b,.ffbox .hd b{font:800 34px var(--tc);letter-spacing:1px}.tiers .hd span,.ffbox .hd span{font:12px var(--tc);color:var(--mute)}
@@ -238,6 +243,7 @@ svg.ic{display:block}
 .floatcoin{position:fixed;z-index:70;font:900 20px var(--game);color:var(--gold);pointer-events:none;animation:fly .7s forwards;text-shadow:0 2px 0 #000}
 @keyframes fly{to{transform:translateY(-50px);opacity:0}}
 .mark{text-align:center;font:11px/1.6 var(--tc);color:#557264;margin-top:16px}
+.mark.playMark{margin:2px 0 6px;font-size:9.5px;line-height:1.3;flex:0 0 auto}
 /* ---------- 窄螢幕 ---------- */
 @media (max-width:1180px){
  .ffr{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -246,7 +252,7 @@ svg.ic{display:block}
  .shipbox{grid-column:1/-1}
 }
 @media (max-width:720px){
- .shelf{grid-template-columns:1fr}
+ .shelf{grid-template-columns:repeat(2,minmax(0,1fr))}
  .wrap{padding:10px 12px 20px}
  .ffr{grid-template-columns:repeat(2,minmax(0,1fr))}
  .zones{grid-template-columns:1fr}
@@ -397,6 +403,7 @@ svg.ic{display:block}
  </div>
  <div class="pager">
   <div class="pagerHd"><button class="icon-btn" id="bPagePrev" aria-label="prev">‹</button><div class="pageDots" id="pageDots"></div><button class="icon-btn" id="bPageNext" aria-label="next">›</button></div>
+  <p class="mark playMark" data-t="mark"></p>
   <div class="pages">
    <div class="page" data-page="0"><div class="pn ffbox"><div class="hd"><i class="stepno">1</i><b data-t="pickFF"></b><span data-t="pickFFsub"></span></div><div class="ffr" id="ffr"></div></div></div>
    <div class="page" data-page="1"><div class="pn shelf" id="shelf"></div></div>
@@ -408,7 +415,6 @@ svg.ic{display:block}
    <div class="page" data-page="7"><div class="pn tierPage" id="tierPage5"></div></div>
   </div>
  </div>
- <p class="mark" data-t="mark"></p>
 </div></section>
 
 <div class="modal" id="mBrief"><div class="pn card" id="briefCard"></div></div>
@@ -1126,11 +1132,14 @@ function renderShelf() {
   const b = B.board ? SQ.BOARDS.find((x) => x.id === B.board) : null;
   $("#shelf").innerHTML = `<div class="hd shelfhd"><i class="stepno">2</i><b>${T("addonTitle")}</b></div>` + SQ.ADDON_ORDER.map((id) => {
     const a = SQ.ADDONS[id], key = a.kind === "pcie" ? "pcie" : a.kind === "m2" ? "m2" : id === "ucom" ? "usb" : "m2";
-    const lock = !isUnlocked(key) || (b && b.custom), n = B.add[id] || 0;
+    const lock = !!(b && b.custom), n = B.add[id] || 0;
     const max = id === "ucom" ? 4 : a.kind === "usb" ? 1 : 2;
     const open = EXPANDED.has(id);
-    return `<div class="ad ${a.kind === "usb" ? "trap" : ""} ${lock ? "lock" : ""} ${open ? "open" : ""}" data-id="${id}">${ic(a.kind === "pcie" ? (id === "lan2" ? "lan" : "card") : a.kind === "m2" ? "m2mod" : "dongle", 24)}
-     <div class="nm">${TXT[LANG].addon[id]}<small>${TXT[LANG].addonSub[id]} · ${a.price}</small>${open ? `<span class="why">${TXT[LANG].mech[key][1]}</span>` : ""}</div>
+    const icon = a.kind === "pcie" ? (id === "lan2" ? "lan" : "card") : a.kind === "m2" ? "m2mod" : "dongle";
+    return `<div class="ad ${a.kind === "usb" ? "trap" : ""} ${lock ? "lock" : ""} ${open ? "open" : ""} ${n ? "sel" : ""}" data-id="${id}">
+     <div class="h">${ic(icon, 16)}<b>${TXT[LANG].addon[id]}</b></div>
+     <div class="box">${ic(icon, 28)}</div>
+     <div class="nm"><small>${TXT[LANG].addonSub[id]} · ${a.price}</small>${open ? `<span class="why">${TXT[LANG].mech[key][1]}</span>` : ""}</div>
      <div class="ct"><button data-a="${id}" data-d="-1" ${lock || !n ? "disabled" : ""} aria-label="-">−</button><b>${n}</b><button data-a="${id}" data-d="1" ${lock || n >= max || !b ? "disabled" : ""} aria-label="+">+</button></div></div>`;
   }).join("");
   $$("#shelf .ad").forEach((card) => card.onclick = (ev) => { if (ev.target.closest("button")) return;
