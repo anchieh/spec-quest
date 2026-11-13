@@ -362,7 +362,7 @@ const TXT = {
   retry:"再試一次", next:"下一關 ▶", toMap:"回地圖", skip:"跳過動畫",
   boardRow:"板型＋擴充", stars:["再想想","過關","不錯","完美"],
   allDone:"十關全破！", allDoneSub:"總星數 {s}/30。工業電腦選型的訣竅只有一個：剛好。",
-  coinGain:"省下", needToast:"這項在第 {n} 關解鎖", tierApplied:"目前套用：{v}", costBreak:"板子＋擴充 {hw} ・ 六項規格 {spec}", timeUp:"時間到，直接送出目前配置",
+  coinGain:"省下", needToast:"這項在第 {n} 關解鎖", tierApplied:"目前套用：{v}", costBreak:"板子＋擴充 {hw} ・ 六項規格 {spec}", timeUp:"時間到，直接送出目前配置", addonReset:"換了板型，原本加的擴充品已清空",
   howto:[["讀情境","環境、介面、空間、年量都藏在簡報裡。"],["選板型＋補介面","放得下的最小板；不夠再插卡或 M.2 模組。"],["挑六項規格","高一級多付錢，低一級日後派工停機。"],["出貨看十年","剛好 100 分；90 分三星，75 分兩星，50 分過關。"]],
  },
  en: {
@@ -410,7 +410,7 @@ const TXT = {
   retry:"Retry", next:"Next ▶", toMap:"Map", skip:"Skip",
   boardRow:"Board + add-ons", stars:["Think again","Cleared","Good","Perfect"],
   allDone:"All ten cleared!", allDoneSub:"Total stars {s}/30. There is one trick to industrial-PC specs: just enough.",
-  coinGain:"Saved", needToast:"Unlocks at level {n}", tierApplied:"Applied now: {v}", costBreak:"Board + add-ons {hw} · Six specs {spec}", timeUp:"Time's up — shipping your current build",
+  coinGain:"Saved", needToast:"Unlocks at level {n}", tierApplied:"Applied now: {v}", costBreak:"Board + add-ons {hw} · Six specs {spec}", timeUp:"Time's up — shipping your current build", addonReset:"Board changed — your add-ons were cleared",
   howto:[["Read the brief","Environment, I/O, space and volume are all in the story."],["Board + I/O","The smallest board that fits; add cards or M.2 modules only if short."],["Six specs","One grade up costs now; one grade down costs service calls later."],["Ship, see ten years","Just right scores 100; 90 for three stars, 75 for two, 50 to pass."]],
  }
 };
@@ -481,39 +481,6 @@ function beep(type) {
 }
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("on"), 1800); }
 
-/* ---------- 環境音（正式關會隨時間加速） ---------- */
-let AMB = null;
-function startAmbience() {
-  if (MUTE) return;
-  stopAmbience();
-  try {
-    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
-    const master = AC.createGain(); master.gain.value = 0; master.connect(AC.destination);
-    master.gain.linearRampToValueAtTime(.05, AC.currentTime + 1.2);
-    const oscs = [110, 164.81, 220].map((f) => { const o = AC.createOscillator(), g = AC.createGain();
-      o.type = "sine"; o.frequency.value = f; g.gain.value = .33; o.connect(g).connect(master); o.start(); return o; });
-    AMB = { master, oscs, pulseId: null, bpm: 70 };
-    ambPulse();
-  } catch {}
-}
-function ambPulse() {
-  if (!AMB) return;
-  AMB.pulseId = setTimeout(() => {
-    if (!AMB || MUTE) return;
-    const o = AC.createOscillator(), g = AC.createGain();
-    o.type = "triangle"; o.frequency.value = 220;
-    g.gain.setValueAtTime(.0001, AC.currentTime); g.gain.exponentialRampToValueAtTime(.06, AC.currentTime + .02); g.gain.exponentialRampToValueAtTime(.0001, AC.currentTime + .2);
-    o.connect(g).connect(AMB.master); o.start(); o.stop(AC.currentTime + .25);
-    ambPulse();
-  }, 60000 / AMB.bpm);
-}
-function setAmbienceTempo(bpm) { if (AMB) AMB.bpm = bpm; }
-function stopAmbience() {
-  if (!AMB) return;
-  try { AMB.master.gain.cancelScheduledValues(AC.currentTime); AMB.master.gain.linearRampToValueAtTime(0, AC.currentTime + .3); clearTimeout(AMB.pulseId);
-    const oscs = AMB.oscs; setTimeout(() => oscs.forEach((o) => { try { o.stop(); } catch {} }), 350); } catch {}
-  AMB = null;
-}
 
 /* ---------- 狀態 ---------- */
 let PROG = store.get("prog", {});            // {id: 最高分}
@@ -569,7 +536,6 @@ function startLevel(id) {
   FORMAL = SQ.TIERS.every((Tr) => isUnlocked(Tr.id));
   TIME_LEFT = TIME_BUDGET[id] || 0;
   show("play"); renderAll(); openBrief();
-  startAmbience();
 }
 function isUnlocked(key) { return SQ.unlockedAt(CUR.id).has(key); }
 function unlockLevel(key) { const l = SQ.LEVELS.find((x) => x.unlock.includes(key)); return l ? l.id : 1; }
@@ -601,7 +567,6 @@ function startTimer() {
   clearInterval(TIMER_ID);
   TIMER_ID = setInterval(() => {
     TIME_LEFT--; renderTimer();
-    const bpm = TIME_LEFT <= 10 ? 150 : TIME_LEFT <= 20 ? 110 : 70; setAmbienceTempo(bpm);
     if (TIME_LEFT <= 0) { clearInterval(TIMER_ID); TIMER_ID = null; timeUp(); }
   }, 1000);
 }
@@ -738,7 +703,7 @@ function renderFF() {
       <div class="model">${cur.model}</div><div class="spec">${spec}</div>${varBtns}${note}</div>`;
   }).join("");
   $$("#ffr .ff").forEach((x) => { const pick = (id) => { if (x.classList.contains("lock")) { beep("err"); toast(T("needToast", {n: unlockLevel("custom")})); return; }
-      const nb = SQ.BOARDS.find((b) => b.id === id); B.board = id; FF_LAST[nb.ff] = id; if (nb.custom) B.add = {}; beep("add"); renderAll(); };
+      const nb = SQ.BOARDS.find((b) => b.id === id); if (id !== B.board && Object.keys(B.add).length) { B.add = {}; toast(T("addonReset")); } B.board = id; FF_LAST[nb.ff] = id; beep("add"); renderAll(); };
     x.onclick = (ev) => { const vb = ev.target.closest("button[data-b]"); pick(vb ? vb.dataset.b : (B.board && SQ.BOARDS.find((b) => b.id === B.board).ff === SQ.BOARDS.find((b) => b.id === x.dataset.b).ff ? B.board : x.dataset.b)); };
     x.onkeydown = (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); x.click(); } }; });
 }
@@ -808,22 +773,22 @@ function showResult(r) {
   let v = 0; const tgt = r.score, num = $("#scNum"); const tick = () => { v = Math.min(tgt, v + Math.max(1, Math.round(tgt / 25))); num.textContent = v; if (v < tgt) setTimeout(tick, 24); else $$("#res .stars .star").forEach((s, i) => setTimeout(() => { s.classList.add("show"); if (s.classList.contains("on")) beep("star"); }, 180 * i)); };
   tick();
   $("#bRetry").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); if (FORMAL) { TIME_LEFT = TIME_BUDGET[CUR.id] || 0; startTimer(); } };
-  $("#bMap2").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); stopAmbience(); show("map"); renderMap(); };
+  $("#bMap2").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); show("map"); renderMap(); };
   if (nextOpen) $("#bNext").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); startLevel(CUR.id + 1); };
   renderHud();
 }
 
 /* ---------- 綁定 ---------- */
 $("#bStart").onclick = () => { beep("ok"); show("map"); renderMap(); };
-$("#bMapBack").onclick = () => { beep("click"); stopAmbience(); show("title"); };
-$("#bToMap").onclick = () => { beep("click"); stopTimer(); stopAmbience(); show("map"); renderMap(); };
+$("#bMapBack").onclick = () => { beep("click"); show("title"); };
+$("#bToMap").onclick = () => { beep("click"); stopTimer(); show("map"); renderMap(); };
 $("#bBrief").onclick = () => { beep("click"); openBrief(); };
 $("#bShip").onclick = ship;
 $("#bPagePrev").onclick = () => { if (PAGE > 0) { PAGE--; beep("click"); renderPager(); } };
 $("#bPageNext").onclick = () => { if (PAGE < 1) { PAGE++; beep("click"); renderPager(); } };
 $$(".bLang").forEach((x) => x.onclick = () => { LANG = LANG === "zh" ? "en" : "zh"; store.set("lang", LANG); beep("click"); i18n(); if ($("#mBrief").classList.contains("on")) openBrief(); });
 $$(".bSnd").forEach((x) => x.onclick = () => { MUTE = !MUTE; store.set("mute", MUTE); i18n(); beep("click");
-  if (MUTE) stopAmbience(); else if ($("#play").classList.contains("on") && !$("#mBrief").classList.contains("on")) startAmbience(); });
+});
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") { $("#mBrief").classList.remove("on"); } });
 let _rz; window.addEventListener("resize", () => { clearTimeout(_rz); _rz = setTimeout(() => { if ($("#play").classList.contains("on")) renderScene(); }, 120); });
 i18n();
