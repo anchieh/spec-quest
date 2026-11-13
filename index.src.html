@@ -177,6 +177,9 @@ svg.ic{display:block}
 /* 出貨 */
 .cost{display:flex;align-items:baseline;gap:10px}.cost b{font:800 34px var(--game);font-variant-numeric:tabular-nums}.cost small{font:13px var(--tc);color:var(--mute)}
 .costBreak{font:600 12px var(--mono);color:var(--mute);margin-top:-4px}
+.shipTimer{font:900 28px var(--game);color:var(--gold);text-align:center;letter-spacing:2px;font-variant-numeric:tabular-nums}
+.shipTimer.low{color:var(--red);animation:tpulse .6s infinite}
+@keyframes tpulse{0%,100%{opacity:1}50%{opacity:.4}}
 .why{font:13px/1.5 var(--tc);color:#ff9a90;min-height:20px}.why.ok{color:var(--green)}
 .shipbtn{height:74px;font-size:26px;letter-spacing:8px;width:100%}
 .hint{font:12px/1.5 var(--tc);color:var(--mute)}
@@ -280,7 +283,7 @@ svg.ic{display:block}
  <div class="topRow">
   <div class="pn stage3d" id="stage3d"></div>
   <div class="pn scn" id="scn"></div>
-  <div class="pn shipbox"><div class="stepk" id="shipStep"><i class="stepno">4</i></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
+  <div class="pn shipbox"><div class="stepk" id="shipStep"><i class="stepno">4</i></div><div class="shipTimer" id="shipTimer" style="display:none"></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
    <div class="costBreak" id="costBreak"></div>
    <div class="why" id="why"></div><button class="btn shipbtn" id="bShip" data-t="ship"></button><div class="hint" data-t="shipHint"></div></div>
  </div>
@@ -359,7 +362,7 @@ const TXT = {
   retry:"再試一次", next:"下一關 ▶", toMap:"回地圖", skip:"跳過動畫",
   boardRow:"板型＋擴充", stars:["再想想","過關","不錯","完美"],
   allDone:"十關全破！", allDoneSub:"總星數 {s}/30。工業電腦選型的訣竅只有一個：剛好。",
-  coinGain:"省下", needToast:"這項在第 {n} 關解鎖", tierApplied:"目前套用：{v}", costBreak:"板子＋擴充 {hw} ・ 六項規格 {spec}",
+  coinGain:"省下", needToast:"這項在第 {n} 關解鎖", tierApplied:"目前套用：{v}", costBreak:"板子＋擴充 {hw} ・ 六項規格 {spec}", timeUp:"時間到，直接送出目前配置",
   howto:[["讀情境","環境、介面、空間、年量都藏在簡報裡。"],["選板型＋補介面","放得下的最小板；不夠再插卡或 M.2 模組。"],["挑六項規格","高一級多付錢，低一級日後派工停機。"],["出貨看十年","剛好 100 分；90 分三星，75 分兩星，50 分過關。"]],
  },
  en: {
@@ -407,7 +410,7 @@ const TXT = {
   retry:"Retry", next:"Next ▶", toMap:"Map", skip:"Skip",
   boardRow:"Board + add-ons", stars:["Think again","Cleared","Good","Perfect"],
   allDone:"All ten cleared!", allDoneSub:"Total stars {s}/30. There is one trick to industrial-PC specs: just enough.",
-  coinGain:"Saved", needToast:"Unlocks at level {n}", tierApplied:"Applied now: {v}", costBreak:"Board + add-ons {hw} · Six specs {spec}",
+  coinGain:"Saved", needToast:"Unlocks at level {n}", tierApplied:"Applied now: {v}", costBreak:"Board + add-ons {hw} · Six specs {spec}", timeUp:"Time's up — shipping your current build",
   howto:[["Read the brief","Environment, I/O, space and volume are all in the story."],["Board + I/O","The smallest board that fits; add cards or M.2 modules only if short."],["Six specs","One grade up costs now; one grade down costs service calls later."],["Ship, see ten years","Just right scores 100; 90 for three stars, 75 for two, 50 to pass."]],
  }
 };
@@ -478,6 +481,40 @@ function beep(type) {
 }
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("on"), 1800); }
 
+/* ---------- 環境音（正式關會隨時間加速） ---------- */
+let AMB = null;
+function startAmbience() {
+  if (MUTE) return;
+  stopAmbience();
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const master = AC.createGain(); master.gain.value = 0; master.connect(AC.destination);
+    master.gain.linearRampToValueAtTime(.05, AC.currentTime + 1.2);
+    const oscs = [110, 164.81, 220].map((f) => { const o = AC.createOscillator(), g = AC.createGain();
+      o.type = "sine"; o.frequency.value = f; g.gain.value = .33; o.connect(g).connect(master); o.start(); return o; });
+    AMB = { master, oscs, pulseId: null, bpm: 70 };
+    ambPulse();
+  } catch {}
+}
+function ambPulse() {
+  if (!AMB) return;
+  AMB.pulseId = setTimeout(() => {
+    if (!AMB || MUTE) return;
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.type = "triangle"; o.frequency.value = 220;
+    g.gain.setValueAtTime(.0001, AC.currentTime); g.gain.exponentialRampToValueAtTime(.06, AC.currentTime + .02); g.gain.exponentialRampToValueAtTime(.0001, AC.currentTime + .2);
+    o.connect(g).connect(AMB.master); o.start(); o.stop(AC.currentTime + .25);
+    ambPulse();
+  }, 60000 / AMB.bpm);
+}
+function setAmbienceTempo(bpm) { if (AMB) AMB.bpm = bpm; }
+function stopAmbience() {
+  if (!AMB) return;
+  try { AMB.master.gain.cancelScheduledValues(AC.currentTime); AMB.master.gain.linearRampToValueAtTime(0, AC.currentTime + .3); clearTimeout(AMB.pulseId);
+    const oscs = AMB.oscs; setTimeout(() => oscs.forEach((o) => { try { o.stop(); } catch {} }), 350); } catch {}
+  AMB = null;
+}
+
 /* ---------- 狀態 ---------- */
 let PROG = store.get("prog", {});            // {id: 最高分}
 let CUR = null;                                // 目前關卡
@@ -486,6 +523,10 @@ let FF_LAST = {};                              // 每種板型最後選的款式
 let TOUCHED = new Set();                       // 玩家主動點過的規格項（index），未點過不預先亮選項
 let EXPANDED = new Set();                      // 點開完整說明的擴充品 id
 let PAGE = 0;                                  // 0=選板型 1=補介面+六項規格
+let FORMAL = false;                            // 正式關（六項規格全解鎖）：設時限
+let TIME_LEFT = 0;
+let TIMER_ID = null;
+const TIME_BUDGET = { 6: 90, 7: 80, 8: 70, 9: 60, 10: 50 };
 function starsOf(id) { return PROG[id] != null ? SQ.stars(PROG[id]) : 0; }
 function isOpen(id) { return id === 1 || PROG[id - 1] != null; }
 function show(id) { $$(".screen").forEach((s) => s.classList.toggle("on", s.id === id)); window.scrollTo(0, 0); }
@@ -524,12 +565,17 @@ function startLevel(id) {
   TOUCHED = new Set();
   EXPANDED = new Set();
   PAGE = 0;
+  stopTimer();
+  FORMAL = SQ.TIERS.every((Tr) => isUnlocked(Tr.id));
+  TIME_LEFT = TIME_BUDGET[id] || 0;
   show("play"); renderAll(); openBrief();
+  startAmbience();
 }
 function isUnlocked(key) { return SQ.unlockedAt(CUR.id).has(key); }
 function unlockLevel(key) { const l = SQ.LEVELS.find((x) => x.unlock.includes(key)); return l ? l.id : 1; }
 
 function openBrief() {
+  stopTimer();
   const t = L(CUR.id), hasMech = CUR.unlock.length > 0;
   const mech = CUR.unlock.map((u) => `<div class="newmech"><div class="nmic">${ic({board:"box",usb:"dongle",pcie:"card",store:"ssd",temp:"thermo_hot",power:"dc_power",m2:"m2mod",prot:"surge",cert:"cert",supply:"cal10",custom:"box"}[u], 30)}</div><div><b>${T("newMech")}：${TXT[LANG].mech[u][0]}</b><span>${TXT[LANG].mech[u][1]}</span></div></div>`).join("");
   const mechBlock = hasMech ? `<div class="mechk">${T("newMechKicker")}</div>${mech}` : "";
@@ -538,14 +584,39 @@ function openBrief() {
    ${mechBlock}
    <div class="briefCtx ${hasMech ? "sec" : ""}"><p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}</div>
    <div class="row"><button class="btn" id="bGo">${T("briefGo")}</button></div>`;
-  $("#mBrief").classList.add("on"); $("#bGo").onclick = () => { beep("click"); $("#mBrief").classList.remove("on"); };
+  $("#mBrief").classList.add("on"); $("#bGo").onclick = () => { beep("click"); $("#mBrief").classList.remove("on"); startTimer(); };
 }
 
-function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTiers(); renderFF(); renderShip(); renderFocus(); renderPager(); }
+function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTiers(); renderFF(); renderShip(); renderFocus(); renderPager(); renderTimer(); }
 function renderPager() {
   $$(".page").forEach((p) => p.classList.toggle("on", +p.dataset.page === PAGE));
   $$("#pageDots i").forEach((d, i) => d.classList.toggle("on", i === PAGE));
   $("#bPagePrev").disabled = PAGE === 0; $("#bPageNext").disabled = PAGE === 1;
+}
+
+/* ---------- 正式關時限 ---------- */
+function startTimer() {
+  if (!FORMAL) return;
+  renderTimer();
+  clearInterval(TIMER_ID);
+  TIMER_ID = setInterval(() => {
+    TIME_LEFT--; renderTimer();
+    const bpm = TIME_LEFT <= 10 ? 150 : TIME_LEFT <= 20 ? 110 : 70; setAmbienceTempo(bpm);
+    if (TIME_LEFT <= 0) { clearInterval(TIMER_ID); TIMER_ID = null; timeUp(); }
+  }, 1000);
+}
+function stopTimer() { clearInterval(TIMER_ID); TIMER_ID = null; }
+function renderTimer() {
+  const el = $("#shipTimer"); if (!el) return;
+  if (!FORMAL) { el.style.display = "none"; return; }
+  el.style.display = "";
+  const v = Math.max(0, TIME_LEFT), m = Math.floor(v / 60), s = v % 60;
+  el.textContent = `${m}:${String(s).padStart(2, "0")}`;
+  el.classList.toggle("low", v <= 10);
+}
+function timeUp() {
+  if (!B.board) { toast(T("timeUp")); beep("err"); return; }
+  beep("err"); toast(T("timeUp")); ship(true);
 }
 function renderFocus() {
   const need = !B.board;
@@ -686,9 +757,10 @@ function renderShip() {
 }
 
 /* ---------- 出貨與十年結算 ---------- */
-function ship() {
+function ship(force) {
   if ($("#mSim").classList.contains("on")) return;
-  const r = SQ.score(CUR, B); if (!r.e.ok) return;
+  const r = SQ.score(CUR, B); if (!r.e.ok && !force) return;
+  stopTimer();
   beep("ship");
   const prev = PROG[CUR.id]; if (prev == null || r.score > prev) { PROG[CUR.id] = r.score; store.set("prog", PROG); }
   const events = r.items.filter((x) => x.kind === "under").map((x) => ({ id: x.id, y: TXT[LANG].evYear[x.id] || 3, v: x.v }));
@@ -735,22 +807,23 @@ function showResult(r) {
   res.classList.add("on");
   let v = 0; const tgt = r.score, num = $("#scNum"); const tick = () => { v = Math.min(tgt, v + Math.max(1, Math.round(tgt / 25))); num.textContent = v; if (v < tgt) setTimeout(tick, 24); else $$("#res .stars .star").forEach((s, i) => setTimeout(() => { s.classList.add("show"); if (s.classList.contains("on")) beep("star"); }, 180 * i)); };
   tick();
-  $("#bRetry").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); };
-  $("#bMap2").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); show("map"); renderMap(); };
+  $("#bRetry").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); if (FORMAL) { TIME_LEFT = TIME_BUDGET[CUR.id] || 0; startTimer(); } };
+  $("#bMap2").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); stopAmbience(); show("map"); renderMap(); };
   if (nextOpen) $("#bNext").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); startLevel(CUR.id + 1); };
   renderHud();
 }
 
 /* ---------- 綁定 ---------- */
 $("#bStart").onclick = () => { beep("ok"); show("map"); renderMap(); };
-$("#bMapBack").onclick = () => { beep("click"); show("title"); };
-$("#bToMap").onclick = () => { beep("click"); show("map"); renderMap(); };
+$("#bMapBack").onclick = () => { beep("click"); stopAmbience(); show("title"); };
+$("#bToMap").onclick = () => { beep("click"); stopTimer(); stopAmbience(); show("map"); renderMap(); };
 $("#bBrief").onclick = () => { beep("click"); openBrief(); };
 $("#bShip").onclick = ship;
 $("#bPagePrev").onclick = () => { if (PAGE > 0) { PAGE--; beep("click"); renderPager(); } };
 $("#bPageNext").onclick = () => { if (PAGE < 1) { PAGE++; beep("click"); renderPager(); } };
 $$(".bLang").forEach((x) => x.onclick = () => { LANG = LANG === "zh" ? "en" : "zh"; store.set("lang", LANG); beep("click"); i18n(); if ($("#mBrief").classList.contains("on")) openBrief(); });
-$$(".bSnd").forEach((x) => x.onclick = () => { MUTE = !MUTE; store.set("mute", MUTE); i18n(); beep("click"); });
+$$(".bSnd").forEach((x) => x.onclick = () => { MUTE = !MUTE; store.set("mute", MUTE); i18n(); beep("click");
+  if (MUTE) stopAmbience(); else if ($("#play").classList.contains("on") && !$("#mBrief").classList.contains("on")) startAmbience(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") { $("#mBrief").classList.remove("on"); } });
 let _rz; window.addEventListener("resize", () => { clearTimeout(_rz); _rz = setTimeout(() => { if ($("#play").classList.contains("on")) renderScene(); }, 120); });
 i18n();

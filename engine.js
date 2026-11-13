@@ -191,8 +191,8 @@
   // 計分：100 × 剛好 ÷（剛好 ＋ 4 × 多付 ＋ 損失）
   function score(lv, build) {
     const e = evaluate(lv, build);
-    if (!e.ok) return { score: 0, e, waste: 0, items: [] };
     const B = best(lv);
+    if (!e.ok) return { score: 0, e, waste: 0, items: [], best: B };
     const items = [];
     const hwOver = Math.max(0, e.hw - B.e.hw) * TIERS[0].cost[build.t[0]];
     if (hwOver > 0.5) items.push({ id: "hw", kind: "over", v: hwOver });
