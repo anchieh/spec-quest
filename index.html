@@ -49,40 +49,40 @@ svg.ic{display:block}
 @media (max-width:1180px){.howto{grid-template-columns:1fr 1fr}}@media (max-width:720px){.howto{grid-template-columns:1fr}}
 .foot{margin-top:34px;font:12px/1.6 var(--tc);color:#6d877a;max-width:720px}
 /* ---------- 地圖 ---------- */
-.mhd{display:flex;align-items:center;gap:14px;margin:6px 0 16px}
-.mhd h2{margin:0;font:900 28px var(--tc);letter-spacing:2px}.mhd .tot{margin-left:auto;display:flex;align-items:center;gap:8px;font:800 18px var(--game)}
+.mhd{display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin:6px 0 16px}
+.mhd h2{margin:0;font:900 56px var(--tc);letter-spacing:2px}.mhd .tot{margin-left:auto;display:flex;align-items:center;gap:8px;font:800 18px var(--game)}
 .zones{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
 .zone{padding:16px;border-radius:18px;position:relative;overflow:hidden}
-.zone h3{margin:0 0 4px;font:900 19px var(--tc);display:flex;align-items:center;gap:10px}.zone .zs{font:12px var(--tc);color:var(--mute);margin-bottom:12px}
+.zone h3{margin:0 0 4px;font:900 38px var(--tc);display:flex;align-items:center;gap:10px}.zone .zs{font:12px var(--tc);color:var(--mute);margin-bottom:12px}
 .zone::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:var(--zc);opacity:.12}
 .lvl{width:100%;display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:10px;border-radius:14px;text-align:left;background:#0b1d15;border:1.5px solid #24443a;transition:transform .12s,border-color .12s}
 .lvl:hover:not([disabled]){transform:translateY(-2px);border-color:var(--zc)}
 .lvl .no{width:44px;height:48px;flex:none;display:grid;place-items:center;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--zc);color:#03140e;font:900 18px var(--game)}
-.lvl b{display:block;font:800 15px/1.3 var(--tc)}.lvl small{display:flex;gap:3px;margin-top:4px}.lvl small .star{width:15px;height:15px}
+.lvl b{display:block;font:800 30px/1.15 var(--tc)}.lvl small{display:flex;gap:3px;margin-top:4px}.lvl small .star{width:15px;height:15px}
 .lvl[disabled]{opacity:.45;cursor:not-allowed}.lvl.boss{border-color:#7a3a2c;background:linear-gradient(90deg,#2a1210,#0b1d15)}
 /* ---------- 遊戲 ---------- */
 .hud{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
 .hex{width:56px;height:62px;flex:none;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:linear-gradient(160deg,#fff0b0,#e08a18 60%,#8a4d06);display:grid;place-items:center}
 .hex .in{width:47px;height:53px;clip-path:inherit;background:radial-gradient(circle at 50% 35%,#1d3a2c,#07140d);display:grid;place-items:center}
-.ttl small{display:block;font:700 12px var(--game);letter-spacing:3px;color:var(--gold)}.ttl b{font:900 26px/1.1 var(--tc);letter-spacing:1px}
+.ttl small{display:block;font:700 12px var(--game);letter-spacing:3px;color:var(--gold)}.ttl b{font:900 52px/1.05 var(--tc);letter-spacing:1px}
 .dots{display:flex;gap:5px}.dots i{width:24px;height:7px;border-radius:4px;background:#1d3a2c;transform:skewX(-20deg)}.dots i.d{background:var(--green)}.dots i.c{background:var(--gold);box-shadow:0 0 10px var(--gold)}
 .hud .sp{flex:1}
 .costpill{display:flex;align-items:center;gap:10px;height:46px;padding:0 16px 0 10px;border-radius:12px;background:linear-gradient(180deg,#183626,#0a1c13);border:1px solid #2f5541}
 .costpill b{font:700 24px var(--game);font-variant-numeric:tabular-nums}.costpill small{font:600 12px var(--tc);color:var(--mute)}
-.grid{display:grid;gap:14px;grid-template-columns:300px minmax(0,1fr) 380px;grid-template-areas:"ff ff ff" "scn scene tiers" "ship ship ship"}
-.scn{grid-area:scn;padding:16px}.scenebox{grid-area:scene;display:flex;flex-direction:column;min-height:440px}.tiers{grid-area:tiers;padding:14px}
+.grid{display:grid;gap:14px;grid-template-columns:1fr 1fr;grid-template-areas:"stage3d scn" "ff ff" "shelf tiers" "ship ship"}
+.scn{grid-area:scn;padding:16px}.tiers{grid-area:tiers;padding:14px}
 .ffbox{grid-area:ff;padding:14px}.shipbox{grid-area:ship;padding:14px;display:flex;flex-direction:column;gap:10px}
 .scn .top{display:flex;gap:12px;align-items:center}.scn .ic{width:60px;height:60px;flex:none;border-radius:14px;display:grid;place-items:center;background:radial-gradient(circle,#2b5a44,#0b2219);border:2px solid var(--gold)}
 /* 步驟序號 */
 .stepno{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:linear-gradient(180deg,#1f6e53,#0f3a2b);border:1px solid var(--teal);color:var(--ink);font:800 12px var(--tc);flex:0 0 auto;box-shadow:0 0 10px rgba(63,224,187,.35)}
 .stepk{display:flex;align-items:center;gap:8px;margin-bottom:8px;font:800 12px var(--tc);letter-spacing:.5px;color:var(--teal);text-transform:uppercase}
 .ffbox .hd .stepno,.tiers .hd .stepno{margin-right:2px}
-.shelf .shelfhd{grid-column:1/-1;display:flex;align-items:center;gap:8px;margin:2px 0 2px}.shelf .shelfhd b{font:800 13px var(--tc);letter-spacing:.5px}
+.shelf .shelfhd{grid-column:1/-1;display:flex;align-items:center;gap:8px;margin:2px 0 2px}.shelf .shelfhd b{font:800 26px var(--tc);letter-spacing:.5px}
 .shipbox .stepk{margin-bottom:-2px}
 /* 選板型前，規格與擴充先弱化，引導視線 */
 .pn.needBoard{position:relative;opacity:.4;pointer-events:none;filter:saturate(.4)}
 .pn.needBoard::after{content:attr(data-hint);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font:800 13px/1.5 var(--tc);color:var(--gold);background:rgba(6,14,10,.6);border-radius:16px;opacity:1}
-.scn h2{margin:2px 0 0;font:900 22px/1.2 var(--tc)}
+.scn h2{margin:2px 0 0;font:900 44px/1.15 var(--tc)}
 .story{font:13.5px/1.65 var(--tc);color:#c1d2c8;margin:10px 0}
 .clue{display:flex;gap:8px;align-items:flex-start;font:13px/1.5 var(--tc);color:#d8e5dd;margin:5px 0}.clue i{flex:none;width:8px;height:8px;margin-top:6px;transform:rotate(45deg);background:var(--gold)}
 .briefCtx .story{font-size:15px}
@@ -92,7 +92,7 @@ svg.ic{display:block}
 .ctxk{font:800 12px var(--tc);letter-spacing:.5px;color:var(--mute);text-transform:uppercase;margin-bottom:8px}
 .sect{font:800 12px var(--game);letter-spacing:2px;color:var(--mute);margin:14px 0 4px}
 /* 3D 場景 */
-.stage3d{position:relative;flex:1;min-height:330px;overflow:hidden;border-radius:16px}
+.stage3d{grid-area:stage3d;position:relative;min-height:420px;overflow:hidden;border-radius:16px}
 .scene{position:absolute;left:50%;top:50%;transform-style:preserve-3d}
 .enc{position:absolute;border:3px dashed rgba(255,198,90,.85);border-radius:10px;background:rgba(255,198,90,.03);box-shadow:0 0 30px rgba(255,198,90,.2)}
 .enc.bad{border-color:rgba(255,79,69,.9);box-shadow:0 0 40px rgba(255,79,69,.4)}
@@ -126,7 +126,7 @@ svg.ic{display:block}
 .sceneinfo span.lv{border-color:var(--teal);color:var(--teal)}
 .empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:700 16px var(--tc);color:var(--mute)}
 /* 擴充 */
-.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;padding:10px;margin-top:12px}
+.shelf{grid-area:shelf;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;padding:10px;align-content:start}
 .ad{display:flex;align-items:center;gap:6px;padding:5px 5px 5px 8px;border-radius:12px;background:#0a1912;border:1.5px solid #21402f;min-width:0;cursor:pointer}
 .ad.trap{border-color:rgba(255,79,69,.45)}.ad.lock{opacity:.4}
 .ad .nm{font:700 12.5px/1.25 var(--tc);flex:1;min-width:0}.ad .nm small{white-space:nowrap}.ad .nm small{display:block;font:600 11px var(--mono);color:var(--mute)}
@@ -135,7 +135,7 @@ svg.ic{display:block}
 .ad .ct button{width:26px;height:26px;border-radius:8px;background:#163a2b;border:1px solid #2f5541;font:900 18px var(--game);line-height:1}
 .ad .ct button:disabled{opacity:.3;cursor:not-allowed}
 /* 分級 */
-.tiers .hd,.ffbox .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}.tiers .hd b,.ffbox .hd b{font:800 17px var(--tc);letter-spacing:1px}.tiers .hd span,.ffbox .hd span{font:12px var(--tc);color:var(--mute)}
+.tiers .hd,.ffbox .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}.tiers .hd b,.ffbox .hd b{font:800 34px var(--tc);letter-spacing:1px}.tiers .hd span,.ffbox .hd span{font:12px var(--tc);color:var(--mute)}
 .tr{margin-bottom:6px;padding:5px 10px 6px;border-radius:12px;background:#0a1912;border:1px solid #21402f}
 .tn{display:flex;align-items:center;gap:8px;margin-bottom:2px;height:24px}.tn span{font:800 14px var(--tc)}.tn small{margin-left:auto;font:700 11px var(--tc);color:var(--mute)}
 .tg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.tg.two{grid-template-columns:repeat(2,1fr)}
@@ -146,7 +146,6 @@ svg.ic{display:block}
 .tr.locked{opacity:.75}.tr.locked .tc{cursor:not-allowed}.tr.locked .tc:not(.on){opacity:.35}
 .lockb{display:inline-flex;align-items:center;gap:4px;font:700 11px var(--tc);color:var(--gold)}
 .trWhy{font:12px/1.5 var(--tc);color:var(--mute)}.trWhy b{color:#c8d6cd;font-weight:700}
-.trCollapsed{display:flex;align-items:center;gap:8px;padding:12px 14px;border-radius:12px;background:#0a1912;border:1px solid #21402f;color:var(--mute);font:700 13px var(--tc)}
 /* 板型 */
 .ffr{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
 .ff{position:relative;border-radius:12px;padding:9px 10px;background:linear-gradient(180deg,#0f2419,#08160f);border:1.5px solid #24443a;text-align:left;transition:all .12s}
@@ -174,7 +173,7 @@ svg.ic{display:block}
 .modal{position:fixed;inset:0;z-index:40;display:none;place-items:center;padding:20px;background:rgba(2,8,6,.75);backdrop-filter:blur(3px)}
 .modal.on{display:grid}
 .card{width:min(820px,100%);max-height:calc(100vh - 40px);overflow:auto;padding:24px 26px;border-radius:20px}
-.card h2{margin:4px 0 10px;font:900 28px/1.2 var(--tc)}
+.card h2{margin:4px 0 10px;font:900 56px/1.1 var(--tc)}
 .newmech{display:flex;gap:14px;align-items:center;padding:14px 16px;margin:10px 0;border-radius:14px;background:linear-gradient(90deg,rgba(255,198,90,.16),rgba(255,198,90,.03));border:1.5px solid rgba(255,198,90,.6);box-shadow:0 0 22px rgba(255,198,90,.12)}
 .newmech .nmic{flex:none;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:rgba(255,198,90,.16);border:1px solid rgba(255,198,90,.55)}
 .newmech b{display:block;font:800 16px var(--tc);color:var(--gold)}.newmech span{font:13.5px/1.6 var(--tc);color:#e1ebe5}
@@ -206,19 +205,21 @@ svg.ic{display:block}
 .mark{text-align:center;font:11px/1.6 var(--tc);color:#557264;margin-top:16px}
 /* ---------- 窄螢幕 ---------- */
 @media (max-width:1180px){
- .grid{grid-template-columns:1fr 1fr;grid-template-areas:"ff ff" "scn scene" "tiers tiers" "ship ship"}
  .ffr{grid-template-columns:repeat(3,minmax(0,1fr))}
  .zones{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:720px){
  .shelf{grid-template-columns:1fr}
  .wrap{padding:10px 12px 20px}
- .grid{grid-template-columns:1fr;grid-template-areas:"ff" "scn" "scene" "tiers" "ship"}
+ .grid{grid-template-columns:1fr;grid-template-areas:"stage3d" "scn" "ff" "shelf" "tiers" "ship"}
  .ffr{grid-template-columns:repeat(2,minmax(0,1fr))}
  .zones{grid-template-columns:1fr}
- .scenebox{min-height:380px}
+ .stage3d{min-height:320px}
  .years{grid-template-columns:repeat(5,1fr)}
- .ttl b{font-size:20px}.dots{display:none}
+ .ttl b{font-size:34px}.dots{display:none}
+ .mhd h2{font-size:48px}
+ .zone h3{font-size:30px}
+ .lvl b{font-size:24px}
  .card{padding:18px}
  .bigscore b{font-size:64px}
  .cmp,.cmp tbody,.cmp tr,.cmp td{display:block}
@@ -342,10 +343,11 @@ svg.ic{display:block}
   <button class="icon-btn" id="bBrief" aria-label="brief">?</button>
   <div class="costpill"><span class="coin"></span><b id="hudCost">0</b><small data-t="perUnit"></small></div><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div>
  <div class="grid">
+  <div class="pn stage3d" id="stage3d"></div>
   <div class="pn scn" id="scn"></div>
-  <div class="scenebox"><div class="pn stage3d" id="stage3d"></div><div class="pn shelf" id="shelf"></div></div>
-  <div class="pn tiers" id="tiers"></div>
   <div class="pn ffbox"><div class="hd"><i class="stepno">1</i><b data-t="pickFF"></b><span data-t="pickFFsub"></span></div><div class="ffr" id="ffr"></div></div>
+  <div class="pn shelf" id="shelf"></div>
+  <div class="pn tiers" id="tiers"></div>
   <div class="pn shipbox"><div class="stepk" id="shipStep"><i class="stepno">4</i></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
    <div class="costBreak" id="costBreak"></div>
    <div class="why" id="why"></div><button class="btn shipbtn" id="bShip" data-t="ship"></button><div class="hint" data-t="shipHint"></div></div>
@@ -633,7 +635,7 @@ const TXT = {
   retry:"再試一次", next:"下一關 ▶", toMap:"回地圖", skip:"跳過動畫",
   boardRow:"板型＋擴充", stars:["再想想","過關","不錯","完美"],
   allDone:"十關全破！", allDoneSub:"總星數 {s}/30。工業電腦選型的訣竅只有一個：剛好。",
-  coinGain:"省下", needToast:"這項在第 {n} 關解鎖", tierApplied:"目前套用：{v}", tiersLocked:"這關還沒開放，第 {n} 關開始解鎖", costBreak:"板子＋擴充 {hw} ・ 六項規格 {spec}",
+  coinGain:"省下", needToast:"這項在第 {n} 關解鎖", tierApplied:"目前套用：{v}", costBreak:"板子＋擴充 {hw} ・ 六項規格 {spec}",
   howto:[["讀情境","環境、介面、空間、年量都藏在簡報裡。"],["選板型＋補介面","放得下的最小板；不夠再插卡或 M.2 模組。"],["挑六項規格","高一級多付錢，低一級日後派工停機。"],["出貨看十年","剛好 100 分；90 分三星，75 分兩星，50 分過關。"]],
  },
  en: {
@@ -681,7 +683,7 @@ const TXT = {
   retry:"Retry", next:"Next ▶", toMap:"Map", skip:"Skip",
   boardRow:"Board + add-ons", stars:["Think again","Cleared","Good","Perfect"],
   allDone:"All ten cleared!", allDoneSub:"Total stars {s}/30. There is one trick to industrial-PC specs: just enough.",
-  coinGain:"Saved", needToast:"Unlocks at level {n}", tierApplied:"Applied now: {v}", tiersLocked:"Not open yet — unlocks starting level {n}", costBreak:"Board + add-ons {hw} · Six specs {spec}",
+  coinGain:"Saved", needToast:"Unlocks at level {n}", tierApplied:"Applied now: {v}", costBreak:"Board + add-ons {hw} · Six specs {spec}",
   howto:[["Read the brief","Environment, I/O, space and volume are all in the story."],["Board + I/O","The smallest board that fits; add cards or M.2 modules only if short."],["Six specs","One grade up costs now; one grade down costs service calls later."],["Ship, see ten years","Just right scores 100; 90 for three stars, 75 for two, 50 to pass."]],
  }
 };
@@ -903,11 +905,6 @@ function floatCoin(ev, txt) { const f = document.createElement("div"); f.classNa
 
 function renderTiers() {
   const hd = `<div class="hd"><i class="stepno">3</i><b>${T("tierTitle")}</b><span>${T("tierSub")}</span></div>`;
-  if (!SQ.TIERS.some((Tr) => isUnlocked(Tr.id))) {
-    const nextLv = Math.min(...SQ.TIERS.map((Tr) => unlockLevel(Tr.id)));
-    $("#tiers").innerHTML = hd + `<div class="trCollapsed">${ic("lock", 16)}${T("tiersLocked", {n: nextLv})}</div>`;
-    return;
-  }
   $("#tiers").innerHTML = hd + SQ.TIERS.map((Tr, i) => {
     const un = isUnlocked(Tr.id), opts = TXT[LANG].tierOpt[Tr.id];
     const costs = TXT[LANG].tierCost[Tr.id] || Tr.cost.map((c) => String(c));
