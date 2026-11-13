@@ -69,7 +69,7 @@ svg.ic{display:block}
 .hud .sp{flex:1}
 .costpill{display:flex;align-items:center;gap:10px;height:46px;padding:0 16px 0 10px;border-radius:12px;background:linear-gradient(180deg,#183626,#0a1c13);border:1px solid #2f5541}
 .costpill b{font:700 24px var(--game);font-variant-numeric:tabular-nums}.costpill small{font:600 12px var(--tc);color:var(--mute)}
-.grid{display:grid;gap:14px;grid-template-columns:300px minmax(0,1fr) 380px;grid-template-areas:"scn scene tiers" "ff ff ship"}
+.grid{display:grid;gap:14px;grid-template-columns:300px minmax(0,1fr) 380px;grid-template-areas:"ff ff ff" "scn scene tiers" "ship ship ship"}
 .scn{grid-area:scn;padding:16px}.scenebox{grid-area:scene;display:flex;flex-direction:column;min-height:440px}.tiers{grid-area:tiers;padding:14px}
 .ffbox{grid-area:ff;padding:14px}.shipbox{grid-area:ship;padding:14px;display:flex;flex-direction:column;gap:10px}
 .scn .top{display:flex;gap:12px;align-items:center}.scn .ic{width:60px;height:60px;flex:none;border-radius:14px;display:grid;place-items:center;background:radial-gradient(circle,#2b5a44,#0b2219);border:2px solid var(--gold)}
@@ -89,7 +89,7 @@ svg.ic{display:block}
 .briefCtx.sec{opacity:.65}.briefCtx.sec .story{font-size:12.5px;margin:8px 0 4px}.briefCtx.sec .clue{font-size:11.5px;color:var(--mute)}.briefCtx.sec .clue i{width:6px;height:6px;margin-top:5px}
 .mechk{font:800 11.5px var(--game);letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin:16px 0 6px}
 .req{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-top:7px;border-radius:10px;background:#0a1912;border:1px solid #21402f;font:700 14px var(--tc)}
-.req em{margin-left:auto;font:800 14px var(--game);font-style:normal;color:var(--ink)}
+.ctxk{font:800 12px var(--tc);letter-spacing:.5px;color:var(--mute);text-transform:uppercase;margin-bottom:8px}
 .sect{font:800 12px var(--game);letter-spacing:2px;color:var(--mute);margin:14px 0 4px}
 /* 3D 場景 */
 .stage3d{position:relative;flex:1;min-height:330px;overflow:hidden;border-radius:16px}
@@ -123,12 +123,14 @@ svg.ic{display:block}
 .dng{position:absolute;top:-34px;width:18px;height:26px;border-radius:4px;background:linear-gradient(180deg,#ff7a6b,#b52a20);box-shadow:0 0 14px rgba(255,79,69,.8);transform:rotateX(-90deg) translateY(-20px);transform-origin:top}
 .sceneinfo{position:absolute;left:14px;top:12px;display:flex;flex-wrap:wrap;gap:6px;z-index:2}
 .sceneinfo span{font:700 12px var(--tc);padding:4px 10px;border-radius:8px;background:rgba(6,14,10,.85);border:1px solid #3a5e4b}
+.sceneinfo span.lv{border-color:var(--teal);color:var(--teal)}
 .empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:700 16px var(--tc);color:var(--mute)}
 /* 擴充 */
 .shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;padding:10px;margin-top:12px}
-.ad{display:flex;align-items:center;gap:6px;padding:5px 5px 5px 8px;border-radius:12px;background:#0a1912;border:1.5px solid #21402f;min-width:0}
+.ad{display:flex;align-items:center;gap:6px;padding:5px 5px 5px 8px;border-radius:12px;background:#0a1912;border:1.5px solid #21402f;min-width:0;cursor:pointer}
 .ad.trap{border-color:rgba(255,79,69,.45)}.ad.lock{opacity:.4}
 .ad .nm{font:700 12.5px/1.25 var(--tc);flex:1;min-width:0}.ad .nm small{white-space:nowrap}.ad .nm small{display:block;font:600 11px var(--mono);color:var(--mute)}
+.ad .nm .why{display:block;margin-top:4px;font:600 11.5px/1.5 var(--tc);color:#c8d6cd;white-space:normal}
 .ad .ct{display:flex;align-items:center;gap:4px}.ad .ct b{width:18px;text-align:center;font:800 16px var(--game)}
 .ad .ct button{width:26px;height:26px;border-radius:8px;background:#163a2b;border:1px solid #2f5541;font:900 18px var(--game);line-height:1}
 .ad .ct button:disabled{opacity:.3;cursor:not-allowed}
@@ -143,6 +145,8 @@ svg.ic{display:block}
 .tc.on{background:linear-gradient(180deg,#1f6e53,#0f3a2b);border-color:var(--teal);box-shadow:0 0 14px rgba(63,224,187,.4)}
 .tr.locked{opacity:.75}.tr.locked .tc{cursor:not-allowed}.tr.locked .tc:not(.on){opacity:.35}
 .lockb{display:inline-flex;align-items:center;gap:4px;font:700 11px var(--tc);color:var(--gold)}
+.trWhy{font:12px/1.5 var(--tc);color:var(--mute)}.trWhy b{color:#c8d6cd;font-weight:700}
+.trCollapsed{display:flex;align-items:center;gap:8px;padding:12px 14px;border-radius:12px;background:#0a1912;border:1px solid #21402f;color:var(--mute);font:700 13px var(--tc)}
 /* 板型 */
 .ffr{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
 .ff{position:relative;border-radius:12px;padding:9px 10px;background:linear-gradient(180deg,#0f2419,#08160f);border:1.5px solid #24443a;text-align:left;transition:all .12s}
@@ -201,14 +205,14 @@ svg.ic{display:block}
 .mark{text-align:center;font:11px/1.6 var(--tc);color:#557264;margin-top:16px}
 /* ---------- 窄螢幕 ---------- */
 @media (max-width:1180px){
- .grid{grid-template-columns:1fr 1fr;grid-template-areas:"scn tiers" "scene scene" "ff ff" "ship ship"}
+ .grid{grid-template-columns:1fr 1fr;grid-template-areas:"ff ff" "scn scene" "tiers tiers" "ship ship"}
  .ffr{grid-template-columns:repeat(3,minmax(0,1fr))}
  .zones{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:720px){
  .shelf{grid-template-columns:1fr}
  .wrap{padding:10px 12px 20px}
- .grid{grid-template-columns:1fr;grid-template-areas:"scn" "scene" "ff" "tiers" "ship"}
+ .grid{grid-template-columns:1fr;grid-template-areas:"ff" "scn" "scene" "tiers" "ship"}
  .ffr{grid-template-columns:repeat(2,minmax(0,1fr))}
  .zones{grid-template-columns:1fr}
  .scenebox{min-height:380px}
@@ -258,7 +262,7 @@ svg.ic{display:block}
   <div class="pn scn" id="scn"></div>
   <div class="scenebox"><div class="pn stage3d" id="stage3d"></div><div class="pn shelf" id="shelf"></div></div>
   <div class="pn tiers" id="tiers"></div>
-  <div class="pn ffbox"><div class="hd"><i class="stepno">2</i><b data-t="pickFF"></b><span data-t="pickFFsub"></span></div><div class="ffr" id="ffr"></div></div>
+  <div class="pn ffbox"><div class="hd"><i class="stepno">1</i><b data-t="pickFF"></b><span data-t="pickFFsub"></span></div><div class="ffr" id="ffr"></div></div>
   <div class="pn shipbox"><div class="stepk" id="shipStep"><i class="stepno">4</i></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
    <div class="why" id="why"></div><button class="btn shipbtn" id="bShip" data-t="ship"></button><div class="hint" data-t="shipHint"></div></div>
  </div>
@@ -290,7 +294,7 @@ const TXT = {
   start:"開始遊戲 ▶", foot:"示意遊戲：名詞依 PICMG、TIA、ISO、IEC、JEDEC 等標準機構用語；價格與損失為遊戲簡化值，非真實報價；板型標的是真實參考型號，但埠數／插槽數仍是遊戲簡化值。",
   mapTitle:"產業地圖", mark:"價格與損失為遊戲簡化值 · 名詞依標準機構定義 · AnChieh Tsai",
   noStoreWarn:"瀏覽器儲存無法使用，進度不會保留，重新整理後會消失。",
-  perUnit:"／台", pickFF:"選板型", pickFFsub:"虛線框＝機構上限；板子依實際比例", unitCost:"目前成本", addonTitle:"補介面", needBoardHint:"先選板型 ↓",
+  perUnit:"／台", pickFF:"選板型", pickFFsub:"虛線框＝機構上限；板子依實際比例", unitCost:"目前成本", addonTitle:"補介面", needBoardHint:"先選板型 ↓", ctxLabel:"情境（固定）",
   ship:"出貨", shipHint:"出貨後看十年結算：多付的錢與現場損失都會扣分。",
   chips:["10 關卡","5 大產業","9 種板型","6 項規格"],
   dom:{retail:"零售與娛樂",factory:"智慧製造",medical:"醫療",energy:"能源",transport:"交通"},
@@ -330,7 +334,7 @@ const TXT = {
   retry:"再試一次", next:"下一關 ▶", toMap:"回地圖", skip:"跳過動畫",
   boardRow:"板型＋擴充", stars:["再想想","過關","不錯","完美"],
   allDone:"十關全破！", allDoneSub:"總星數 {s}/30。工業電腦選型的訣竅只有一個：剛好。",
-  coinGain:"省下", needToast:"這項在第 {n} 關解鎖",
+  coinGain:"省下", needToast:"這項在第 {n} 關解鎖", tierApplied:"目前套用：{v}", tiersLocked:"這關還沒開放，第 {n} 關開始解鎖",
   howto:[["讀情境","環境、介面、空間、年量都藏在簡報裡。"],["選板型＋補介面","放得下的最小板；不夠再插卡或 M.2 模組。"],["挑六項規格","高一級多付錢，低一級日後派工停機。"],["出貨看十年","剛好 100 分；90 分三星，75 分兩星，50 分過關。"]],
  },
  en: {
@@ -338,7 +342,7 @@ const TXT = {
   start:"Start ▶", foot:"Illustrative game: terms follow PICMG, TIA, ISO, IEC and JEDEC; prices and losses are simplified game values, not real quotes; board cards cite real reference models, but port/slot counts are still the game's own simplified values.",
   mapTitle:"Industry map", mark:"Prices and losses are simplified game values · Terms follow standards bodies · AnChieh Tsai",
   noStoreWarn:"Browser storage is unavailable — progress won't be saved and will disappear on reload.",
-  perUnit:"/ unit", pickFF:"Pick a form factor", pickFFsub:"Dashed box = enclosure limit; boards to scale", unitCost:"Cost now", addonTitle:"Add interfaces", needBoardHint:"Pick a board first ↓",
+  perUnit:"/ unit", pickFF:"Pick a form factor", pickFFsub:"Dashed box = enclosure limit; boards to scale", unitCost:"Cost now", addonTitle:"Add interfaces", needBoardHint:"Pick a board first ↓", ctxLabel:"Scenario (fixed)",
   ship:"SHIP", shipHint:"After shipping you see ten years: overpaying and field losses both cost points.",
   chips:["10 levels","5 industries","9 boards","6 specs"],
   dom:{retail:"Retail & Entertainment",factory:"Smart Factory",medical:"Medical",energy:"Energy",transport:"Transportation"},
@@ -378,7 +382,7 @@ const TXT = {
   retry:"Retry", next:"Next ▶", toMap:"Map", skip:"Skip",
   boardRow:"Board + add-ons", stars:["Think again","Cleared","Good","Perfect"],
   allDone:"All ten cleared!", allDoneSub:"Total stars {s}/30. There is one trick to industrial-PC specs: just enough.",
-  coinGain:"Saved", needToast:"Unlocks at level {n}",
+  coinGain:"Saved", needToast:"Unlocks at level {n}", tierApplied:"Applied now: {v}", tiersLocked:"Not open yet — unlocks starting level {n}",
   howto:[["Read the brief","Environment, I/O, space and volume are all in the story."],["Board + I/O","The smallest board that fits; add cards or M.2 modules only if short."],["Six specs","One grade up costs now; one grade down costs service calls later."],["Ship, see ten years","Just right scores 100; 90 for three stars, 75 for two, 50 to pass."]],
  }
 };
@@ -455,6 +459,7 @@ let CUR = null;                                // 目前關卡
 let B = null;                                  // build
 let FF_LAST = {};                              // 每種板型最後選的款式 {ff: boardId}
 let TOUCHED = new Set();                       // 玩家主動點過的規格項（index），未點過不預先亮選項
+let EXPANDED = new Set();                      // 點開完整說明的擴充品 id
 function starsOf(id) { return PROG[id] != null ? SQ.stars(PROG[id]) : 0; }
 function isOpen(id) { return id === 1 || PROG[id - 1] != null; }
 function show(id) { $$(".screen").forEach((s) => s.classList.toggle("on", s.id === id)); window.scrollTo(0, 0); }
@@ -491,6 +496,7 @@ function startLevel(id) {
   B = { board: null, add: {}, t: [...CUR.need].map((n, i) => isUnlocked(SQ.TIERS[i].id) ? 0 : n) };
   FF_LAST = {};
   TOUCHED = new Set();
+  EXPANDED = new Set();
   show("play"); renderAll(); openBrief();
 }
 function isUnlocked(key) { return SQ.unlockedAt(CUR.id).has(key); }
@@ -519,13 +525,12 @@ function renderHud() {
 }
 function evalNow() { return B.board ? SQ.evaluate(CUR, B) : null; }
 function renderScn() {
-  const t = L(CUR.id), e = evalNow(), h = e ? e.have : { com: 0, lan: 0, can: 0, lte: 0 };
-  const r = (label, val) => `<div class="req">${label}${val ? `<em>${val}</em>` : ""}</div>`;
-  const curLen = e ? SQ.BOARDS.find((b) => b.id === B.board).len : null;
-  let rq = r(T("req.len", {v: CUR.maxLen}), curLen != null ? `${curLen} mm` : "—");
-  for (const k of ["com","lan","can","lte"]) if (CUR.req[k]) rq += r(T("req." + k, {v: CUR.req[k]}), e ? `${Math.min(h[k], 99)}/${CUR.req[k]}` : "—");
-  if (CUR.cards.length) rq += r(T("req.cards", {v: CUR.cards.map((c) => TXT[LANG].card[c]).join("、")}), "");
-  $("#scn").innerHTML = `<div class="stepk"><i class="stepno">1</i>${TXT[LANG].howto[0][0]}</div><div class="top"><div class="ic">${ic(CUR.icon, 40)}</div><div><div class="k">${T("dom." + CUR.dom)}</div><h2>${t.n}</h2></div></div>
+  const t = L(CUR.id);
+  const r = (label) => `<div class="req">${label}</div>`;
+  let rq = r(T("req.len", {v: CUR.maxLen}));
+  for (const k of ["com","lan","can","lte"]) if (CUR.req[k]) rq += r(T("req." + k, {v: CUR.req[k]}));
+  if (CUR.cards.length) rq += r(T("req.cards", {v: CUR.cards.map((c) => TXT[LANG].card[c]).join("、")}));
+  $("#scn").innerHTML = `<div class="ctxk">${T("ctxLabel")}</div><div class="top"><div class="ic">${ic(CUR.icon, 40)}</div><div><div class="k">${T("dom." + CUR.dom)}</div><h2>${t.n}</h2></div></div>
    <p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}<div class="sect">I/O</div>${rq}`;
 }
 
@@ -571,7 +576,9 @@ function renderScene() {
   }
   const info = [`${T("ff." + b.ff)}${b.custom ? "" : " · COM " + b.com + " · LAN " + b.lan}`];
   if (!b.custom) info.push(`${T("slotX16")} ${b.x16} · ${T("slotX4")} ${b.x4} · ${T("m2")} ${b.m2}`);
-  box.innerHTML = `<div class="sceneinfo">${info.map((i) => `<span>${i}</span>`).join("")}</div>
+  const reqChips = [`${b.len}/${CUR.maxLen}mm`];
+  for (const k of ["com","lan","can","lte"]) if (CUR.req[k]) reqChips.push(`${k.toUpperCase()} ${Math.min(e.have[k], 99)}/${CUR.req[k]}`);
+  box.innerHTML = `<div class="sceneinfo">${info.map((i) => `<span>${i}</span>`).join("")}${reqChips.map((i) => `<span class="lv">${i}</span>`).join("")}</div>
    <div class="scene" style="width:${Math.max(el, bw)}px;height:${Math.max(el, bh)}px;margin-left:-${Math.max(el, bw)/2}px;margin-top:-${Math.max(el, bh)/2 + 10}px;transform:perspective(1300px) rotateX(52deg) rotateZ(-32deg)">
    <div class="enc ${big ? "bad" : ""}" style="left:0;top:0;width:${el}px;height:${el}px"><span>${T("req.len", {v: CUR.maxLen})}</span></div>
    <div class="pcb ${b.custom ? "come" : ""}" style="left:${big ? 0 : (el - bw) / 2}px;top:${big ? 0 : (el - bh) / 2}px;width:${bw}px;height:${bh}px">${inner}</div></div>`;
@@ -583,22 +590,33 @@ function renderShelf() {
     const a = SQ.ADDONS[id], key = a.kind === "pcie" ? "pcie" : a.kind === "m2" ? "m2" : id === "ucom" ? "usb" : "m2";
     const lock = !isUnlocked(key) || (b && b.custom), n = B.add[id] || 0;
     const max = id === "ucom" ? 4 : a.kind === "usb" ? 1 : 2;
-    return `<div class="ad ${a.kind === "usb" ? "trap" : ""} ${lock ? "lock" : ""}">${ic(a.kind === "pcie" ? (id === "lan2" ? "lan" : "card") : a.kind === "m2" ? "m2mod" : "dongle", 24)}
-     <div class="nm">${TXT[LANG].addon[id]}<small>${TXT[LANG].addonSub[id]} · ${a.price}</small></div>
+    const open = EXPANDED.has(id);
+    return `<div class="ad ${a.kind === "usb" ? "trap" : ""} ${lock ? "lock" : ""} ${open ? "open" : ""}" data-id="${id}">${ic(a.kind === "pcie" ? (id === "lan2" ? "lan" : "card") : a.kind === "m2" ? "m2mod" : "dongle", 24)}
+     <div class="nm">${TXT[LANG].addon[id]}<small>${TXT[LANG].addonSub[id]} · ${a.price}</small>${open ? `<span class="why">${TXT[LANG].mech[key][1]}</span>` : ""}</div>
      <div class="ct"><button data-a="${id}" data-d="-1" ${lock || !n ? "disabled" : ""} aria-label="-">−</button><b>${n}</b><button data-a="${id}" data-d="1" ${lock || n >= max || !b ? "disabled" : ""} aria-label="+">+</button></div></div>`;
   }).join("");
+  $$("#shelf .ad").forEach((card) => card.onclick = (ev) => { if (ev.target.closest("button")) return;
+    const id = card.dataset.id; if (EXPANDED.has(id)) EXPANDED.delete(id); else EXPANDED.add(id); beep("click"); renderAll(); });
   $$("#shelf button").forEach((x) => x.onclick = (ev) => { const id = x.dataset.a, d = +x.dataset.d; B.add[id] = Math.max(0, (B.add[id] || 0) + d); if (!B.add[id]) delete B.add[id];
     beep(d > 0 ? "add" : "click"); if (d > 0) floatCoin(ev, "-" + SQ.ADDONS[id].price); renderAll(); });
 }
 function floatCoin(ev, txt) { const f = document.createElement("div"); f.className = "floatcoin"; f.textContent = txt; f.style.left = ev.clientX + "px"; f.style.top = ev.clientY - 20 + "px"; document.body.appendChild(f); setTimeout(() => f.remove(), 700); }
 
 function renderTiers() {
-  $("#tiers").innerHTML = `<div class="hd"><i class="stepno">3</i><b>${T("tierTitle")}</b><span>${T("tierSub")}</span></div>` + SQ.TIERS.map((Tr, i) => {
+  const hd = `<div class="hd"><i class="stepno">3</i><b>${T("tierTitle")}</b><span>${T("tierSub")}</span></div>`;
+  if (!SQ.TIERS.some((Tr) => isUnlocked(Tr.id))) {
+    const nextLv = Math.min(...SQ.TIERS.map((Tr) => unlockLevel(Tr.id)));
+    $("#tiers").innerHTML = hd + `<div class="trCollapsed">${ic("lock", 16)}${T("tiersLocked", {n: nextLv})}</div>`;
+    return;
+  }
+  $("#tiers").innerHTML = hd + SQ.TIERS.map((Tr, i) => {
     const un = isUnlocked(Tr.id), opts = TXT[LANG].tierOpt[Tr.id];
     const costs = TXT[LANG].tierCost[Tr.id] || Tr.cost.map((c) => String(c));
-    const tag = un ? "" : `<small><span class="lockb">${ic("lock", 14)}${T("locked", {n: unlockLevel(Tr.id)})}</span></small>`;
-    return `<div class="tr ${un ? "" : "locked"}"><div class="tn">${ic({temp:"thermo_hot",power:"dc_power",prot:"surge",store:"ssd",supply:"cal10",cert:"cert"}[Tr.id], 24)}<span>${T("tier." + Tr.id)}</span>${tag}</div>
-     <div class="tg ${opts.length === 2 ? "two" : ""}">${opts.map((o, k) => `<button class="tc ${(un ? TOUCHED.has(i) : true) && B.t[i] === k ? "on" : ""}" data-i="${i}" data-k="${k}"><b>${o}</b><small>${costs[k]}</small></button>`).join("")}</div></div>`;
+    const icon = ic({temp:"thermo_hot",power:"dc_power",prot:"surge",store:"ssd",supply:"cal10",cert:"cert"}[Tr.id], 24);
+    if (!un) return `<div class="tr locked"><div class="tn">${icon}<span>${T("tier." + Tr.id)}</span><small><span class="lockb">${ic("lock", 14)}${T("locked", {n: unlockLevel(Tr.id)})}</span></small></div>
+     <div class="trWhy">${TXT[LANG].mech[Tr.id][1]} <b>${T("tierApplied", {v: opts[B.t[i]]})}</b></div></div>`;
+    return `<div class="tr"><div class="tn">${icon}<span>${T("tier." + Tr.id)}</span></div>
+     <div class="tg ${opts.length === 2 ? "two" : ""}">${opts.map((o, k) => `<button class="tc ${TOUCHED.has(i) && B.t[i] === k ? "on" : ""}" data-i="${i}" data-k="${k}"><b>${o}</b><small>${costs[k]}</small></button>`).join("")}</div></div>`;
   }).join("");
   $$("#tiers .tc").forEach((x) => x.onclick = () => { const i = +x.dataset.i; if (!isUnlocked(SQ.TIERS[i].id)) { beep("err"); toast(T("needToast", {n: unlockLevel(SQ.TIERS[i].id)})); return; }
     B.t[i] = +x.dataset.k; TOUCHED.add(i); beep("click"); renderAll(); });
