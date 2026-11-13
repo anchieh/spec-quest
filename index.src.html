@@ -89,8 +89,7 @@ svg.ic{display:block}
 .briefCtx.sec{opacity:.65}.briefCtx.sec .story{font-size:12.5px;margin:8px 0 4px}.briefCtx.sec .clue{font-size:11.5px;color:var(--mute)}.briefCtx.sec .clue i{width:6px;height:6px;margin-top:5px}
 .mechk{font:800 11.5px var(--game);letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin:16px 0 6px}
 .req{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-top:7px;border-radius:10px;background:#0a1912;border:1px solid #21402f;font:700 14px var(--tc)}
-.req em{margin-left:auto;font:800 14px var(--game);font-style:normal;color:var(--mute)}
-.req.ok{border-color:rgba(69,209,138,.5)}.req.ok em{color:var(--green)}.req.no{border-color:rgba(255,79,69,.6);background:rgba(255,79,69,.07)}.req.no em{color:#ff8a80}
+.req em{margin-left:auto;font:800 14px var(--game);font-style:normal;color:var(--ink)}
 .sect{font:800 12px var(--game);letter-spacing:2px;color:var(--mute);margin:14px 0 4px}
 /* 3D 場景 */
 .stage3d{position:relative;flex:1;min-height:330px;overflow:hidden;border-radius:16px}
@@ -153,11 +152,10 @@ svg.ic{display:block}
 .ff .h{display:flex;align-items:center;gap:6px}.ff .h b{font:800 14px var(--game)}
 .ff .model{font:700 10.5px var(--mono);color:var(--mute);letter-spacing:.3px;margin-top:2px}
 .bd{margin-left:auto;font:800 10.5px var(--tc);padding:1px 7px;border-radius:5px;white-space:nowrap}
-.bd.big{background:var(--red);color:#fff}.bd.fit{border:1px solid var(--green);color:var(--green)}.bd.lk{border:1px solid var(--gold);color:var(--gold)}
+.bd.dim{border:1px solid var(--line);color:var(--mute);font:700 10.5px var(--mono)}.bd.lk{border:1px solid var(--gold);color:var(--gold)}
 .box{position:relative;height:50px;margin:7px 0 6px;display:grid;place-items:center;border-radius:8px;background:#06120c;overflow:hidden}
 .lim{position:absolute;border:2px dashed rgba(255,198,90,.75);border-radius:4px}
 .sil{position:relative;border-radius:3px;background:linear-gradient(135deg,#2a9a6c,#0e4a31);box-shadow:0 0 0 1px #4fd1a0}
-.ff.over .sil{background:linear-gradient(135deg,rgba(255,79,69,.6),rgba(120,20,15,.7));box-shadow:0 0 0 1px var(--red)}
 .spec{display:flex;flex-wrap:wrap;gap:4px;font:700 11px var(--game);color:#c8d6cd}.spec span{padding:1px 5px;border-radius:5px;background:#0a1c15}
 .spec .pr{margin-left:auto;display:flex;align-items:center;gap:3px;background:none}.spec .coin{width:12px;height:12px}
 .var{display:flex;gap:4px;margin-top:6px}.var button{flex:1;padding:3px 0;border-radius:6px;font:700 11px var(--tc);background:#0a1c15;border:1px solid #21402f;color:var(--mute)}
@@ -299,7 +297,7 @@ const TXT = {
   domSub:{retail:"室內、量大、價格敏感",factory:"產線、連續運轉",medical:"病患安全、長壽命",energy:"戶外、電網、極端環境",transport:"振動、寬壓、驗證"},
   lv:"第 {n} 關", boss:"魔王關",
   ff:{pico:"Pico-ITX",sbc:"3.5 吋",itx:"Mini-ITX",matx:"Micro-ATX",atx:"ATX",come:"COM Express"},
-  var:["基本款","多介面款"], varSbc:["基本款","6 COM 款"], tooBig:"放不下", fits:"放得下", locked:"第 {n} 關解鎖",
+  var:["基本款","多介面款"], varSbc:["基本款","6 COM 款"], locked:"第 {n} 關解鎖",
   comeNote:"客製底板，開發費 {nre} ÷ 年量 {vol}", comeIo:"介面依需求",
   slotX16:"x16 槽", slotX4:"x4 槽", m2:"M.2",
   addon:{com4:"4 埠 COM 卡",lan2:"2 埠 LAN 卡",can:"CAN 模組",lte:"LTE 模組",ucom:"USB 轉 COM",ucan:"USB 轉 CAN",ulte:"USB LTE 棒"},
@@ -347,7 +345,7 @@ const TXT = {
   domSub:{retail:"Indoor, high volume, price-driven",factory:"Lines that never stop",medical:"Patient safety, long life",energy:"Outdoors, grid, extremes",transport:"Vibration, wide power, certification"},
   lv:"Level {n}", boss:"Boss",
   ff:{pico:"Pico-ITX",sbc:"3.5\"",itx:"Mini-ITX",matx:"Micro-ATX",atx:"ATX",come:"COM Express"},
-  var:["Basic","More I/O"], varSbc:["Basic","6-COM"], tooBig:"Too big", fits:"Fits", locked:"Unlocks at L{n}",
+  var:["Basic","More I/O"], varSbc:["Basic","6-COM"], locked:"Unlocks at L{n}",
   comeNote:"Custom carrier, NRE {nre} ÷ {vol}/yr", comeIo:"I/O as needed",
   slotX16:"x16", slotX4:"x4", m2:"M.2",
   addon:{com4:"4-port COM card",lan2:"2-port LAN card",can:"CAN module",lte:"LTE module",ucom:"USB-to-COM",ucan:"USB-to-CAN",ulte:"USB LTE stick"},
@@ -456,6 +454,7 @@ let PROG = store.get("prog", {});            // {id: 最高分}
 let CUR = null;                                // 目前關卡
 let B = null;                                  // build
 let FF_LAST = {};                              // 每種板型最後選的款式 {ff: boardId}
+let TOUCHED = new Set();                       // 玩家主動點過的規格項（index），未點過不預先亮選項
 function starsOf(id) { return PROG[id] != null ? SQ.stars(PROG[id]) : 0; }
 function isOpen(id) { return id === 1 || PROG[id - 1] != null; }
 function show(id) { $$(".screen").forEach((s) => s.classList.toggle("on", s.id === id)); window.scrollTo(0, 0); }
@@ -491,6 +490,7 @@ function startLevel(id) {
   CUR = SQ.LEVELS.find((l) => l.id === id);
   B = { board: null, add: {}, t: [...CUR.need].map((n, i) => isUnlocked(SQ.TIERS[i].id) ? 0 : n) };
   FF_LAST = {};
+  TOUCHED = new Set();
   show("play"); renderAll(); openBrief();
 }
 function isUnlocked(key) { return SQ.unlockedAt(CUR.id).has(key); }
@@ -520,11 +520,11 @@ function renderHud() {
 function evalNow() { return B.board ? SQ.evaluate(CUR, B) : null; }
 function renderScn() {
   const t = L(CUR.id), e = evalNow(), h = e ? e.have : { com: 0, lan: 0, can: 0, lte: 0 };
-  const r = (cls, label, val) => `<div class="req ${cls}">${label}<em>${val}</em></div>`;
-  const lenOk = e && SQ.BOARDS.find((b) => b.id === B.board).len <= CUR.maxLen;
-  let rq = r(e ? (lenOk ? "ok" : "no") : "", T("req.len", {v: CUR.maxLen}), e ? (lenOk ? "✓" : "✕") : "—");
-  for (const k of ["com","lan","can","lte"]) if (CUR.req[k]) rq += r(e ? (h[k] >= CUR.req[k] ? "ok" : "no") : "", T("req." + k, {v: CUR.req[k]}), e ? `${Math.min(h[k], 99)}/${CUR.req[k]}` : "—");
-  if (CUR.cards.length) rq += r(e ? (e.reasons.includes("noSlot") ? "no" : "ok") : "", T("req.cards", {v: CUR.cards.map((c) => TXT[LANG].card[c]).join("、")}), e ? (e.reasons.includes("noSlot") ? "✕" : "✓") : "—");
+  const r = (label, val) => `<div class="req">${label}${val ? `<em>${val}</em>` : ""}</div>`;
+  const curLen = e ? SQ.BOARDS.find((b) => b.id === B.board).len : null;
+  let rq = r(T("req.len", {v: CUR.maxLen}), curLen != null ? `${curLen} mm` : "—");
+  for (const k of ["com","lan","can","lte"]) if (CUR.req[k]) rq += r(T("req." + k, {v: CUR.req[k]}), e ? `${Math.min(h[k], 99)}/${CUR.req[k]}` : "—");
+  if (CUR.cards.length) rq += r(T("req.cards", {v: CUR.cards.map((c) => TXT[LANG].card[c]).join("、")}), "");
   $("#scn").innerHTML = `<div class="stepk"><i class="stepno">1</i>${TXT[LANG].howto[0][0]}</div><div class="top"><div class="ic">${ic(CUR.icon, 40)}</div><div><div class="k">${T("dom." + CUR.dom)}</div><h2>${t.n}</h2></div></div>
    <p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}<div class="sect">I/O</div>${rq}`;
 }
@@ -598,10 +598,10 @@ function renderTiers() {
     const costs = TXT[LANG].tierCost[Tr.id] || Tr.cost.map((c) => String(c));
     const tag = un ? "" : `<small><span class="lockb">${ic("lock", 14)}${T("locked", {n: unlockLevel(Tr.id)})}</span></small>`;
     return `<div class="tr ${un ? "" : "locked"}"><div class="tn">${ic({temp:"thermo_hot",power:"dc_power",prot:"surge",store:"ssd",supply:"cal10",cert:"cert"}[Tr.id], 24)}<span>${T("tier." + Tr.id)}</span>${tag}</div>
-     <div class="tg ${opts.length === 2 ? "two" : ""}">${opts.map((o, k) => `<button class="tc ${B.t[i] === k ? "on" : ""}" data-i="${i}" data-k="${k}"><b>${o}</b><small>${costs[k]}</small></button>`).join("")}</div></div>`;
+     <div class="tg ${opts.length === 2 ? "two" : ""}">${opts.map((o, k) => `<button class="tc ${(un ? TOUCHED.has(i) : true) && B.t[i] === k ? "on" : ""}" data-i="${i}" data-k="${k}"><b>${o}</b><small>${costs[k]}</small></button>`).join("")}</div></div>`;
   }).join("");
   $$("#tiers .tc").forEach((x) => x.onclick = () => { const i = +x.dataset.i; if (!isUnlocked(SQ.TIERS[i].id)) { beep("err"); toast(T("needToast", {n: unlockLevel(SQ.TIERS[i].id)})); return; }
-    B.t[i] = +x.dataset.k; beep("click"); renderAll(); });
+    B.t[i] = +x.dataset.k; TOUCHED.add(i); beep("click"); renderAll(); });
 }
 
 function renderFF() {
@@ -609,14 +609,14 @@ function renderFF() {
   $("#ffr").innerHTML = SQ.FORMS.map((ff) => {
     const vars = SQ.BOARDS.filter((b) => b.ff === ff), lock = ff === "come" && !isUnlocked("custom");
     const cur = sel && sel.ff === ff ? sel : (FF_LAST[ff] ? SQ.BOARDS.find((b) => b.id === FF_LAST[ff]) : vars[0]);
-    const over = cur.len > CUR.maxLen, sc = 62 / Math.max(CUR.maxLen, 305);
+    const sc = 62 / Math.max(CUR.maxLen, 305);
     const silW = Math.min(cur.len * sc * 1.9, 150), silH = Math.min(FFH[ff] * sc * 1.9, 70), lim = CUR.maxLen * sc * 1.9;
-    const badge = lock ? `<span class="bd lk">${T("locked", {n: unlockLevel("custom")})}</span>` : over ? `<span class="bd big">${T("tooBig")}</span>` : `<span class="bd fit">${T("fits")}</span>`;
+    const badge = lock ? `<span class="bd lk">${T("locked", {n: unlockLevel("custom")})}</span>` : `<span class="bd dim">${cur.len} × ${FFH[ff]} mm</span>`;
     const spec = cur.custom ? `<span>${T("comeIo")}</span><span class="pr"><i class="coin"></i>${fmt(cur.price + SQ.COME_NRE / CUR.vol)}</span>`
       : `<span>COM ${cur.com}</span><span>LAN ${cur.lan}</span><span>${T("slotX16")}${cur.x16}${cur.x4 ? "+" + T("slotX4") + cur.x4 : ""}</span><span>${T("m2")} ${cur.m2}</span><span class="pr"><i class="coin"></i>${cur.price}</span>`;
     const varBtns = vars.length > 1 ? `<div class="var">${vars.map((v) => `<button data-b="${v.id}" class="${sel && sel.id === v.id ? "on" : ""}">${(ff === "sbc" ? TXT[LANG].varSbc : TXT[LANG].var)[v.v]}</button>`).join("")}</div>` : "";
     const note = cur.custom ? `<div class="hint" style="margin-top:4px">${T("comeNote", {nre: fmt(SQ.COME_NRE), vol: fmt(CUR.vol)})}</div>` : "";
-    return `<div class="ff ${sel && sel.ff === ff ? "sel" : ""} ${over ? "over" : ""} ${lock ? "lock" : ""}" data-b="${cur.id}" role="button" tabindex="0">
+    return `<div class="ff ${sel && sel.ff === ff ? "sel" : ""} ${lock ? "lock" : ""}" data-b="${cur.id}" role="button" tabindex="0">
       <div class="h"><b>${T("ff." + ff)}</b>${badge}</div><div class="box"><div class="lim" style="width:${lim}px;height:${lim}px"></div><div class="sil" style="width:${silW}px;height:${silH}px"></div></div>
       <div class="model">${cur.model}</div><div class="spec">${spec}</div>${varBtns}${note}</div>`;
   }).join("");
