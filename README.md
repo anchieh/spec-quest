@@ -11,7 +11,7 @@ Progress is saved in the browser (localStorage).
 
 ## Publish on GitHub Pages
 
-1. Create a repository and upload `index.html` plus the three `bgm-*` audio files next to it (background music needs them).
+1. Create a repository and upload `index.html` plus the `bgm-*` audio files next to it (background music needs them).
 2. Settings → Pages → Source: *Deploy from a branch* → Branch `main`, folder `/ (root)` → Save.
 3. The game is live at `https://<your-account>.github.io/<repo>/`.
 
@@ -23,5 +23,6 @@ Progress is saved in the browser (localStorage).
 
 ## Music credits
 
-- `bgm-practice.ogg` — "Exploration Theme" by Cleyton Kauffman ([soundcloud.com/cleytonkauffman](https://soundcloud.com/cleytonkauffman)), [CC0](https://opengameart.org/content/exploration-theme). Attribution not required.
-- `bgm-formal.ogg` / `bgm-formal.mp3` — "Tense Future Loop" by gmason, [CC0](https://opengameart.org/content/tense-future-loop). Attribution not required.
+- `bgm-practice.ogg` — "Exploration Theme" by Cleyton Kauffman ([soundcloud.com/cleytonkauffman](https://soundcloud.com/cleytonkauffman)), [CC0](https://opengameart.org/content/exploration-theme). Title screen music. Attribution not required.
+- `bgm-practice2.ogg` / `bgm-practice2.mp3` — "Cozy Puzzle In-Game 2" by MintoDog, [CC0](https://opengameart.org/content/cozy-puzzle-in-game-2). Practice-level music. Attribution not required.
+- `bgm-formal.ogg` / `bgm-formal.mp3` — "Tense Future Loop" by gmason, [CC0](https://opengameart.org/content/tense-future-loop). Formal-level music. Attribution not required.
