@@ -316,7 +316,7 @@ const TXT = {
   perPort:"／埠", preset:"本關預設",
   req:{len:"機構 ≤ {v} mm",com:"COM × {v}",lan:"LAN × {v}",can:"CAN × {v}",lte:"行動網路 × {v}",cards:"必插：{v}"},
   reason:{noBoard:"先選一塊板子",tooBig:"板子放不進機構",noSlot:"擴充槽不夠插必要的卡",noM2:"M.2 插槽不夠",customNoAddon:"客製底板不能再插卡",need_com:"COM 不夠",need_lan:"LAN 不夠",need_can:"缺 CAN",need_lte:"缺行動網路"},
-  ready:"可以出貨", briefGo:"開始配置", newMech:"新機制", newMechKicker:"這關新增", brief:"任務簡報",
+  ready:"可以出貨", briefGo:"開始配置", newMech:"新機制", newMechKicker:"本關教學", brief:"任務簡報",
   mech:{board:["板型","板子越大，內建介面與擴充槽越多，但越貴、越佔空間。先找放得下又夠用的最小板。"],
    usb:["USB 轉接器","缺介面時插個轉接器很便宜，但現場會鬆脫、沒有隔離，十年內會出事，會算進損失。"],
    pcie:["PCIe 擴充槽","客戶的卡（例如 AI 加速卡）要佔槽。槽被佔走，就不能再加 COM 卡，只能換有內建介面的款。"],
@@ -364,7 +364,7 @@ const TXT = {
   perPort:"/port", preset:"Preset here",
   req:{len:"Enclosure ≤ {v} mm",com:"COM × {v}",lan:"LAN × {v}",can:"CAN × {v}",lte:"Cellular × {v}",cards:"Must fit: {v}"},
   reason:{noBoard:"Pick a board first",tooBig:"The board does not fit the enclosure",noSlot:"Not enough slots for the required cards",noM2:"Not enough M.2 sockets",customNoAddon:"A custom carrier takes no add-ons",need_com:"Not enough COM",need_lan:"Not enough LAN",need_can:"CAN missing",need_lte:"Cellular missing"},
-  ready:"Ready to ship", briefGo:"Start building", newMech:"New mechanic", newMechKicker:"New this level", brief:"Briefing",
+  ready:"Ready to ship", briefGo:"Start building", newMech:"New mechanic", newMechKicker:"This level's lesson", brief:"Briefing",
   mech:{board:["Form factor","Bigger boards bring more I/O and slots, but cost more and take more space. Find the smallest board that fits and is enough."],
    usb:["USB adapters","An adapter is a cheap fix for a missing port, but in the field it loosens and has no isolation. It counts as a loss."],
    pcie:["PCIe slots","The customer's card, such as an AI accelerator, takes a slot. With the slot gone you cannot add a COM card, so pick a board with the ports on board."],
@@ -510,8 +510,8 @@ function openBrief() {
   const mechBlock = hasMech ? `<div class="mechk">${T("newMechKicker")}</div>${mech}` : "";
   $("#briefCard").innerHTML = `<div class="k">${T("lv", {n: CUR.id})} · ${T("dom." + CUR.dom)}${CUR.boss ? " · " + T("boss") : ""}</div>
    <div style="display:flex;gap:16px;align-items:center;margin-top:8px"><div class="hex" style="width:76px;height:84px"><div class="in" style="width:64px;height:72px">${ic(CUR.icon, 44)}</div></div><h2>${t.n}</h2></div>
-   <div class="briefCtx ${hasMech ? "sec" : ""}"><p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}</div>
    ${mechBlock}
+   <div class="briefCtx ${hasMech ? "sec" : ""}"><p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}</div>
    <div class="row"><button class="btn" id="bGo">${T("briefGo")}</button></div>`;
   $("#mBrief").classList.add("on"); $("#bGo").onclick = () => { beep("click"); $("#mBrief").classList.remove("on"); };
 }
