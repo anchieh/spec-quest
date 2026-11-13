@@ -25,7 +25,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
  background:linear-gradient(180deg,#ffe29a,#ffc65a 50%,#d1840f);box-shadow:0 6px 0 #7a4a0a,0 12px 24px rgba(255,198,90,.3),inset 0 2px 0 rgba(255,255,255,.55);transition:transform .08s}
 .btn:active{transform:translateY(4px);box-shadow:0 2px 0 #7a4a0a}
 .btn.ghost{color:var(--ink);background:linear-gradient(180deg,#1d4a37,#0f2a1f);box-shadow:0 5px 0 #06140d,inset 0 1px 0 rgba(255,255,255,.1);border:1px solid #3a6a54}
-.btn[disabled]{filter:grayscale(.9) brightness(.6);cursor:not-allowed}
+.btn[disabled]{filter:grayscale(1) brightness(.45);opacity:.7;cursor:not-allowed;box-shadow:none}
 .icon-btn{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:#0f2a1f;border:1px solid #2f5541;font:800 14px var(--game)}
 svg.ic{display:block}
 .coin{display:inline-block;width:20px;height:20px;border-radius:50%;flex:none;background:radial-gradient(circle at 35% 30%,#fff3c4,#ffc54a 45%,#b8700c);box-shadow:inset 0 -2px 0 rgba(0,0,0,.3)}
@@ -73,7 +73,9 @@ svg.ic{display:block}
 #play .wrap{height:100%;display:flex;flex-direction:column;overflow:hidden}
 .topRow{display:grid;gap:14px;grid-template-columns:1.1fr 1fr .8fr;grid-template-rows:380px;margin-bottom:14px;flex:0 0 auto}
 .stage3d,.scn,.shipbox{min-height:0;overflow-y:auto}
-.scn{padding:16px}.tierPage{padding:14px;height:100%;overflow-y:auto}
+.scn{padding:16px}.tierPage{padding:14px;height:100%;overflow-y:auto;display:flex;flex-direction:column}
+.tierPage .tr{flex:1;display:flex;flex-direction:column;justify-content:center}
+.tierPage .tg{max-width:520px;width:100%;margin:0 auto}
 .ffbox{padding:14px}.shipbox{padding:14px;display:flex;flex-direction:column;gap:10px}
 .pager{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
 .pagerHd{display:flex;align-items:center;justify-content:center;gap:16px;flex:0 0 auto}
@@ -225,13 +227,18 @@ svg.ic{display:block}
 @media (max-width:720px){
  .shelf{grid-template-columns:1fr}
  .wrap{padding:10px 12px 20px}
- .topRow{grid-template-columns:1fr}
  .ffr{grid-template-columns:repeat(2,minmax(0,1fr))}
  .zones{grid-template-columns:1fr}
- .topRow{grid-template-rows:140px auto auto}
- .stage3d{height:140px}
- .scn{max-height:150px}
- .shipbox{max-height:130px;gap:4px}
+ /* 手機：放棄單頁不捲動，改成可以正常上下滑動的版面，不然主要操作區會被壓到看不清楚 */
+ #play{height:auto;overflow:visible}
+ #play .wrap{height:auto;display:block;overflow:visible}
+ .topRow{grid-template-columns:1fr;grid-template-rows:none;flex:none;display:flex;flex-direction:column}
+ .stage3d,.scn,.shipbox{max-height:none;overflow:visible}
+ .stage3d{height:220px}
+ .shipbox{gap:8px}
+ .pager{flex:none}
+ .pages{flex:none}
+ .page{height:auto;overflow:visible}
  .years{grid-template-columns:repeat(5,1fr)}
  .ttl b{font-size:34px}.dots{display:none}
  .mhd h2{font-size:48px}
