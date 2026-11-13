@@ -23,6 +23,8 @@ Progress is saved in the browser (localStorage).
 
 ## Music credits
 
-- `bgm-practice.ogg` — "Exploration Theme" by Cleyton Kauffman ([soundcloud.com/cleytonkauffman](https://soundcloud.com/cleytonkauffman)), [CC0](https://opengameart.org/content/exploration-theme). Title screen music. Attribution not required.
-- `bgm-practice2.ogg` / `bgm-practice2.mp3` — "Cozy Puzzle In-Game 2" by MintoDog, [CC0](https://opengameart.org/content/cozy-puzzle-in-game-2). Practice-level music. Attribution not required.
-- `bgm-formal.ogg` / `bgm-formal.mp3` — "Tense Future Loop" by gmason, [CC0](https://opengameart.org/content/tense-future-loop). Formal-level music. Attribution not required.
+All three tracks are MP3 only (re-encoded at a lower bitrate to keep the page light; the original OGG exports are not used due to a duration-metadata bug in the encoding toolchain).
+
+- `bgm-practice.mp3` — a 35-second excerpt of "Exploration Theme" by Cleyton Kauffman ([soundcloud.com/cleytonkauffman](https://soundcloud.com/cleytonkauffman)), [CC0](https://opengameart.org/content/exploration-theme), cut at a natural quiet point for a clean loop. Title screen music. Attribution not required.
+- `bgm-practice2.mp3` — "Cozy Puzzle In-Game 2" by MintoDog, [CC0](https://opengameart.org/content/cozy-puzzle-in-game-2). Practice-level music. Attribution not required.
+- `bgm-formal.mp3` — "Tense Future Loop" by gmason, [CC0](https://opengameart.org/content/tense-future-loop). Formal-level music. Attribution not required.
