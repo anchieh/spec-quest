@@ -85,6 +85,9 @@ svg.ic{display:block}
 .scn h2{margin:2px 0 0;font:900 22px/1.2 var(--tc)}
 .story{font:13.5px/1.65 var(--tc);color:#c1d2c8;margin:10px 0}
 .clue{display:flex;gap:8px;align-items:flex-start;font:13px/1.5 var(--tc);color:#d8e5dd;margin:5px 0}.clue i{flex:none;width:8px;height:8px;margin-top:6px;transform:rotate(45deg);background:var(--gold)}
+.briefCtx .story{font-size:15px}
+.briefCtx.sec{opacity:.65}.briefCtx.sec .story{font-size:12.5px;margin:8px 0 4px}.briefCtx.sec .clue{font-size:11.5px;color:var(--mute)}.briefCtx.sec .clue i{width:6px;height:6px;margin-top:5px}
+.mechk{font:800 11.5px var(--game);letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin:16px 0 6px}
 .req{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-top:7px;border-radius:10px;background:#0a1912;border:1px solid #21402f;font:700 14px var(--tc)}
 .req em{margin-left:auto;font:800 14px var(--game);font-style:normal;color:var(--mute)}
 .req.ok{border-color:rgba(69,209,138,.5)}.req.ok em{color:var(--green)}.req.no{border-color:rgba(255,79,69,.6);background:rgba(255,79,69,.07)}.req.no em{color:#ff8a80}
@@ -169,8 +172,9 @@ svg.ic{display:block}
 .modal.on{display:grid}
 .card{width:min(820px,100%);max-height:calc(100vh - 40px);overflow:auto;padding:24px 26px;border-radius:20px}
 .card h2{margin:4px 0 10px;font:900 28px/1.2 var(--tc)}
-.newmech{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;margin:8px 0;border-radius:12px;background:linear-gradient(90deg,rgba(255,198,90,.14),rgba(255,198,90,.03));border:1px solid rgba(255,198,90,.5)}
-.newmech b{display:block;font:800 15px var(--tc);color:var(--gold)}.newmech span{font:13.5px/1.6 var(--tc);color:#e1ebe5}
+.newmech{display:flex;gap:14px;align-items:center;padding:14px 16px;margin:10px 0;border-radius:14px;background:linear-gradient(90deg,rgba(255,198,90,.16),rgba(255,198,90,.03));border:1.5px solid rgba(255,198,90,.6);box-shadow:0 0 22px rgba(255,198,90,.12)}
+.newmech .nmic{flex:none;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:rgba(255,198,90,.16);border:1px solid rgba(255,198,90,.55)}
+.newmech b{display:block;font:800 16px var(--tc);color:var(--gold)}.newmech span{font:13.5px/1.6 var(--tc);color:#e1ebe5}
 .row{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}
 /* 十年結算 */
 .years{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:18px 0 8px}
@@ -308,7 +312,7 @@ const TXT = {
   perPort:"／埠", preset:"本關預設",
   req:{len:"機構 ≤ {v} mm",com:"COM × {v}",lan:"LAN × {v}",can:"CAN × {v}",lte:"行動網路 × {v}",cards:"必插：{v}"},
   reason:{noBoard:"先選一塊板子",tooBig:"板子放不進機構",noSlot:"擴充槽不夠插必要的卡",noM2:"M.2 插槽不夠",customNoAddon:"客製底板不能再插卡",need_com:"COM 不夠",need_lan:"LAN 不夠",need_can:"缺 CAN",need_lte:"缺行動網路"},
-  ready:"可以出貨", briefGo:"開始配置", newMech:"新機制", brief:"任務簡報",
+  ready:"可以出貨", briefGo:"開始配置", newMech:"新機制", newMechKicker:"這關新增", brief:"任務簡報",
   mech:{board:["板型","板子越大，內建介面與擴充槽越多，但越貴、越佔空間。先找放得下又夠用的最小板。"],
    usb:["USB 轉接器","缺介面時插個轉接器很便宜，但現場會鬆脫、沒有隔離，十年內會出事，會算進損失。"],
    pcie:["PCIe 擴充槽","客戶的卡（例如 AI 加速卡）要佔槽。槽被佔走，就不能再加 COM 卡，只能換有內建介面的款。"],
@@ -356,7 +360,7 @@ const TXT = {
   perPort:"/port", preset:"Preset here",
   req:{len:"Enclosure ≤ {v} mm",com:"COM × {v}",lan:"LAN × {v}",can:"CAN × {v}",lte:"Cellular × {v}",cards:"Must fit: {v}"},
   reason:{noBoard:"Pick a board first",tooBig:"The board does not fit the enclosure",noSlot:"Not enough slots for the required cards",noM2:"Not enough M.2 sockets",customNoAddon:"A custom carrier takes no add-ons",need_com:"Not enough COM",need_lan:"Not enough LAN",need_can:"CAN missing",need_lte:"Cellular missing"},
-  ready:"Ready to ship", briefGo:"Start building", newMech:"New mechanic", brief:"Briefing",
+  ready:"Ready to ship", briefGo:"Start building", newMech:"New mechanic", newMechKicker:"New this level", brief:"Briefing",
   mech:{board:["Form factor","Bigger boards bring more I/O and slots, but cost more and take more space. Find the smallest board that fits and is enough."],
    usb:["USB adapters","An adapter is a cheap fix for a missing port, but in the field it loosens and has no isolation. It counts as a loss."],
    pcie:["PCIe slots","The customer's card, such as an AI accelerator, takes a slot. With the slot gone you cannot add a COM card, so pick a board with the ports on board."],
@@ -493,11 +497,13 @@ function isUnlocked(key) { return SQ.unlockedAt(CUR.id).has(key); }
 function unlockLevel(key) { const l = SQ.LEVELS.find((x) => x.unlock.includes(key)); return l ? l.id : 1; }
 
 function openBrief() {
-  const t = L(CUR.id);
-  const mech = CUR.unlock.map((u) => `<div class="newmech">${ic({board:"box",usb:"dongle",pcie:"card",store:"ssd",temp:"thermo_hot",power:"dc_power",m2:"m2mod",prot:"surge",cert:"cert",supply:"cal10",custom:"box"}[u], 34)}<div><b>${T("newMech")}：${TXT[LANG].mech[u][0]}</b><span>${TXT[LANG].mech[u][1]}</span></div></div>`).join("");
+  const t = L(CUR.id), hasMech = CUR.unlock.length > 0;
+  const mech = CUR.unlock.map((u) => `<div class="newmech"><div class="nmic">${ic({board:"box",usb:"dongle",pcie:"card",store:"ssd",temp:"thermo_hot",power:"dc_power",m2:"m2mod",prot:"surge",cert:"cert",supply:"cal10",custom:"box"}[u], 30)}</div><div><b>${T("newMech")}：${TXT[LANG].mech[u][0]}</b><span>${TXT[LANG].mech[u][1]}</span></div></div>`).join("");
+  const mechBlock = hasMech ? `<div class="mechk">${T("newMechKicker")}</div>${mech}` : "";
   $("#briefCard").innerHTML = `<div class="k">${T("lv", {n: CUR.id})} · ${T("dom." + CUR.dom)}${CUR.boss ? " · " + T("boss") : ""}</div>
    <div style="display:flex;gap:16px;align-items:center;margin-top:8px"><div class="hex" style="width:76px;height:84px"><div class="in" style="width:64px;height:72px">${ic(CUR.icon, 44)}</div></div><h2>${t.n}</h2></div>
-   <p class="story" style="font-size:15px">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}${mech}
+   <div class="briefCtx ${hasMech ? "sec" : ""}"><p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}</div>
+   ${mechBlock}
    <div class="row"><button class="btn" id="bGo">${T("briefGo")}</button></div>`;
   $("#mBrief").classList.add("on"); $("#bGo").onclick = () => { beep("click"); $("#mBrief").classList.remove("on"); };
 }
