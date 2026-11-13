@@ -303,6 +303,8 @@ svg.ic{display:block}
 <div class="modal" id="mBrief"><div class="pn card" id="briefCard"></div></div>
 <div class="modal" id="mSim"><div class="pn card" id="simCard" style="width:min(1000px,100%)"></div></div>
 <div class="toast" id="toast"></div>
+<audio id="bgmPractice" loop preload="none"><source src="bgm-practice.ogg" type="audio/ogg"></audio>
+<audio id="bgmFormal" loop preload="none"><source src="bgm-formal.ogg" type="audio/ogg"><source src="bgm-formal.mp3" type="audio/mpeg"></audio>
 
 <script>/*ENGINE*/</script>
 <script>/*BEST*/</script>
@@ -539,7 +541,15 @@ function startLevel(id) {
   FORMAL = SQ.TIERS.every((Tr) => isUnlocked(Tr.id));
   TIME_LEFT = TIME_BUDGET[id] || 0;
   show("play"); renderAll(); openBrief();
+  playBgm();
 }
+function playBgm() {
+  const el = FORMAL ? $("#bgmFormal") : $("#bgmPractice"), other = FORMAL ? $("#bgmPractice") : $("#bgmFormal");
+  other.pause();
+  if (MUTE) return;
+  el.volume = 0.35; el.play().catch(() => {});
+}
+function stopBgm() { $("#bgmPractice").pause(); $("#bgmFormal").pause(); }
 function isUnlocked(key) { return SQ.unlockedAt(CUR.id).has(key); }
 function unlockLevel(key) { const l = SQ.LEVELS.find((x) => x.unlock.includes(key)); return l ? l.id : 1; }
 
@@ -786,22 +796,22 @@ function showResult(r) {
   let v = 0; const tgt = r.score, num = $("#scNum"); const tick = () => { v = Math.min(tgt, v + Math.max(1, Math.round(tgt / 25))); num.textContent = v; if (v < tgt) setTimeout(tick, 24); else $$("#res .stars .star").forEach((s, i) => setTimeout(() => { s.classList.add("show"); if (s.classList.contains("on")) beep("star"); }, 180 * i)); };
   tick();
   $("#bRetry").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); if (FORMAL) { TIME_LEFT = TIME_BUDGET[CUR.id] || 0; startTimer(); } };
-  $("#bMap2").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); show("map"); renderMap(); };
+  $("#bMap2").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); stopBgm(); show("map"); renderMap(); };
   if (nextOpen) $("#bNext").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); startLevel(CUR.id + 1); };
   renderHud();
 }
 
 /* ---------- 綁定 ---------- */
 $("#bStart").onclick = () => { beep("ok"); show("map"); renderMap(); };
-$("#bMapBack").onclick = () => { beep("click"); show("title"); };
-$("#bToMap").onclick = () => { beep("click"); stopTimer(); show("map"); renderMap(); };
+$("#bMapBack").onclick = () => { beep("click"); stopBgm(); show("title"); };
+$("#bToMap").onclick = () => { beep("click"); stopTimer(); stopBgm(); show("map"); renderMap(); };
 $("#bBrief").onclick = () => { beep("click"); openBrief(); };
 $("#bShip").onclick = ship;
 $("#bPagePrev").onclick = () => { if (PAGE > 0) { PAGE--; beep("click"); renderPager(); } };
 $("#bPageNext").onclick = () => { if (PAGE < PAGE_COUNT - 1) { PAGE++; beep("click"); renderPager(); } };
 $$(".bLang").forEach((x) => x.onclick = () => { LANG = LANG === "zh" ? "en" : "zh"; store.set("lang", LANG); beep("click"); i18n(); if ($("#mBrief").classList.contains("on")) openBrief(); });
 $$(".bSnd").forEach((x) => x.onclick = () => { MUTE = !MUTE; store.set("mute", MUTE); i18n(); beep("click");
-});
+  if (MUTE) stopBgm(); else if ($("#play").classList.contains("on")) playBgm(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") { $("#mBrief").classList.remove("on"); } });
 let _rz; window.addEventListener("resize", () => { clearTimeout(_rz); _rz = setTimeout(() => { if ($("#play").classList.contains("on")) renderScene(); }, 120); });
 i18n();
