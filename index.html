@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Spec Quest · 選型大挑戰</title>
+<meta name="description" content="A browser game about choosing industrial PC specs: just enough wins.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+TC:wght@400;600;700;900&display=swap">
+<style>
+:root{--bg:#05100c;--ink:#f1f6f3;--mute:#93a9a0;--line:#2a4b3b;--gold:#ffc65a;--red:#ff4f45;--teal:#3fe0bb;--amber:#ffa53a;--green:#45d18a;--blue:#5aa2ea;
+ --game:"Chakra Petch","Noto Sans TC","Segoe UI",sans-serif;--tc:"Noto Sans TC","Microsoft JhengHei","PingFang TC","Segoe UI",sans-serif;--mono:"IBM Plex Mono",Consolas,monospace;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--bg)}
+body{font-family:var(--tc);color:var(--ink);overflow-x:hidden;
+ background:radial-gradient(1100px 620px at 50% 30%,#12382a 0%,transparent 70%),linear-gradient(180deg,#05100c,#081a12 60%,#061009);background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.4;background-image:linear-gradient(rgba(255,170,80,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,170,80,.07) 1px,transparent 1px);background-size:40px 40px}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.screen{display:none;position:relative;min-height:100vh}.screen.on{display:block}
+.wrap{max-width:1600px;margin:0 auto;padding:14px 20px 24px}
+.pn{border-radius:16px;background:linear-gradient(180deg,rgba(16,38,28,.92),rgba(7,20,14,.92));border:1px solid var(--line);box-shadow:0 20px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05)}
+.k{font:800 11.5px var(--game);letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 26px;border-radius:14px;font:900 18px var(--tc);letter-spacing:2px;color:#2a1600;
+ background:linear-gradient(180deg,#ffe29a,#ffc65a 50%,#d1840f);box-shadow:0 6px 0 #7a4a0a,0 12px 24px rgba(255,198,90,.3),inset 0 2px 0 rgba(255,255,255,.55);transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #7a4a0a}
+.btn.ghost{color:var(--ink);background:linear-gradient(180deg,#1d4a37,#0f2a1f);box-shadow:0 5px 0 #06140d,inset 0 1px 0 rgba(255,255,255,.1);border:1px solid #3a6a54}
+.btn[disabled]{filter:grayscale(.9) brightness(.6);cursor:not-allowed}
+.icon-btn{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:#0f2a1f;border:1px solid #2f5541;font:800 14px var(--game)}
+svg.ic{display:block}
+.coin{display:inline-block;width:20px;height:20px;border-radius:50%;flex:none;background:radial-gradient(circle at 35% 30%,#fff3c4,#ffc54a 45%,#b8700c);box-shadow:inset 0 -2px 0 rgba(0,0,0,.3)}
+.star{width:22px;height:22px;clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);background:#21402f;display:inline-block}
+.star.on{background:linear-gradient(180deg,#ffe08a,#ffad1f)}
+/* ---------- 標題 ---------- */
+#title .hero{min-height:100vh;display:grid;place-items:center;text-align:center;padding:30px 20px}
+.logo{font:900 clamp(44px,8vw,96px)/1 var(--game);letter-spacing:4px;background:linear-gradient(180deg,#fff6d2,#ffc65a 55%,#d1840f);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 0 #3a2208) drop-shadow(0 0 30px rgba(255,198,90,.35))}
+.logo2{font:900 clamp(22px,3.4vw,38px) var(--tc);letter-spacing:10px;margin-top:10px;text-shadow:0 3px 0 #000}
+.tag{max-width:640px;margin:22px auto 30px;font:15.5px/1.7 var(--tc);color:#c1d2c8}
+.chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:-10px 0 28px}
+.chip{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#0e2419;border:1px solid #2f5541;font:700 13px var(--tc)}
+.tbar{position:absolute;top:14px;right:16px;display:flex;gap:8px;z-index:5}
+.heroboard{position:relative;height:150px;margin:-10px auto 6px;width:300px;perspective:900px}
+.hb{position:absolute;left:50%;top:50%;width:230px;height:150px;margin:-75px 0 0 -115px;border-radius:10px;transform-style:preserve-3d;background:radial-gradient(circle at 30% 25%,#1f7a52,#0d4a31 60%,#083522);box-shadow:0 30px 50px rgba(0,0,0,.7),0 0 40px rgba(63,224,187,.3);animation:spin 14s linear infinite}
+@keyframes spin{from{transform:rotateX(58deg) rotateZ(0)}to{transform:rotateX(58deg) rotateZ(360deg)}}
+.hb .trace{position:absolute;inset:0;opacity:.35;border-radius:10px;background:repeating-linear-gradient(90deg,transparent 0 22px,rgba(150,230,190,.35) 22px 24px),repeating-linear-gradient(0deg,transparent 0 30px,rgba(150,230,190,.25) 30px 32px)}
+.howto{margin-top:16px;padding:18px 20px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.howto .st{display:flex;gap:12px;align-items:flex-start}.howto .n{flex:none;width:34px;height:38px;display:grid;place-items:center;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--gold);color:#2a1600;font:900 16px var(--game)}
+.howto b{display:block;font:800 15px var(--tc);margin-bottom:3px}.howto span{font:13px/1.55 var(--tc);color:#c1d2c8}
+@media (max-width:1180px){.howto{grid-template-columns:1fr 1fr}}@media (max-width:720px){.howto{grid-template-columns:1fr}}
+.foot{margin-top:34px;font:12px/1.6 var(--tc);color:#6d877a;max-width:720px}
+/* ---------- 地圖 ---------- */
+.mhd{display:flex;align-items:center;gap:14px;margin:6px 0 16px}
+.mhd h2{margin:0;font:900 28px var(--tc);letter-spacing:2px}.mhd .tot{margin-left:auto;display:flex;align-items:center;gap:8px;font:800 18px var(--game)}
+.zones{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.zone{padding:16px;border-radius:18px;position:relative;overflow:hidden}
+.zone h3{margin:0 0 4px;font:900 19px var(--tc);display:flex;align-items:center;gap:10px}.zone .zs{font:12px var(--tc);color:var(--mute);margin-bottom:12px}
+.zone::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:var(--zc);opacity:.12}
+.lvl{width:100%;display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:10px;border-radius:14px;text-align:left;background:#0b1d15;border:1.5px solid #24443a;transition:transform .12s,border-color .12s}
+.lvl:hover:not([disabled]){transform:translateY(-2px);border-color:var(--zc)}
+.lvl .no{width:44px;height:48px;flex:none;display:grid;place-items:center;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--zc);color:#03140e;font:900 18px var(--game)}
+.lvl b{display:block;font:800 15px/1.3 var(--tc)}.lvl small{display:flex;gap:3px;margin-top:4px}.lvl small .star{width:15px;height:15px}
+.lvl[disabled]{opacity:.45;cursor:not-allowed}.lvl.boss{border-color:#7a3a2c;background:linear-gradient(90deg,#2a1210,#0b1d15)}
+/* ---------- 遊戲 ---------- */
+.hud{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.hex{width:56px;height:62px;flex:none;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:linear-gradient(160deg,#fff0b0,#e08a18 60%,#8a4d06);display:grid;place-items:center}
+.hex .in{width:47px;height:53px;clip-path:inherit;background:radial-gradient(circle at 50% 35%,#1d3a2c,#07140d);display:grid;place-items:center}
+.ttl small{display:block;font:700 12px var(--game);letter-spacing:3px;color:var(--gold)}.ttl b{font:900 26px/1.1 var(--tc);letter-spacing:1px}
+.dots{display:flex;gap:5px}.dots i{width:24px;height:7px;border-radius:4px;background:#1d3a2c;transform:skewX(-20deg)}.dots i.d{background:var(--green)}.dots i.c{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.hud .sp{flex:1}
+.costpill{display:flex;align-items:center;gap:10px;height:46px;padding:0 16px 0 10px;border-radius:12px;background:linear-gradient(180deg,#183626,#0a1c13);border:1px solid #2f5541}
+.costpill b{font:700 24px var(--game);font-variant-numeric:tabular-nums}.costpill small{font:600 12px var(--tc);color:var(--mute)}
+.grid{display:grid;gap:14px;grid-template-columns:300px minmax(0,1fr) 380px;grid-template-areas:"scn scene tiers" "ff ff ship"}
+.scn{grid-area:scn;padding:16px}.scenebox{grid-area:scene;display:flex;flex-direction:column;min-height:440px}.tiers{grid-area:tiers;padding:14px}
+.ffbox{grid-area:ff;padding:14px}.shipbox{grid-area:ship;padding:14px;display:flex;flex-direction:column;gap:10px}
+.scn .top{display:flex;gap:12px;align-items:center}.scn .ic{width:60px;height:60px;flex:none;border-radius:14px;display:grid;place-items:center;background:radial-gradient(circle,#2b5a44,#0b2219);border:2px solid var(--gold)}
+.scn h2{margin:2px 0 0;font:900 22px/1.2 var(--tc)}
+.story{font:13.5px/1.65 var(--tc);color:#c1d2c8;margin:10px 0}
+.clue{display:flex;gap:8px;align-items:flex-start;font:13px/1.5 var(--tc);color:#d8e5dd;margin:5px 0}.clue i{flex:none;width:8px;height:8px;margin-top:6px;transform:rotate(45deg);background:var(--gold)}
+.req{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-top:7px;border-radius:10px;background:#0a1912;border:1px solid #21402f;font:700 14px var(--tc)}
+.req em{margin-left:auto;font:800 14px var(--game);font-style:normal;color:var(--mute)}
+.req.ok{border-color:rgba(69,209,138,.5)}.req.ok em{color:var(--green)}.req.no{border-color:rgba(255,79,69,.6);background:rgba(255,79,69,.07)}.req.no em{color:#ff8a80}
+.sect{font:800 12px var(--game);letter-spacing:2px;color:var(--mute);margin:14px 0 4px}
+/* 3D 場景 */
+.stage3d{position:relative;flex:1;min-height:330px;overflow:hidden;border-radius:16px}
+.scene{position:absolute;left:50%;top:50%;transform-style:preserve-3d}
+.enc{position:absolute;border:3px dashed rgba(255,198,90,.85);border-radius:10px;background:rgba(255,198,90,.03);box-shadow:0 0 30px rgba(255,198,90,.2)}
+.enc.bad{border-color:rgba(255,79,69,.9);box-shadow:0 0 40px rgba(255,79,69,.4)}
+.enc span{position:absolute;left:8px;bottom:-30px;font:800 14px var(--tc);color:var(--gold);white-space:nowrap}
+.pcb{position:absolute;border-radius:8px;transform-style:preserve-3d;background:radial-gradient(circle at 30% 25%,#1f7a52,#0d4a31 60%,#083522);box-shadow:0 0 0 2px #0a2e1e,0 40px 60px rgba(0,0,0,.8),0 0 40px rgba(63,224,187,.2);transition:all .35s}
+.pcb.come{background:radial-gradient(circle at 30% 25%,#2a5f8c,#173a5a 60%,#0e2840)}
+.pcb .trace{position:absolute;inset:0;opacity:.35;background:repeating-linear-gradient(90deg,transparent 0 24px,rgba(150,230,190,.35) 24px 26px),repeating-linear-gradient(0deg,transparent 0 38px,rgba(150,230,190,.25) 38px 40px);-webkit-mask-image:radial-gradient(circle at 60% 60%,#000 30%,transparent 80%)}
+.hole{position:absolute;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle,#05100c 40%,#e8c06a 45%,#a8771f 70%)}
+.silk{position:absolute;left:12px;bottom:8px;font:600 10px var(--mono);letter-spacing:2px;color:rgba(232,239,233,.75);white-space:nowrap}
+.cpu{position:absolute;border-radius:5px;background:#2a2f33;transform:translateZ(5px)}
+.fins{position:absolute;inset:-5px;border-radius:5px;transform:translateZ(18px);background:repeating-linear-gradient(90deg,#c9d3db 0 4px,#7d8a95 4px 8px);box-shadow:0 10px 18px rgba(0,0,0,.6)}
+.dimm{position:absolute;width:9px;border-radius:2px;background:linear-gradient(90deg,#1b1b1b,#333);transform:translateZ(6px)}
+.slot{position:absolute;height:10px;border-radius:2px;background:#151515;box-shadow:0 0 0 1px #000}
+.slot.x16{background:#1a1a2a}
+.m2s{position:absolute;width:56px;height:16px;border-radius:2px;background:rgba(0,0,0,.35);border:1px dashed rgba(255,255,255,.35)}
+.m2s.used{background:linear-gradient(90deg,#2f6fb5,#5aa2ea);border:0;box-shadow:0 0 14px rgba(90,162,234,.8);transform:translateZ(3px)}
+.m2s b{position:absolute;inset:0;display:grid;place-items:center;font:800 9px var(--mono);color:#fff}
+.stand{position:absolute;height:0;transform-style:preserve-3d}
+.stand .face{position:absolute;left:0;top:0;transform-origin:top;border-radius:5px 5px 0 0;display:flex;flex-direction:column;justify-content:center;padding:0 8px;font:900 12px var(--tc);color:#03140e;box-shadow:inset 0 0 0 2px rgba(255,255,255,.4)}
+.stand.mine .face{background:linear-gradient(180deg,#30f2c6,#13916f);box-shadow:0 0 30px rgba(63,224,187,.7),inset 0 0 0 2px rgba(255,255,255,.4)}
+.stand.cust .face{background:linear-gradient(180deg,#c9d3db,#7d8a95);color:#0b1d15}
+.stand.gpu .face{background:linear-gradient(180deg,#b78cff,#6a3fc4);color:#fff;box-shadow:0 0 26px rgba(183,140,255,.6),inset 0 0 0 2px rgba(255,255,255,.35)}
+.rear{position:absolute;left:0;top:-3px;height:0;transform-style:preserve-3d}
+.port{position:absolute;top:0;height:24px;transform-origin:top;transform:rotateX(-90deg);border-radius:3px;background:linear-gradient(180deg,#a9b4bd,#6f7b84);display:grid;place-items:center}
+.port i{display:block;border-radius:2px}
+.port.db{width:34px}.port.db i{width:22px;height:9px;background:#1f3d8a;clip-path:polygon(0 0,100% 0,88% 100%,12% 100%)}
+.port.lan{width:26px}.port.lan i{width:14px;height:11px;background:#111}
+.dng{position:absolute;top:-34px;width:18px;height:26px;border-radius:4px;background:linear-gradient(180deg,#ff7a6b,#b52a20);box-shadow:0 0 14px rgba(255,79,69,.8);transform:rotateX(-90deg) translateY(-20px);transform-origin:top}
+.sceneinfo{position:absolute;left:14px;top:12px;display:flex;flex-wrap:wrap;gap:6px;z-index:2}
+.sceneinfo span{font:700 12px var(--tc);padding:4px 10px;border-radius:8px;background:rgba(6,14,10,.85);border:1px solid #3a5e4b}
+.empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:700 16px var(--tc);color:var(--mute)}
+/* 擴充 */
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;padding:10px;margin-top:12px}
+.ad{display:flex;align-items:center;gap:6px;padding:5px 5px 5px 8px;border-radius:12px;background:#0a1912;border:1.5px solid #21402f;min-width:0}
+.ad.trap{border-color:rgba(255,79,69,.45)}.ad.lock{opacity:.4}
+.ad .nm{font:700 12.5px/1.25 var(--tc);flex:1;min-width:0}.ad .nm small{white-space:nowrap}.ad .nm small{display:block;font:600 11px var(--mono);color:var(--mute)}
+.ad .ct{display:flex;align-items:center;gap:4px}.ad .ct b{width:18px;text-align:center;font:800 16px var(--game)}
+.ad .ct button{width:26px;height:26px;border-radius:8px;background:#163a2b;border:1px solid #2f5541;font:900 18px var(--game);line-height:1}
+.ad .ct button:disabled{opacity:.3;cursor:not-allowed}
+/* 分級 */
+.tiers .hd,.ffbox .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}.tiers .hd b,.ffbox .hd b{font:800 17px var(--tc);letter-spacing:1px}.tiers .hd span,.ffbox .hd span{font:12px var(--tc);color:var(--mute)}
+.tr{margin-bottom:6px;padding:5px 10px 6px;border-radius:12px;background:#0a1912;border:1px solid #21402f}
+.tn{display:flex;align-items:center;gap:8px;margin-bottom:2px;height:24px}.tn span{font:800 14px var(--tc)}.tn small{margin-left:auto;font:700 11px var(--tc);color:var(--mute)}
+.tg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.tg.two{grid-template-columns:repeat(2,1fr)}
+.tc{padding:2px 6px 3px;border-radius:8px;background:#071510;border:1.5px solid #1f3a2c;text-align:center;transition:all .12s}
+.tc b{display:block;font:700 12px/1.3 var(--tc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tc small{display:block;font:600 10.5px/1.2 var(--mono);color:var(--mute)}
+.tc:hover:not(:disabled){border-color:#3f7a62}
+.tc.on{background:linear-gradient(180deg,#1f6e53,#0f3a2b);border-color:var(--teal);box-shadow:0 0 14px rgba(63,224,187,.4)}
+.tr.locked{opacity:.75}.tr.locked .tc{cursor:not-allowed}.tr.locked .tc:not(.on){opacity:.35}
+.lockb{display:inline-flex;align-items:center;gap:4px;font:700 11px var(--tc);color:var(--gold)}
+/* 板型 */
+.ffr{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.ff{position:relative;border-radius:12px;padding:9px 10px;background:linear-gradient(180deg,#0f2419,#08160f);border:1.5px solid #24443a;text-align:left;transition:all .12s}
+.ff:hover:not(.lock){border-color:#3f7a62;transform:translateY(-2px)}
+.ff.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal),0 0 24px rgba(63,224,187,.4);background:linear-gradient(180deg,#14402f,#0a1d14)}
+.ff.lock{opacity:.4;cursor:not-allowed}
+.ff .h{display:flex;align-items:center;gap:6px}.ff .h b{font:800 14px var(--game)}
+.ff .model{font:700 10.5px var(--mono);color:var(--mute);letter-spacing:.3px;margin-top:2px}
+.bd{margin-left:auto;font:800 10.5px var(--tc);padding:1px 7px;border-radius:5px;white-space:nowrap}
+.bd.big{background:var(--red);color:#fff}.bd.fit{border:1px solid var(--green);color:var(--green)}.bd.lk{border:1px solid var(--gold);color:var(--gold)}
+.box{position:relative;height:50px;margin:7px 0 6px;display:grid;place-items:center;border-radius:8px;background:#06120c;overflow:hidden}
+.lim{position:absolute;border:2px dashed rgba(255,198,90,.75);border-radius:4px}
+.sil{position:relative;border-radius:3px;background:linear-gradient(135deg,#2a9a6c,#0e4a31);box-shadow:0 0 0 1px #4fd1a0}
+.ff.over .sil{background:linear-gradient(135deg,rgba(255,79,69,.6),rgba(120,20,15,.7));box-shadow:0 0 0 1px var(--red)}
+.spec{display:flex;flex-wrap:wrap;gap:4px;font:700 11px var(--game);color:#c8d6cd}.spec span{padding:1px 5px;border-radius:5px;background:#0a1c15}
+.spec .pr{margin-left:auto;display:flex;align-items:center;gap:3px;background:none}.spec .coin{width:12px;height:12px}
+.var{display:flex;gap:4px;margin-top:6px}.var button{flex:1;padding:3px 0;border-radius:6px;font:700 11px var(--tc);background:#0a1c15;border:1px solid #21402f;color:var(--mute)}
+.var button.on{background:#1f6e53;border-color:var(--teal);color:var(--ink)}
+/* 出貨 */
+.cost{display:flex;align-items:baseline;gap:10px}.cost b{font:800 34px var(--game);font-variant-numeric:tabular-nums}.cost small{font:13px var(--tc);color:var(--mute)}
+.why{font:13px/1.5 var(--tc);color:#ff9a90;min-height:20px}.why.ok{color:var(--green)}
+.shipbtn{height:74px;font-size:26px;letter-spacing:8px;width:100%}
+.hint{font:12px/1.5 var(--tc);color:var(--mute)}
+/* 彈窗 */
+.modal{position:fixed;inset:0;z-index:40;display:none;place-items:center;padding:20px;background:rgba(2,8,6,.75);backdrop-filter:blur(3px)}
+.modal.on{display:grid}
+.card{width:min(820px,100%);max-height:calc(100vh - 40px);overflow:auto;padding:24px 26px;border-radius:20px}
+.card h2{margin:4px 0 10px;font:900 28px/1.2 var(--tc)}
+.newmech{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;margin:8px 0;border-radius:12px;background:linear-gradient(90deg,rgba(255,198,90,.14),rgba(255,198,90,.03));border:1px solid rgba(255,198,90,.5)}
+.newmech b{display:block;font:800 15px var(--tc);color:var(--gold)}.newmech span{font:13.5px/1.6 var(--tc);color:#e1ebe5}
+.row{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}
+/* 十年結算 */
+.years{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:18px 0 8px}
+.yr{position:relative;height:96px;border-radius:12px;background:#0a1912;border:1.5px solid #21402f;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:8px;font:800 12px var(--game);color:var(--mute);transition:all .25s}
+.yr.lit{border-color:var(--green);color:var(--green);background:#0f2a1f}
+.yr.hit{border-color:var(--red);color:#fff;background:linear-gradient(180deg,#5a1612,#2a0b09);box-shadow:0 0 20px rgba(255,79,69,.5);animation:shake .35s}
+.yr .ev{position:absolute;top:8px}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.evlog{min-height:52px;font:14px/1.6 var(--tc)}
+.evlog div{animation:pop .3s}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.result{display:none}.result.on{display:block;animation:pop .35s}
+.bigscore{display:flex;align-items:center;gap:20px;margin:6px 0 14px}
+.bigscore b{font:900 84px/1 var(--game);background:linear-gradient(180deg,#fff6d2,#ffc65a 55%,#d1840f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bigscore .stars .star{width:44px;height:44px;margin-right:4px;transform:scale(.3);opacity:0;transition:all .35s cubic-bezier(.2,1.6,.4,1)}
+.bigscore .stars .star.show{transform:scale(1);opacity:1}
+.cmp{width:100%;border-collapse:collapse;font:13.5px/1.45 var(--tc)}
+.cmp th{font:700 12px var(--tc);color:var(--mute);text-align:left;padding:6px 8px;border-bottom:1px solid #21402f}
+.cmp td{padding:7px 8px;border-bottom:1px solid #16301f;vertical-align:top}
+.cmp .o{color:var(--amber)}.cmp .u{color:#ff8a80}.cmp .r{color:var(--green)}
+.cmp td.w{color:#b9cbc0;font-size:12.5px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;z-index:60;padding:10px 18px;border-radius:12px;background:#1d0f0d;border:1px solid var(--red);font:700 14px var(--tc);transition:all .25s;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.floatcoin{position:fixed;z-index:70;font:900 20px var(--game);color:var(--gold);pointer-events:none;animation:fly .7s forwards;text-shadow:0 2px 0 #000}
+@keyframes fly{to{transform:translateY(-50px);opacity:0}}
+.mark{text-align:center;font:11px/1.6 var(--tc);color:#557264;margin-top:16px}
+/* ---------- 窄螢幕 ---------- */
+@media (max-width:1180px){
+ .grid{grid-template-columns:1fr 1fr;grid-template-areas:"scn tiers" "scene scene" "ff ff" "ship ship"}
+ .ffr{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .zones{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:720px){
+ .shelf{grid-template-columns:1fr}
+ .wrap{padding:10px 12px 20px}
+ .grid{grid-template-columns:1fr;grid-template-areas:"scn" "scene" "ff" "tiers" "ship"}
+ .ffr{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .zones{grid-template-columns:1fr}
+ .scenebox{min-height:380px}
+ .years{grid-template-columns:repeat(5,1fr)}
+ .ttl b{font-size:20px}.dots{display:none}
+ .card{padding:18px}
+ .bigscore b{font-size:64px}
+ .cmp,.cmp tbody,.cmp tr,.cmp td{display:block}
+ .cmp tr:first-child{display:none}
+ .cmp tr{padding:8px 0;border-bottom:1px solid #16301f}
+ .cmp td{border-bottom:none;padding:2px 0}
+ .cmp td:first-child{font:800 13px var(--tc)}
+ .cmp td[data-l]::before{content:attr(data-l) "：";color:var(--mute);font-size:11px;margin-right:4px}
+ .cmp .w{display:block;font-size:12px;margin-top:2px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-cpu_fan" viewBox="0 0 48 48"><rect x="7" y="7" width="34" height="34" rx="4" fill="#566477"/><rect x="7" y="7" width="34" height="6" rx="3" fill="#7d8da1"/>
+<circle cx="24" cy="26" r="12" fill="#3b4757"/><circle cx="24" cy="26" r="10.5" fill="#2a333f"/>
+<g fill="#c3ccd6"><path d="M24 26 C22 19 26 16 29 17 C29 21 27 24 24 26Z"/><path d="M24 26 C31 24 34 28 33 31 C29 31 26 29 24 26Z"/>
+<path d="M24 26 C26 33 22 36 19 35 C19 31 21 28 24 26Z"/><path d="M24 26 C17 28 14 24 15 21 C19 21 22 23 24 26Z"/></g>
+<circle cx="24" cy="26" r="2.6" fill="#ffc766"/></symbol><symbol id="i-heatsink" viewBox="0 0 48 48"><rect x="6" y="34" width="36" height="8" rx="2" fill="#566477"/><rect x="6" y="34" width="36" height="2.5" rx="1.2" fill="#7d8da1"/>
+<rect x="8" y="10" width="3" height="24" rx="1.2" fill="#c3ccd6"/><rect x="13" y="12" width="3" height="22" rx="1.2" fill="#7d8da1"/><rect x="18" y="10" width="3" height="24" rx="1.2" fill="#c3ccd6"/><rect x="23" y="12" width="3" height="22" rx="1.2" fill="#7d8da1"/><rect x="28" y="10" width="3" height="24" rx="1.2" fill="#c3ccd6"/><rect x="33" y="12" width="3" height="22" rx="1.2" fill="#7d8da1"/><rect x="38" y="10" width="3" height="24" rx="1.2" fill="#c3ccd6"/>
+<path d="M11 8 q2 -3 0 -5 M24 8 q2 -3 0 -5 M37 8 q2 -3 0 -5" stroke="#5aa2ea" stroke-width="2" fill="none" stroke-linecap="round"/></symbol><symbol id="i-dc_power" viewBox="0 0 48 48"><rect x="5" y="16" width="38" height="22" rx="4" fill="#1f7a4d"/><rect x="5" y="16" width="38" height="6" rx="3" fill="#3fb779"/>
+<circle cx="14" cy="29" r="4.2" fill="#c3ccd6"/><rect x="11" y="28" width="6" height="2" rx="1" fill="#3b4757"/><circle cx="24" cy="29" r="4.2" fill="#c3ccd6"/><rect x="21" y="28" width="6" height="2" rx="1" fill="#3b4757"/><circle cx="34" cy="29" r="4.2" fill="#c3ccd6"/><rect x="31" y="28" width="6" height="2" rx="1" fill="#3b4757"/>
+<path d="M27 3 L19 14 H25 L22 22 L31 10 H25 Z" fill="#ffc766" stroke="#1a1206" stroke-width="1" stroke-linejoin="round"/></symbol><symbol id="i-surge" viewBox="0 0 48 48"><path d="M24 4 L40 10 V23 C40 33 33 40 24 44 C15 40 8 33 8 23 V10 Z" fill="#2f6fb5"/>
+<path d="M24 4 L40 10 V23 C40 33 33 40 24 44 Z" fill="#5aa2ea" opacity=".55"/>
+<path d="M27 12 L18 26 H24 L21 36 L31 21 H25 Z" fill="#ffc766"/></symbol><symbol id="i-rs485" viewBox="0 0 48 48"><rect x="3" y="12" width="42" height="24" rx="4" fill="#566477"/><rect x="3" y="12" width="42" height="5" rx="2.5" fill="#7d8da1"/>
+<path d="M10 18 H38 L35 31 H13 Z" fill="#232b35"/>
+<circle cx="14.5" cy="22" r="1.6" fill="#f0c66a"/><circle cx="19.25" cy="22" r="1.6" fill="#f0c66a"/><circle cx="24.0" cy="22" r="1.6" fill="#f0c66a"/><circle cx="28.75" cy="22" r="1.6" fill="#f0c66a"/><circle cx="33.5" cy="22" r="1.6" fill="#f0c66a"/><circle cx="16.9" cy="27" r="1.6" fill="#f0c66a"/><circle cx="21.65" cy="27" r="1.6" fill="#f0c66a"/><circle cx="26.4" cy="27" r="1.6" fill="#f0c66a"/><circle cx="31.15" cy="27" r="1.6" fill="#f0c66a"/>
+<circle cx="7" cy="24" r="2" fill="#c3ccd6"/><circle cx="41" cy="24" r="2" fill="#c3ccd6"/></symbol><symbol id="i-can" viewBox="0 0 48 48"><path d="M6 30 C12 22 16 22 22 30 S32 38 42 30" stroke="#ffc766" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+<path d="M6 30 C12 38 16 38 22 30 S32 22 42 30" stroke="#c3ccd6" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+<rect x="4" y="8" width="12" height="10" rx="2.5" fill="#2f6fb5"/><rect x="18" y="8" width="12" height="10" rx="2.5" fill="#5aa2ea"/><rect x="32" y="8" width="12" height="10" rx="2.5" fill="#2f6fb5"/>
+<path d="M10 18 V26 M24 18 V30 M38 18 V26" stroke="#7d8da1" stroke-width="2"/></symbol><symbol id="i-usb" viewBox="0 0 48 48"><rect x="8" y="12" width="32" height="24" rx="3" fill="#7d8da1"/><rect x="8" y="12" width="32" height="5" rx="2.5" fill="#c3ccd6"/>
+<rect x="12" y="19" width="24" height="12" rx="1.5" fill="#232b35"/><rect x="14" y="21" width="20" height="5" rx="1" fill="#5aa2ea"/>
+<rect x="17" y="22" width="4" height="2.5" fill="#232b35"/><rect x="27" y="22" width="4" height="2.5" fill="#232b35"/></symbol><symbol id="i-ssd" viewBox="0 0 48 48"><path d="M4 18 H40 a3 3 0 0 1 3 3 V27 a3 3 0 0 1 -3 3 H4 V26 H6 V22 H4 Z" fill="#1f7a4d"/>
+<rect x="11" y="19.5" width="11" height="9" rx="1.2" fill="#232b35"/><rect x="24" y="19.5" width="11" height="9" rx="1.2" fill="#232b35"/>
+<rect x="12" y="20.5" width="9" height="2" rx="1" fill="#566477"/><rect x="25" y="20.5" width="9" height="2" rx="1" fill="#566477"/>
+<rect x="4" y="19" width="2.5" height="1.2" fill="#f0c66a"/><rect x="4" y="21" width="2.5" height="1.2" fill="#f0c66a"/><rect x="4" y="26.5" width="2.5" height="1.2" fill="#f0c66a"/><rect x="4" y="28.5" width="2.5" height="1.2" fill="#f0c66a"/>
+<circle cx="40" cy="24" r="1.8" fill="#c3ccd6"/></symbol><symbol id="i-memory" viewBox="0 0 48 48"><rect x="3" y="14" width="42" height="18" rx="2" fill="#1f7a4d"/><rect x="3" y="14" width="42" height="4" rx="2" fill="#3fb779"/>
+<rect x="6" y="19" width="8" height="8" rx="1" fill="#232b35"/><rect x="16" y="19" width="8" height="8" rx="1" fill="#232b35"/><rect x="26" y="19" width="8" height="8" rx="1" fill="#232b35"/><rect x="36" y="19" width="8" height="8" rx="1" fill="#232b35"/>
+<rect x="3" y="32" width="42" height="4" fill="#1f7a4d"/><rect x="5.0" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="7.6" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="10.2" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="12.8" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="15.4" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="18.0" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="20.6" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="23.2" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="25.8" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="28.4" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="31.0" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="33.6" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="36.2" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="38.8" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/><rect x="41.4" y="32.5" width="1.5" height="3.5" fill="#f0c66a"/></symbol><symbol id="i-cal3" viewBox="0 0 48 48"><rect x="7" y="9" width="34" height="32" rx="4" fill="#c3ccd6"/><rect x="7" y="9" width="34" height="9" rx="4" fill="#d8433a"/><rect x="7" y="14" width="34" height="4" fill="#d8433a"/>
+<rect x="14" y="5" width="3" height="8" rx="1.5" fill="#3b4757"/><rect x="31" y="5" width="3" height="8" rx="1.5" fill="#3b4757"/>
+<text x="24" y="36" text-anchor="middle" font-size="16" font-weight="700" fill="#3b4757" font-family="IBM Plex Mono,Consolas,monospace">3</text></symbol><symbol id="i-cal10" viewBox="0 0 48 48"><rect x="7" y="9" width="34" height="32" rx="4" fill="#c3ccd6"/><rect x="7" y="9" width="34" height="9" rx="4" fill="#3fb779"/><rect x="7" y="14" width="34" height="4" fill="#3fb779"/>
+<rect x="14" y="5" width="3" height="8" rx="1.5" fill="#3b4757"/><rect x="31" y="5" width="3" height="8" rx="1.5" fill="#3b4757"/>
+<text x="24" y="36" text-anchor="middle" font-size="15" font-weight="700" fill="#3b4757" font-family="IBM Plex Mono,Consolas,monospace">10</text></symbol><symbol id="i-thermo_hot" viewBox="0 0 48 48"><rect x="19" y="4" width="10" height="30" rx="5" fill="#c3ccd6"/><rect x="22" y="12" width="4" height="22" rx="2" fill="#ff7a6b"/>
+<circle cx="24" cy="37" r="7" fill="#d8433a"/><circle cx="22" cy="35" r="2" fill="#ff7a6b"/>
+<rect x="31" y="8" width="5" height="2" rx="1" fill="#7d8da1"/><rect x="31" y="14" width="5" height="2" rx="1" fill="#7d8da1"/><rect x="31" y="20" width="5" height="2" rx="1" fill="#7d8da1"/><rect x="31" y="26" width="5" height="2" rx="1" fill="#7d8da1"/></symbol><symbol id="i-snow" viewBox="0 0 48 48"><g stroke="#5aa2ea" stroke-width="3" stroke-linecap="round"><line x1="24" y1="24" x2="41.0" y2="24.0"/><line x1="24" y1="24" x2="32.5" y2="38.7"/><line x1="24" y1="24" x2="15.5" y2="38.7"/><line x1="24" y1="24" x2="7.0" y2="24.0"/><line x1="24" y1="24" x2="15.5" y2="9.3"/><line x1="24" y1="24" x2="32.5" y2="9.3"/></g>
+<g stroke="#eef2f6" stroke-width="2.2" stroke-linecap="round" fill="none"><path d="M32.4 20.9 L35.0 24.0 L32.4 27.1"/><path d="M30.9 29.8 L29.5 33.5 L25.6 32.8"/><path d="M22.4 32.8 L18.5 33.5 L17.1 29.8"/><path d="M15.6 27.1 L13.0 24.0 L15.6 20.9"/><path d="M17.1 18.2 L18.5 14.5 L22.4 15.2"/><path d="M25.6 15.2 L29.5 14.5 L30.9 18.2"/></g>
+<circle cx="24" cy="24" r="4" fill="#eef2f6"/></symbol><symbol id="i-bolt" viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" fill="#e39a2a" opacity=".22"/><path d="M28 5 L13 27 H23 L19 43 L36 19 H26 Z" fill="#ffc766"/><path d="M28 5 L13 27 H23 Z" fill="#fff" opacity=".25"/></symbol><symbol id="i-phone" viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" fill="#d8433a" opacity=".22"/>
+<path d="M15 11 L20 10 L23 17 L19.5 19.5 C21 23.5 24.5 27 28.5 28.5 L31 25 L38 28 L37 33 C36 36 33 37.5 30 36.8 C21 34.8 13.2 27 11.2 18 C10.5 15 12 12 15 11Z" fill="#ff7a6b"/>
+<path d="M30 9 a9 9 0 0 1 9 9 M30 14 a4 4 0 0 1 4 4" stroke="#eef2f6" stroke-width="2.2" fill="none" stroke-linecap="round"/></symbol><symbol id="i-badge" viewBox="0 0 48 48"><path d="M14 30 L10 44 L17 41 L21 46 L24 34Z" fill="#2f6fb5"/><path d="M34 30 L38 44 L31 41 L27 46 L24 34Z" fill="#2f6fb5"/>
+<circle cx="24" cy="21" r="16" fill="#c08a2c"/><circle cx="24" cy="21" r="12.5" fill="#f0c66a"/>
+<path d="M17.5 21.5 L22 26 L31 16.5" stroke="#5a3d0c" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol><symbol id="i-cell" viewBox="0 0 48 48"><rect x="8" y="34" width="6" height="8" rx="1.5" fill="#5aa2ea"/><rect x="17" y="27" width="6" height="15" rx="1.5" fill="#5aa2ea"/><rect x="26" y="20" width="6" height="22" rx="1.5" fill="#5aa2ea"/><rect x="35" y="13" width="6" height="29" rx="1.5" fill="#7d8da1"/>
+<path d="M38 8 a8 8 0 0 1 0 12 M42 5 a13 13 0 0 1 0 18" stroke="#5aa2ea" stroke-width="2.2" fill="none" stroke-linecap="round"/></symbol><symbol id="i-charger" viewBox="0 0 48 48"><rect x="10" y="5" width="22" height="38" rx="4" fill="#7d8da1"/><rect x="10" y="5" width="22" height="6" rx="3" fill="#c3ccd6"/>
+<rect x="14" y="13" width="14" height="10" rx="1.5" fill="#232b35"/><path d="M22 14.5 L18 19 H21 L20 22 L24 17.5 H21 Z" fill="#3fb779"/>
+<rect x="6" y="41" width="30" height="4" rx="2" fill="#566477"/>
+<path d="M32 18 H36 a3 3 0 0 1 3 3 V32 a3 3 0 0 0 3 3" stroke="#c3ccd6" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+<rect x="39" y="33" width="6" height="8" rx="1.5" fill="#ffc766"/></symbol><symbol id="i-train" viewBox="0 0 48 48"><rect x="9" y="5" width="30" height="32" rx="7" fill="#2f6fb5"/><rect x="9" y="5" width="30" height="8" rx="4" fill="#5aa2ea"/>
+<rect x="13" y="15" width="22" height="10" rx="2" fill="#cfe4fa"/><circle cx="16" cy="31" r="2.5" fill="#ffc766"/><circle cx="32" cy="31" r="2.5" fill="#ffc766"/>
+<path d="M14 37 L9 45 M34 37 L39 45" stroke="#7d8da1" stroke-width="2.6" stroke-linecap="round"/><rect x="12" y="42" width="24" height="2.4" rx="1.2" fill="#7d8da1"/></symbol><symbol id="i-medcart" viewBox="0 0 48 48"><rect x="8" y="10" width="32" height="24" rx="3" fill="#c3ccd6"/><rect x="8" y="10" width="32" height="5" rx="2.5" fill="#eef2f6"/>
+<rect x="20" y="17" width="8" height="14" rx="1.5" fill="#d8433a"/><rect x="17" y="20" width="14" height="8" rx="1.5" fill="#d8433a"/>
+<rect x="11" y="34" width="26" height="3" rx="1.5" fill="#566477"/><circle cx="14" cy="41" r="3.5" fill="#3b4757"/><circle cx="34" cy="41" r="3.5" fill="#3b4757"/></symbol><symbol id="i-kiosk" viewBox="0 0 48 48"><rect x="13" y="4" width="22" height="30" rx="3" fill="#566477"/><rect x="15" y="7" width="18" height="15" rx="1.5" fill="#2f6fb5"/>
+<rect x="15" y="7" width="18" height="5" fill="#5aa2ea"/><rect x="18" y="25" width="12" height="3" rx="1" fill="#c3ccd6"/>
+<rect x="19" y="34" width="10" height="7" fill="#3b4757"/><rect x="11" y="41" width="26" height="4" rx="2" fill="#7d8da1"/>
+<path d="M22 14 h4 M21 17 h6" stroke="#eef2f6" stroke-width="1.6" stroke-linecap="round"/></symbol><symbol id="i-vending" viewBox="0 0 48 48"><rect x="9" y="3" width="30" height="42" rx="3" fill="#d8433a"/><rect x="9" y="3" width="30" height="6" rx="3" fill="#ff7a6b"/>
+<rect x="12" y="10" width="17" height="24" rx="1.5" fill="#1b2430"/>
+<rect x="14" y="12" width="3.5" height="5" rx="1" fill="#ffc766"/><rect x="19" y="12" width="3.5" height="5" rx="1" fill="#3fb779"/><rect x="24" y="12" width="3.5" height="5" rx="1" fill="#5aa2ea"/><rect x="14" y="19" width="3.5" height="5" rx="1" fill="#3fb779"/><rect x="19" y="19" width="3.5" height="5" rx="1" fill="#5aa2ea"/><rect x="24" y="19" width="3.5" height="5" rx="1" fill="#ffc766"/><rect x="14" y="26" width="3.5" height="5" rx="1" fill="#5aa2ea"/><rect x="19" y="26" width="3.5" height="5" rx="1" fill="#ffc766"/><rect x="24" y="26" width="3.5" height="5" rx="1" fill="#3fb779"/>
+<rect x="31" y="11" width="6" height="8" rx="1" fill="#c3ccd6"/><circle cx="34" cy="23" r="1.8" fill="#ffc766"/><rect x="12" y="37" width="17" height="4" rx="1" fill="#1b2430"/></symbol><symbol id="i-gauge" viewBox="0 0 48 48"><circle cx="24" cy="26" r="18" fill="#566477"/><circle cx="24" cy="26" r="14" fill="#1b2430"/>
+<path d="M13 31 A12 12 0 0 1 35 31" stroke="#3fb779" stroke-width="3" fill="none"/><path d="M31 21 A12 12 0 0 1 35 31" stroke="#ff7a6b" stroke-width="3" fill="none"/>
+<path d="M24 28 L32 18" stroke="#ffc766" stroke-width="2.6" stroke-linecap="round"/><circle cx="24" cy="28" r="2.6" fill="#c3ccd6"/>
+<path d="M6 10 l4 -4 l4 6 l4 -8 l4 6" stroke="#5aa2ea" stroke-width="2" fill="none" stroke-linejoin="round"/></symbol><symbol id="i-agv" viewBox="0 0 48 48"><rect x="5" y="18" width="38" height="16" rx="3" fill="#e39a2a"/><rect x="5" y="18" width="38" height="5" rx="2.5" fill="#ffc766"/>
+<rect x="10" y="10" width="28" height="8" rx="1.5" fill="#7d8da1"/><rect x="14" y="6" width="20" height="4" rx="1" fill="#c3ccd6"/>
+<circle cx="13" cy="37" r="5" fill="#3b4757"/><circle cx="35" cy="37" r="5" fill="#3b4757"/><circle cx="13" cy="37" r="2" fill="#c3ccd6"/><circle cx="35" cy="37" r="2" fill="#c3ccd6"/>
+<rect x="20" y="25" width="8" height="5" rx="1" fill="#1b2430"/><circle cx="24" cy="27.5" r="1.5" fill="#5aa2ea"/></symbol><symbol id="i-bed" viewBox="0 0 48 48"><rect x="4" y="26" width="40" height="7" rx="2" fill="#7d8da1"/><rect x="4" y="20" width="12" height="7" rx="3" fill="#eef2f6"/>
+<rect x="14" y="22" width="30" height="5" rx="2" fill="#5aa2ea"/><rect x="4" y="12" width="3" height="28" rx="1.5" fill="#566477"/><rect x="41" y="22" width="3" height="18" rx="1.5" fill="#566477"/>
+<rect x="26" y="4" width="16" height="12" rx="2" fill="#3b4757"/><path d="M28 11 h3 l2 -4 l2 7 l2 -3 h3" stroke="#3fb779" stroke-width="1.6" fill="none" stroke-linejoin="round"/></symbol><symbol id="i-scan" viewBox="0 0 48 48"><path d="M6 30 a18 18 0 0 1 36 0 v10 h-36z" fill="#566477"/><path d="M6 30 a18 18 0 0 1 36 0" fill="#7d8da1"/>
+<circle cx="24" cy="30" r="9" fill="#1b2430"/><circle cx="24" cy="30" r="5.5" fill="#2f6fb5"/><circle cx="22" cy="28" r="1.8" fill="#5aa2ea"/>
+<rect x="2" y="40" width="44" height="5" rx="2" fill="#3b4757"/><rect x="30" y="38" width="16" height="3" rx="1" fill="#eef2f6"/></symbol><symbol id="i-grid" viewBox="0 0 48 48"><path d="M24 3 L33 44 H29 L24 18 L19 44 H15 Z" fill="#566477"/><path d="M24 3 L33 44 H29 L24 18 Z" fill="#7d8da1"/>
+<rect x="10" y="10" width="28" height="3" rx="1" fill="#c3ccd6"/><rect x="13" y="19" width="22" height="3" rx="1" fill="#c3ccd6"/>
+<circle cx="11" cy="14" r="2" fill="#ffc766"/><circle cx="37" cy="14" r="2" fill="#ffc766"/><path d="M5 30 L11 14 M43 30 L37 14" stroke="#e39a2a" stroke-width="1.4"/></symbol><symbol id="i-ship" viewBox="0 0 48 48"><path d="M4 30 H44 L38 40 H10 Z" fill="#2f6fb5"/><path d="M4 30 H44 L42 33 H6 Z" fill="#5aa2ea"/>
+<rect x="14" y="18" width="18" height="12" rx="1.5" fill="#eef2f6"/><rect x="16" y="20" width="14" height="4" fill="#1b2430"/>
+<rect x="22" y="8" width="3" height="10" fill="#566477"/><path d="M25 9 L33 12 L25 15 Z" fill="#ff7a6b"/>
+<path d="M2 44 q4 -3 8 0 t8 0 t8 0 t8 0 t8 0" stroke="#5aa2ea" stroke-width="2" fill="none"/></symbol><symbol id="i-lan" viewBox="0 0 48 48"><rect x="8" y="10" width="32" height="28" rx="3" fill="#566477"/><rect x="8" y="10" width="32" height="6" rx="3" fill="#7d8da1"/>
+<path d="M14 20 h20 v12 h-5 v3 h-10 v-3 h-5z" fill="#1b2430"/><g fill="#f0c66a"><rect x="16.0" y="21" width="1.2" height="4"/><rect x="18.2" y="21" width="1.2" height="4"/><rect x="20.4" y="21" width="1.2" height="4"/><rect x="22.6" y="21" width="1.2" height="4"/><rect x="24.8" y="21" width="1.2" height="4"/><rect x="27.0" y="21" width="1.2" height="4"/><rect x="29.2" y="21" width="1.2" height="4"/><rect x="31.4" y="21" width="1.2" height="4"/></g>
+<circle cx="13" cy="13" r="1.5" fill="#3fb779"/><circle cx="35" cy="13" r="1.5" fill="#ffc766"/></symbol><symbol id="i-gpu" viewBox="0 0 48 48"><rect x="3" y="12" width="42" height="22" rx="3" fill="#3b4757"/><rect x="3" y="12" width="42" height="5" rx="2.5" fill="#566477"/>
+<circle cx="15" cy="23" r="7" fill="#1b2430"/><circle cx="33" cy="23" r="7" fill="#1b2430"/><circle cx="15" cy="23" r="2" fill="#c3ccd6"/><circle cx="33" cy="23" r="2" fill="#c3ccd6"/>
+<path d="M15 16 v14 M8 23 h14 M33 16 v14 M26 23 h14" stroke="#7d8da1" stroke-width="1.4"/><rect x="8" y="34" width="26" height="4" fill="#c08a2c"/>
+<rect x="9.0" y="34" width="1.4" height="4" fill="#f0c66a"/><rect x="11.5" y="34" width="1.4" height="4" fill="#f0c66a"/><rect x="14.0" y="34" width="1.4" height="4" fill="#f0c66a"/><rect x="16.5" y="34" width="1.4" height="4" fill="#f0c66a"/><rect x="19.0" y="34" width="1.4" height="4" fill="#f0c66a"/><rect x="21.5" y="34" width="1.4" height="4" fill="#f0c66a"/><rect x="24.0" y="34" width="1.4" height="4" fill="#f0c66a"/><rect x="26.5" y="34" width="1.4" height="4" fill="#f0c66a"/><rect x="29.0" y="34" width="1.4" height="4" fill="#f0c66a"/><rect x="31.5" y="34" width="1.4" height="4" fill="#f0c66a"/></symbol><symbol id="i-card" viewBox="0 0 48 48"><rect x="5" y="10" width="36" height="22" rx="2" fill="#1f7a4d"/><rect x="5" y="10" width="36" height="5" rx="2" fill="#3fb779"/>
+<rect x="13" y="17" width="12" height="10" rx="1" fill="#1b2430"/><rect x="28" y="18" width="8" height="3" fill="#c3ccd6"/><rect x="28" y="23" width="8" height="3" fill="#c3ccd6"/>
+<rect x="9" y="32" width="22" height="4" fill="#c08a2c"/><rect x="10.0" y="32" width="1.4" height="4" fill="#f0c66a"/><rect x="12.5" y="32" width="1.4" height="4" fill="#f0c66a"/><rect x="15.0" y="32" width="1.4" height="4" fill="#f0c66a"/><rect x="17.5" y="32" width="1.4" height="4" fill="#f0c66a"/><rect x="20.0" y="32" width="1.4" height="4" fill="#f0c66a"/><rect x="22.5" y="32" width="1.4" height="4" fill="#f0c66a"/><rect x="25.0" y="32" width="1.4" height="4" fill="#f0c66a"/><rect x="27.5" y="32" width="1.4" height="4" fill="#f0c66a"/>
+<rect x="41" y="6" width="3" height="32" fill="#7d8da1"/></symbol><symbol id="i-m2mod" viewBox="0 0 48 48"><rect x="4" y="16" width="38" height="14" rx="2" fill="#2f6fb5"/><rect x="4" y="16" width="38" height="4" rx="2" fill="#5aa2ea"/>
+<rect x="12" y="20" width="10" height="7" rx="1" fill="#1b2430"/><rect x="26" y="21" width="7" height="5" rx="1" fill="#c3ccd6"/>
+<rect x="4" y="19" width="4" height="8" fill="#f0c66a"/><circle cx="40" cy="23" r="2.4" fill="#0e1a24" stroke="#c3ccd6" stroke-width="1.2"/></symbol><symbol id="i-dongle" viewBox="0 0 48 48"><rect x="16" y="4" width="16" height="12" rx="1.5" fill="#7d8da1"/><rect x="19" y="7" width="3" height="3" fill="#1b2430"/><rect x="26" y="7" width="3" height="3" fill="#1b2430"/>
+<rect x="14" y="16" width="20" height="16" rx="3" fill="#3b4757"/><path d="M24 32 C24 40 30 38 32 44" stroke="#566477" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M36 10 l5 -5 M38 16 l7 -2" stroke="#ff7a6b" stroke-width="2.2" stroke-linecap="round"/></symbol><symbol id="i-lock" viewBox="0 0 48 48"><rect x="10" y="20" width="28" height="22" rx="4" fill="#566477"/><rect x="10" y="20" width="28" height="6" rx="3" fill="#7d8da1"/>
+<path d="M16 20 v-6 a8 8 0 0 1 16 0 v6" stroke="#c3ccd6" stroke-width="4" fill="none"/><circle cx="24" cy="31" r="3" fill="#1b2430"/><rect x="23" y="32" width="2" height="5" fill="#1b2430"/></symbol><symbol id="i-cert" viewBox="0 0 48 48"><rect x="8" y="5" width="28" height="36" rx="3" fill="#eef2f6"/><rect x="12" y="11" width="20" height="2.5" rx="1" fill="#7d8da1"/><rect x="12" y="16" width="16" height="2.5" rx="1" fill="#7d8da1"/>
+<rect x="12" y="21" width="18" height="2.5" rx="1" fill="#7d8da1"/><circle cx="33" cy="34" r="8" fill="#c08a2c"/><circle cx="33" cy="34" r="5.5" fill="#f0c66a"/>
+<path d="M28 40 l-2 7 l4 -2 l3 3 l1 -7" fill="#d8433a"/><path d="M30.5 34 l2 2 l4 -4" stroke="#1a1206" stroke-width="1.6" fill="none"/></symbol><symbol id="i-box" viewBox="0 0 48 48"><path d="M24 4 L42 13 V35 L24 44 L6 35 V13 Z" fill="#e39a2a"/><path d="M24 4 L42 13 L24 22 L6 13 Z" fill="#ffc766"/><path d="M24 22 V44 L6 35 V13 Z" fill="#b97a1c"/>
+<path d="M15 8.5 L33 17.5 V24" stroke="#eef2f6" stroke-width="2.2" fill="none"/></symbol></svg>
+
+<section class="screen on" id="title"><div class="tbar"><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div><div class="hero"><div>
+ <div class="heroboard" aria-hidden="true"><div class="hb"><div class="trace"></div><div class="cpu" style="left:38%;top:26%;width:70px;height:70px"><div class="fins"></div></div><div class="m2s used" style="left:62%;top:70%"><b>LTE</b></div><div class="slot x16" style="left:8%;top:70%;width:46%"></div><div class="stand mine" style="left:8%;top:74%;width:46%"><div class="face" style="width:100%;height:60px;transform:rotateX(-90deg) translateY(-60px)">COM ×4</div></div></div></div>
+ <div class="k" data-t="kicker"></div>
+ <div class="logo">SPEC QUEST</div><div class="logo2" data-t="sub"></div>
+ <p class="tag" data-t="tag"></p>
+ <div class="chips" id="titleChips"></div>
+ <button class="btn" id="bStart" data-t="start"></button>
+ <p class="foot" data-t="foot"></p>
+</div></div></section>
+
+<section class="screen" id="map"><div class="wrap">
+ <div class="mhd"><button class="icon-btn" id="bMapBack" aria-label="back">←</button><h2 data-t="mapTitle"></h2><div class="tot"><span class="star on"></span><span id="totStars">0</span>/30</div><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div>
+ <p class="mark" id="storeWarn" style="display:none;color:var(--red)" data-t="noStoreWarn"></p>
+ <div class="zones" id="zones"></div>
+ <div class="pn howto" id="howto"></div>
+ <p class="mark" data-t="mark"></p>
+</div></section>
+
+<section class="screen" id="play"><div class="wrap">
+ <div class="hud"><button class="icon-btn" id="bToMap" aria-label="map">≡</button>
+  <div class="hex"><div class="in" id="hudIc"></div></div><div class="ttl"><small id="hudNo"></small><b id="hudName"></b></div>
+  <div class="dots" id="hudDots"></div><div class="sp"></div>
+  <button class="icon-btn" id="bBrief" aria-label="brief">?</button>
+  <div class="costpill"><span class="coin"></span><b id="hudCost">0</b><small data-t="perUnit"></small></div><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div>
+ <div class="grid">
+  <div class="pn scn" id="scn"></div>
+  <div class="scenebox"><div class="pn stage3d" id="stage3d"></div><div class="pn shelf" id="shelf"></div></div>
+  <div class="pn tiers" id="tiers"></div>
+  <div class="pn ffbox"><div class="hd"><b data-t="pickFF"></b><span data-t="pickFFsub"></span></div><div class="ffr" id="ffr"></div></div>
+  <div class="pn shipbox"><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
+   <div class="why" id="why"></div><button class="btn shipbtn" id="bShip" data-t="ship"></button><div class="hint" data-t="shipHint"></div></div>
+ </div>
+ <p class="mark" data-t="mark"></p>
+</div></section>
+
+<div class="modal" id="mBrief"><div class="pn card" id="briefCard"></div></div>
+<div class="modal" id="mSim"><div class="pn card" id="simCard" style="width:min(1000px,100%)"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>window.SQ_BEST={"1":{"board":"pico2","add":{},"t":[0,0,0,0,0,0]},"2":{"board":"itx6","add":{},"t":[0,0,0,0,0,0]},"3":{"board":"matx","add":{},"t":[0,0,0,2,1,0]},"4":{"board":"pico2","add":{"can":1},"t":[1,1,0,1,1,0]},"5":{"board":"pico2","add":{},"t":[0,1,2,1,1,1]},"6":{"board":"matx","add":{},"t":[0,0,0,2,1,1]},"7":{"board":"come","add":{},"t":[2,1,2,1,1,0]},"8":{"board":"itx6","add":{"lan2":1},"t":[2,2,2,1,2,1]},"9":{"board":"sbc6","add":{},"t":[1,1,2,1,1,1]},"10":{"board":"sbc","add":{"can":1,"lte":1},"t":[2,2,1,1,2,1]}};</script>
+<script>/* 選型大挑戰 Spec Quest：資料＋解題器＋計分。瀏覽器與 Node 共用（掛在 globalThis.SQ）。
+   價格與損失為遊戲簡化值；名詞依 terms.md；情境取材自產業應用分類（去識別化）。 */
+(function (G) {
+  "use strict";
+
+  // 板型：id、名稱、長邊 mm、COM、LAN、x16 槽、x4 槽、M.2 槽、單價、市售真實型號參考（Avalue，2026-11-13 官網核對）
+  const BOARDS = [
+    { id: "pico", ff: "pico", v: 0, len: 100, com: 1, lan: 1, x16: 0, x4: 0, m2: 1, price: 380, model: "EPX-APLP" },
+    { id: "pico2", ff: "pico", v: 1, len: 100, com: 2, lan: 2, x16: 0, x4: 0, m2: 1, price: 450, model: "EPX-TWLP" },
+    { id: "sbc", ff: "sbc", v: 0, len: 146, com: 2, lan: 2, x16: 0, x4: 0, m2: 2, price: 520, model: "ECM-RPL" },
+    { id: "sbc6", ff: "sbc", v: 1, len: 146, com: 6, lan: 2, x16: 0, x4: 0, m2: 2, price: 640, model: "ECM-APL" },
+    { id: "itx", ff: "itx", v: 0, len: 170, com: 2, lan: 2, x16: 1, x4: 0, m2: 2, price: 600, model: "MX610H" },
+    { id: "itx6", ff: "itx", v: 1, len: 170, com: 6, lan: 2, x16: 1, x4: 0, m2: 2, price: 700, model: "EMX-RPLP" },
+    { id: "matx", ff: "matx", v: 0, len: 244, com: 6, lan: 2, x16: 1, x4: 3, m2: 2, price: 880, model: "RX680R" },
+    { id: "atx", ff: "atx", v: 0, len: 305, com: 6, lan: 2, x16: 2, x4: 5, m2: 2, price: 1050, model: "BC680R" },
+    { id: "come", ff: "come", v: 0, len: 125, com: 0, lan: 0, x16: 0, x4: 0, m2: 0, price: 760, custom: true, model: "ESM-RPL" },
+  ];
+  const FORMS = ["pico", "sbc", "itx", "matx", "atx", "come"];
+  const COME_NRE = 60000;
+
+  // 可買的擴充：PCIe 卡（佔槽）、M.2 模組（佔 M.2）、USB 轉接器（不佔槽，但有現場損失）
+  const ADDONS = {
+    com4: { kind: "pcie", price: 120, give: { com: 4 } },
+    lan2: { kind: "pcie", price: 90, give: { lan: 2 } },
+    can: { kind: "m2", price: 60, give: { can: 1 } },
+    lte: { kind: "m2", price: 90, give: { lte: 1 } },
+    ucom: { kind: "usb", price: 25, give: { com: 1 }, loss: 600 },
+    ucan: { kind: "usb", price: 30, give: { can: 1 }, loss: 900 },
+    ulte: { kind: "usb", price: 40, give: { lte: 1 }, loss: 500 },
+  };
+  const ADDON_ORDER = ["com4", "lan2", "can", "lte", "ucom", "ucan", "ulte"];
+
+  // 六項分級：成本（溫度為板價倍率）、少一級損失（少兩級 ×1.5）
+  const TIERS = [
+    { id: "temp", cost: [1.0, 1.3, 1.6], under: 2200, mult: true },
+    { id: "power", cost: [180, 420, 650], under: 750 },
+    { id: "prot", cost: [0, 30, 70], under: 380, perPort: true },
+    { id: "store", cost: [150, 380, 680], under: 650 },
+    { id: "supply", cost: [0, 600, 900], under: 2000 },
+    { id: "cert", cost: [0, 400], under: 2200 },
+  ];
+  const OVER_K = 4;
+
+  // 關卡：產業、圖示、機構上限、介面需求、必插卡（顧客自備，佔槽）、年量、六項需要級別、解鎖
+  // need 順序：溫度、電源、防護、儲存、供貨、認證
+  const LEVELS = [
+    { id: 1, dom: "retail", icon: "kiosk", maxLen: 150, req: { com: 2, lan: 1, can: 0, lte: 0 }, cards: [], vol: 1500,
+      need: [0, 0, 0, 0, 0, 0], unlock: ["board", "usb"] },
+    { id: 2, dom: "retail", icon: "vending", maxLen: 200, req: { com: 4, lan: 1, can: 0, lte: 0 }, cards: ["ai"], vol: 3000,
+      need: [0, 0, 0, 0, 0, 0], unlock: ["pcie"] },
+    { id: 3, dom: "factory", icon: "gauge", maxLen: 260, req: { com: 2, lan: 2, can: 0, lte: 0 }, cards: ["daq", "daq"], vol: 300,
+      need: [0, 0, 0, 2, 1, 0], unlock: ["store", "power"] },
+    { id: 4, dom: "factory", icon: "agv", maxLen: 150, req: { com: 2, lan: 2, can: 1, lte: 0 }, cards: [], vol: 800,
+      need: [1, 1, 0, 1, 1, 0], unlock: ["temp", "m2"] },
+    { id: 5, dom: "medical", icon: "bed", maxLen: 150, req: { com: 2, lan: 2, can: 0, lte: 0 }, cards: [], vol: 600,
+      need: [0, 1, 2, 1, 1, 1], unlock: ["prot", "cert"] },
+    { id: 6, dom: "medical", icon: "scan", maxLen: 320, req: { com: 1, lan: 2, can: 0, lte: 0 }, cards: ["gpu", "cap"], vol: 200,
+      need: [0, 0, 0, 2, 1, 1], unlock: ["supply"] },
+    { id: 7, dom: "energy", icon: "charger", maxLen: 150, req: { com: 4, lan: 1, can: 1, lte: 1 }, cards: [], vol: 10000,
+      need: [2, 1, 2, 1, 1, 0], unlock: ["custom"] },
+    { id: 8, dom: "energy", icon: "grid", maxLen: 320, req: { com: 4, lan: 4, can: 0, lte: 0 }, cards: [], vol: 150,
+      need: [2, 2, 2, 1, 2, 1], unlock: [] },
+    { id: 9, dom: "transport", icon: "ship", maxLen: 200, req: { com: 4, lan: 2, can: 0, lte: 0 }, cards: [], vol: 120,
+      need: [1, 1, 2, 1, 1, 1], unlock: [] },
+    { id: 10, dom: "transport", icon: "train", maxLen: 150, req: { com: 2, lan: 2, can: 1, lte: 1 }, cards: [], vol: 400,
+      need: [2, 2, 1, 1, 2, 1], unlock: [], boss: true },
+  ];
+  const CARD_SLOT = { ai: "x4", daq: "x4", gpu: "x16", cap: "x4" };
+
+  // 到第 n 關為止解鎖的機制
+  function unlockedAt(n) {
+    const s = new Set();
+    LEVELS.filter((l) => l.id <= n).forEach((l) => l.unlock.forEach((u) => s.add(u)));
+    return s;
+  }
+  const TIER_UNLOCK = { temp: "temp", power: "power", prot: "prot", store: "store", supply: "supply", cert: "cert" };
+
+  // 把必插卡與擴充卡放進槽：x16 卡只能進 x16；x4 卡進 x4 或 x16。回傳是否放得下。
+  function fits(board, lvCards, nPcie) {
+    let x16 = board.x16, x4 = board.x4;
+    for (const c of lvCards) {
+      if (CARD_SLOT[c] === "x16") { if (x16 > 0) x16--; else return false; }
+    }
+    for (const c of lvCards) {
+      if (CARD_SLOT[c] === "x4") { if (x4 > 0) x4--; else if (x16 > 0) x16--; else return false; }
+    }
+    return nPcie <= x4 + x16;
+  }
+
+  // 評估一組選擇。build = { board, add:{id:count}, t:[6 級] }
+  function evaluate(lv, build) {
+    const b = BOARDS.find((x) => x.id === build.board);
+    const add = build.add || {};
+    const out = { ok: true, reasons: [], have: { com: 0, lan: 0, can: 0, lte: 0 }, buy: 0, loss: 0, lossItems: [], ports: 0, dongles: 0 };
+    if (!b) { out.ok = false; out.reasons.push("noBoard"); return out; }
+    if (b.len > lv.maxLen) { out.ok = false; out.reasons.push("tooBig"); }
+    let nPcie = 0, nM2 = 0;
+    for (const id of ADDON_ORDER) {
+      const n = add[id] || 0; if (!n) continue;
+      const a = ADDONS[id];
+      if (a.kind === "pcie") nPcie += n;
+      if (a.kind === "m2") nM2 += n;
+      for (const k in a.give) out.have[k] += a.give[k] * n;
+    }
+    if (b.custom) {
+      if (lv.cards.length) { out.ok = false; out.reasons.push("noSlot"); }
+      if (nPcie || nM2) { out.ok = false; out.reasons.push("customNoAddon"); }
+      for (const k in lv.req) out.have[k] = Math.max(out.have[k], lv.req[k]);  // 客製底板：介面剛好做進去
+    } else {
+      out.have.com += b.com; out.have.lan += b.lan;
+      if (!fits(b, lv.cards, nPcie)) { out.ok = false; out.reasons.push("noSlot"); }
+      if (nM2 > b.m2) { out.ok = false; out.reasons.push("noM2"); }
+    }
+    for (const k in lv.req) if (out.have[k] < lv.req[k]) { out.ok = false; out.reasons.push("need_" + k); }
+
+    // 整組擴充品完全沒用到（去掉後介面仍滿足需求）：原價加罰一次，當成浪費
+    let wasteAddon = 0;
+    for (const id of ADDON_ORDER) {
+      const n = add[id] || 0; if (!n) continue;
+      const a = ADDONS[id]; if (a.kind === "usb") continue;
+      for (const k in a.give) { if (out.have[k] - a.give[k] * n >= (lv.req[k] || 0)) wasteAddon += a.price * n; }
+    }
+
+    const t = build.t;
+    const base = b.custom ? b.price + COME_NRE / lv.vol : b.price;
+    const hw = base + wasteAddon + ADDON_ORDER.filter((i) => ADDONS[i].kind !== "usb").reduce((s, i) => s + (add[i] || 0) * ADDONS[i].price, 0);
+    out.hw = hw;
+    out.buy = hw * TIERS[0].cost[t[0]];
+    const usb = ADDON_ORDER.filter((i) => ADDONS[i].kind === "usb");
+    out.dongles = usb.reduce((s, i) => s + (add[i] || 0), 0);
+    out.buy += usb.reduce((s, i) => s + (add[i] || 0) * ADDONS[i].price, 0);
+    // 實裝且可防護的埠：板載＋卡上的 COM、CAN 模組；轉接器不能防護
+    out.ports = b.custom ? lv.req.com + lv.req.can : b.com + (add.com4 || 0) * 4 + (add.can || 0);
+    for (const i of usb) if (add[i]) { out.loss += add[i] * ADDONS[i].loss; out.lossItems.push({ id: i, n: add[i], v: add[i] * ADDONS[i].loss }); }
+    TIERS.forEach((T, i) => {
+      if (i === 0) return;
+      out.buy += T.perPort ? T.cost[t[i]] * out.ports : T.cost[t[i]];
+    });
+    TIERS.forEach((T, i) => {
+      const gap = lv.need[i] - t[i];
+      if (gap > 0) {
+        const mult = T.perPort ? Math.max(1, out.ports + out.dongles) : 1;
+        const v = T.under * (gap === 1 ? 1 : 1.5) * mult;
+        out.loss += v; out.lossItems.push({ id: T.id, gap, v });
+      }
+      if (T.perPort && lv.need[i] > 0 && out.dongles) {          // 轉接器上的埠沒有防護
+        const v = T.under * (lv.need[i] === 1 ? 1 : 1.5) * out.dongles;
+        out.loss += v; out.lossItems.push({ id: "prot_usb", v });
+      }
+    });
+    out.total = out.buy + out.loss;
+    return out;
+  }
+
+  // 列舉所有可出貨組合（鎖住的分級固定在 need）
+  function enumerate(lv) {
+    const un = unlockedAt(lv.id);
+    const tierChoices = TIERS.map((T, i) => (un.has(TIER_UNLOCK[T.id]) ? [...Array(T.cost.length).keys()] : [lv.need[i]]));
+    const rows = [];
+    const addonRanges = {
+      com4: un.has("pcie") ? [0, 1, 2] : [0], lan2: un.has("pcie") ? [0, 1, 2] : [0],
+      can: un.has("m2") ? [0, 1] : [0], lte: un.has("m2") ? [0, 1] : [0],
+      ucom: [0, 1, 2, 3, 4], ucan: un.has("m2") ? [0, 1] : [0], ulte: un.has("m2") ? [0, 1] : [0],
+    };
+    const boards = BOARDS.filter((b) => !b.custom || un.has("custom"));
+    const combos = cart(ADDON_ORDER.map((k) => addonRanges[k]));
+    const tcombos = cart(tierChoices);
+    for (const b of boards) for (const c of combos) {
+      const add = {}; ADDON_ORDER.forEach((k, i) => { if (c[i]) add[k] = c[i]; });
+      const probe = evaluate(lv, { board: b.id, add, t: lv.need });
+      if (!probe.ok) continue;
+      for (const t of tcombos) {
+        const e = evaluate(lv, { board: b.id, add, t });
+        rows.push({ board: b.id, add, t, e });
+      }
+    }
+    rows.sort((a, b) => a.e.total - b.e.total);
+    return rows;
+  }
+  function cart(arrs) { return arrs.reduce((acc, a) => acc.flatMap((x) => a.map((y) => [...x, y])), [[]]); }
+
+  // 最佳解：建置時預先算好嵌入（G.SQ_BEST），瀏覽器不必現場窮舉
+  const _bestCache = {};
+  function best(lv) {
+    if (_bestCache[lv.id]) return _bestCache[lv.id];
+    const pre = G.SQ_BEST && G.SQ_BEST[lv.id];
+    const r = pre ? { board: pre.board, add: pre.add, t: pre.t, e: evaluate(lv, pre) } : enumerate(lv)[0];
+    return (_bestCache[lv.id] = r);
+  }
+
+  // 計分：100 × 剛好 ÷（剛好 ＋ 4 × 多付 ＋ 損失）
+  function score(lv, build) {
+    const e = evaluate(lv, build);
+    if (!e.ok) return { score: 0, e, waste: 0, items: [] };
+    const B = best(lv);
+    const items = [];
+    const hwOver = Math.max(0, e.hw - B.e.hw) * TIERS[0].cost[build.t[0]];
+    if (hwOver > 0.5) items.push({ id: "hw", kind: "over", v: hwOver });
+    let tierOver = 0;
+    TIERS.forEach((T, i) => {
+      const k = build.t[i], n = lv.need[i];
+      if (k > n) {
+        const v = i === 0 ? B.e.hw * (T.cost[k] - T.cost[n]) : (T.cost[k] - T.cost[n]) * (T.perPort ? e.ports : 1);
+        if (v > 0) { tierOver += v; items.push({ id: T.id, kind: "over", v }); }
+      }
+    });
+    e.lossItems.forEach((li) => items.push({ id: li.id, kind: "under", v: li.v }));
+    const waste = Math.max(hwOver + tierOver, e.buy - B.e.buy);
+    const s = Math.round((100 * B.e.total) / (B.e.total + OVER_K * waste + e.loss));
+    return { score: Math.min(100, s), e, waste, items, best: B };
+  }
+  function stars(s) { return s >= 90 ? 3 : s >= 75 ? 2 : s >= 50 ? 1 : 0; }
+
+  G.SQ = { BOARDS, FORMS, ADDONS, ADDON_ORDER, TIERS, LEVELS, CARD_SLOT, COME_NRE, unlockedAt, evaluate, enumerate, best, score, stars };
+})(typeof window !== "undefined" ? window : globalThis);
+</script>
+<script>
+"use strict";
+const SQ = window.SQ;
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+let STORE_OK = true;
+const store = { get(k, d) { try { const v = localStorage.getItem("sq_" + k); return v == null ? d : JSON.parse(v); } catch { STORE_OK = false; return d; } },
+  set(k, v) { try { localStorage.setItem("sq_" + k, JSON.stringify(v)); } catch { STORE_OK = false; } } };
+let LANG = store.get("lang", (navigator.language || "").toLowerCase().startsWith("zh") ? "zh" : "en");
+let MUTE = store.get("mute", false);
+const ic = (n, s = 28) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const fmt = (n) => Math.round(n).toLocaleString("en-US");
+
+/* ---------- 文字 ---------- */
+const TXT = {
+ zh: {
+  kicker:"工業電腦選型遊戲", sub:"選型大挑戰", tag:"十個產業情境，選板型、補介面、挑規格。買多是浪費，買少是之後的派工與停機，剛好的規格才拿滿分。",
+  start:"開始遊戲 ▶", foot:"示意遊戲：名詞依 PICMG、TIA、ISO、IEC、JEDEC 等標準機構用語；價格與損失為遊戲簡化值，非真實報價；不含任何品牌。",
+  mapTitle:"產業地圖", mark:"價格與損失為遊戲簡化值 · 名詞依標準機構定義 · AnChieh Tsai",
+  noStoreWarn:"瀏覽器儲存無法使用，進度不會保留，重新整理後會消失。",
+  perUnit:"／台", pickFF:"選板型", pickFFsub:"虛線框＝機構上限；板子依實際比例", unitCost:"目前成本",
+  ship:"出貨", shipHint:"出貨後看十年結算：多付的錢與現場損失都會扣分。",
+  chips:["10 關卡","5 大產業","9 種板型","6 項規格"],
+  dom:{retail:"零售與娛樂",factory:"智慧製造",medical:"醫療",energy:"能源",transport:"交通"},
+  domSub:{retail:"室內、量大、價格敏感",factory:"產線、連續運轉",medical:"病患安全、長壽命",energy:"戶外、電網、極端環境",transport:"振動、寬壓、驗證"},
+  lv:"第 {n} 關", boss:"魔王關",
+  ff:{pico:"Pico-ITX",sbc:"3.5 吋",itx:"Mini-ITX",matx:"Micro-ATX",atx:"ATX",come:"COM Express"},
+  var:["基本款","多介面款"], varSbc:["基本款","6 COM 款"], tooBig:"放不下", fits:"放得下", locked:"第 {n} 關解鎖",
+  comeNote:"客製底板，開發費 {nre} ÷ 年量 {vol}", comeIo:"介面依需求",
+  slotX16:"x16 槽", slotX4:"x4 槽", m2:"M.2",
+  addon:{com4:"4 埠 COM 卡",lan2:"2 埠 LAN 卡",can:"CAN 模組",lte:"LTE 模組",ucom:"USB 轉 COM",ucan:"USB 轉 CAN",ulte:"USB LTE 棒"},
+  addonSub:{com4:"PCIe",lan2:"PCIe",can:"M.2",lte:"M.2",ucom:"USB・易鬆脫",ucan:"USB・易鬆脫",ulte:"USB・易鬆脫"},
+  card:{ai:"AI 加速卡",daq:"資料擷取卡",gpu:"GPU",cap:"影像擷取卡"},
+  tierTitle:"六項規格", tierSub:"選高要錢，選低日後付",
+  tier:{temp:"工作溫度",power:"電源輸入",prot:"通訊埠防護",store:"儲存",supply:"供貨年限",cert:"產業認證"},
+  tierOpt:{temp:["0～60°C","−20～70°C","−40～85°C"],power:["12 V","9～36 V","寬壓隔離（涵蓋 110 V 標稱）"],prot:["一般","加強突波","隔離"],store:["消費級","工業級斷電保護","企業級高耐寫"],supply:["三年","十年","十五年"],cert:["不需要","產業認證"]},
+  tierCost:{temp:["×1.0","×1.3","×1.6"],prot:["0","30／埠","70／埠"]},
+  perPort:"／埠", preset:"本關預設",
+  req:{len:"機構 ≤ {v} mm",com:"COM × {v}",lan:"LAN × {v}",can:"CAN × {v}",lte:"行動網路 × {v}",cards:"必插：{v}"},
+  reason:{noBoard:"先選一塊板子",tooBig:"板子放不進機構",noSlot:"擴充槽不夠插必要的卡",noM2:"M.2 插槽不夠",customNoAddon:"客製底板不能再插卡",need_com:"COM 不夠",need_lan:"LAN 不夠",need_can:"缺 CAN",need_lte:"缺行動網路"},
+  ready:"可以出貨", briefGo:"開始配置", newMech:"新機制", brief:"任務簡報",
+  mech:{board:["板型","板子越大，內建介面與擴充槽越多，但越貴、越佔空間。先找放得下又夠用的最小板。"],
+   usb:["USB 轉接器","缺介面時插個轉接器很便宜，但現場會鬆脫、沒有隔離，十年內會出事，會算進損失。"],
+   pcie:["PCIe 擴充槽","客戶的卡（例如 AI 加速卡）要佔槽。槽被佔走，就不能再加 COM 卡，只能換有內建介面的款。"],
+   store:["儲存等級","連續寫入的資料、會被突然斷電的設備，消費級硬碟撐不久。寫入量決定等級。"],
+   temp:["工作溫度","冷凍庫、戶外機櫃、無空調機房，溫度決定處理器與零件等級。寬溫要加價。"],
+   power:["電源輸入","電池、車用、鐵道、變電站的電源各不相同。電源選錯，突波一來就燒。"],
+   m2:["M.2 模組","CAN、行動網路用 M.2 模組插在板上最穩；用 USB 轉接器會在振動中鬆脫。"],
+   prot:["通訊埠防護","長線、雷擊、病患安全都要隔離。按實裝埠數計價，多出來的埠也要付錢。"],
+   cert:["產業認證","醫療、鐵道、變電站、船舶要對應認證；不需要的場合買了就是浪費。"],
+   supply:["供貨年限","設備要用十年、十五年，板子就要有對應的供貨承諾，否則停產就得重新設計。"],
+   custom:["客製底板","年量大時，用 COM Express 模組加客製底板：介面剛好、開發費攤到每台。"]},
+  simTitle:"十年結算", year:"第 {n} 年", calm:"一切正常",
+  ev:{temp:"溫度超出零件範圍，停機待修",power:"電源突波／電壓超出範圍，電源燒毀",prot:"雷擊或靜電打壞通訊埠",prot_usb:"轉接器上的埠沒有防護，被突波打壞",store:"斷電或寫滿，資料損毀",supply:"料件停產，被迫重新設計",cert:"驗證不過，產品進不了市場",ucom:"USB 轉 COM 鬆脫，客戶叫修",ucan:"USB 轉 CAN 在振動中鬆脫",ulte:"USB 行動網卡鬆脫，連不上後台"},
+  evYear:{cert:1,temp:2,ucom:2,ucan:2,ulte:2,power:3,prot:4,prot_usb:4,store:5,supply:8},
+  score:"分數", yourPick:"你的選擇", right:"剛好", diff:"差額", reason2:"為什麼",
+  over:"多付 {v}", under:"損失 {v}", same:"剛好",
+  retry:"再試一次", next:"下一關 ▶", toMap:"回地圖", skip:"跳過動畫",
+  boardRow:"板型＋擴充", stars:["再想想","過關","不錯","完美"],
+  allDone:"十關全破！", allDoneSub:"總星數 {s}/30。工業電腦選型的訣竅只有一個：剛好。",
+  coinGain:"省下", needToast:"這項在第 {n} 關解鎖",
+  howto:[["讀情境","環境、介面、空間、年量都藏在簡報裡。"],["選板型＋補介面","放得下的最小板；不夠再插卡或 M.2 模組。"],["挑六項規格","高一級多付錢，低一級日後派工停機。"],["出貨看十年","剛好 100 分；90 分三星，75 分兩星，50 分過關。"]],
+ },
+ en: {
+  kicker:"An industrial-PC spec game", sub:"Pick just enough", tag:"Ten industry scenarios. Pick a board, fill the I/O, choose the grades. Buying more is waste, buying less becomes service calls and downtime later. Just enough scores 100.",
+  start:"Start ▶", foot:"Illustrative game: terms follow PICMG, TIA, ISO, IEC and JEDEC; prices and losses are simplified game values, not real quotes; no brands.",
+  mapTitle:"Industry map", mark:"Prices and losses are simplified game values · Terms follow standards bodies · AnChieh Tsai",
+  noStoreWarn:"Browser storage is unavailable — progress won't be saved and will disappear on reload.",
+  perUnit:"/ unit", pickFF:"Pick a form factor", pickFFsub:"Dashed box = enclosure limit; boards to scale", unitCost:"Cost now",
+  ship:"SHIP", shipHint:"After shipping you see ten years: overpaying and field losses both cost points.",
+  chips:["10 levels","5 industries","9 boards","6 specs"],
+  dom:{retail:"Retail & Entertainment",factory:"Smart Factory",medical:"Medical",energy:"Energy",transport:"Transportation"},
+  domSub:{retail:"Indoor, high volume, price-driven",factory:"Lines that never stop",medical:"Patient safety, long life",energy:"Outdoors, grid, extremes",transport:"Vibration, wide power, certification"},
+  lv:"Level {n}", boss:"Boss",
+  ff:{pico:"Pico-ITX",sbc:"3.5\"",itx:"Mini-ITX",matx:"Micro-ATX",atx:"ATX",come:"COM Express"},
+  var:["Basic","More I/O"], varSbc:["Basic","6-COM"], tooBig:"Too big", fits:"Fits", locked:"Unlocks at L{n}",
+  comeNote:"Custom carrier, NRE {nre} ÷ {vol}/yr", comeIo:"I/O as needed",
+  slotX16:"x16", slotX4:"x4", m2:"M.2",
+  addon:{com4:"4-port COM card",lan2:"2-port LAN card",can:"CAN module",lte:"LTE module",ucom:"USB-to-COM",ucan:"USB-to-CAN",ulte:"USB LTE stick"},
+  addonSub:{com4:"PCIe",lan2:"PCIe",can:"M.2",lte:"M.2",ucom:"USB · loosens",ucan:"USB · loosens",ulte:"USB · loosens"},
+  card:{ai:"AI accelerator",daq:"DAQ card",gpu:"GPU",cap:"Video capture"},
+  tierTitle:"Six specs", tierSub:"Higher costs now, lower costs later",
+  tier:{temp:"Temperature",power:"Power input",prot:"Port protection",store:"Storage",supply:"Supply life",cert:"Certification"},
+  tierOpt:{temp:["0–60°C","−20–70°C","−40–85°C"],power:["12 V","9–36 V","Wide-range isolated (covers 110 V nominal)"],prot:["Basic","Surge+","Isolated"],store:["Consumer","Industrial PLP","Enterprise"],supply:["3 yr","10 yr","15 yr"],cert:["Not needed","Industry cert"]},
+  tierCost:{temp:["×1.0","×1.3","×1.6"],prot:["0","30/port","70/port"]},
+  perPort:"/port", preset:"Preset here",
+  req:{len:"Enclosure ≤ {v} mm",com:"COM × {v}",lan:"LAN × {v}",can:"CAN × {v}",lte:"Cellular × {v}",cards:"Must fit: {v}"},
+  reason:{noBoard:"Pick a board first",tooBig:"The board does not fit the enclosure",noSlot:"Not enough slots for the required cards",noM2:"Not enough M.2 sockets",customNoAddon:"A custom carrier takes no add-ons",need_com:"Not enough COM",need_lan:"Not enough LAN",need_can:"CAN missing",need_lte:"Cellular missing"},
+  ready:"Ready to ship", briefGo:"Start building", newMech:"New mechanic", brief:"Briefing",
+  mech:{board:["Form factor","Bigger boards bring more I/O and slots, but cost more and take more space. Find the smallest board that fits and is enough."],
+   usb:["USB adapters","An adapter is a cheap fix for a missing port, but in the field it loosens and has no isolation. It counts as a loss."],
+   pcie:["PCIe slots","The customer's card, such as an AI accelerator, takes a slot. With the slot gone you cannot add a COM card, so pick a board with the ports on board."],
+   store:["Storage grade","Continuous writes and sudden power cuts wear out consumer drives. Write load decides the grade."],
+   temp:["Temperature","Freezers, outdoor cabinets and unheated rooms decide the grade of the CPU and parts. Wide temperature costs extra."],
+   power:["Power input","Batteries, vehicles, trains and substations all supply different power. Pick wrong and the first surge burns it."],
+   m2:["M.2 modules","CAN and cellular are most robust as M.2 modules on the board; USB adapters loosen under vibration."],
+   prot:["Port protection","Long lines, lightning and patient safety need isolation. It is priced per installed port, so extra ports cost too."],
+   cert:["Certification","Medical, rail, substation and marine need their certifications; elsewhere it is waste."],
+   supply:["Supply life","Equipment that runs 10 or 15 years needs a matching supply commitment, or the first part end-of-life forces a redesign."],
+   custom:["Custom carrier","At high volume, a COM Express module on a custom carrier gives exactly the I/O you need, with NRE spread over every unit."]},
+  simTitle:"Ten-year review", year:"Year {n}", calm:"All quiet",
+  ev:{temp:"Temperature beyond the part's range, down for repair",power:"Power surge or voltage out of range, the supply burns",prot:"Lightning or ESD kills a port",prot_usb:"Ports on adapters have no protection and get hit",store:"Power loss or wear-out corrupts the data",supply:"A part goes end-of-life, forced redesign",cert:"Certification fails, the product cannot enter the market",ucom:"USB-to-COM works loose, service call",ucan:"USB-to-CAN shakes loose",ulte:"USB cellular stick loosens, backend offline"},
+  evYear:{cert:1,temp:2,ucom:2,ucan:2,ulte:2,power:3,prot:4,prot_usb:4,store:5,supply:8},
+  score:"Score", yourPick:"Your pick", right:"Just right", diff:"Diff", reason2:"Why",
+  over:"Over {v}", under:"Loss {v}", same:"Right",
+  retry:"Retry", next:"Next ▶", toMap:"Map", skip:"Skip",
+  boardRow:"Board + add-ons", stars:["Think again","Cleared","Good","Perfect"],
+  allDone:"All ten cleared!", allDoneSub:"Total stars {s}/30. There is one trick to industrial-PC specs: just enough.",
+  coinGain:"Saved", needToast:"Unlocks at level {n}",
+  howto:[["Read the brief","Environment, I/O, space and volume are all in the story."],["Board + I/O","The smallest board that fits; add cards or M.2 modules only if short."],["Six specs","One grade up costs now; one grade down costs service calls later."],["Ship, see ten years","Just right scores 100; 90 for three stars, 75 for two, 50 to pass."]],
+ }
+};
+const LVT = {
+ zh: {
+  1:{n:"自助點餐機",s:"速食店櫃檯旁的點餐機，接收據印表機與刷卡機，一條網路回總部。機殼很薄。",c:["冷氣房，室溫","印表機、刷卡機各一個 COM","機殼內板子長邊不超過 150 mm"],
+     w:{board:"Pico-ITX 雙網款剛好有 2 個 COM、2 個 LAN，又最小。",temp:"室內冷氣房",power:"店內 12 V 轉接器",prot:"線短、室內",store:"只存點餐暫存",supply:"店面三年換一代",cert:"不需要"}},
+  2:{n:"智慧販賣機",s:"刷臉付款需要一張 AI 加速卡；紙鈔機、硬幣機、出貨馬達、讀卡機各要一個 COM。",c:["AI 加速卡要佔一個 PCIe 槽","需要 4 個 COM","機箱內長邊不超過 200 mm"],
+     w:{board:"Mini-ITX 6 COM 款：唯一的槽給 AI 卡，COM 已內建。基本款要加 COM 卡卻沒槽。",temp:"室內大廳",power:"機內 12 V",prot:"機內短線",store:"交易暫存",supply:"三年改款",cert:"不需要"}},
+  3:{n:"預測性維護資料站",s:"產線馬達旁的資料站，兩張資料擷取卡全天記錄振動波形，送往分析伺服器。",c:["兩張資料擷取卡要兩個槽","24 小時連續寫入波形","控制櫃內長邊不超過 260 mm"],
+     w:{board:"Micro-ATX 有 4 個槽，兩張擷取卡放得下；Mini-ITX 只有 1 個槽。",temp:"空調控制櫃",power:"櫃內 12 V",prot:"櫃內短線",store:"連續寫入波形，消費級幾年就寫壞，要企業級高耐寫",supply:"產線設備用十年",cert:"不需要"}},
+  4:{n:"冷鏈倉儲 AGV",s:"在 −18°C 冷凍倉裡搬貨的無人搬運車，24 V 電池供電，用 CAN 控制馬達驅動器，雷達與無線各一條網路。",c:["冷凍倉 −18°C","24 V 電池，換電池時會瞬斷","車體振動；車上空間小，長邊 ≤150 mm"],
+     w:{board:"Pico-ITX 雙網款加 M.2 CAN 模組最省；USB 轉 CAN 會在振動中鬆脫。",temp:"−18°C 需要 −20～70°C",power:"24 V 電池需要 9～36 V 寬壓",prot:"車內短線",store:"換電池瞬斷，要斷電保護",supply:"物流設備用十年",cert:"不需要"}},
+  5:{n:"床邊照護終端",s:"病床旁的終端，接生理監視器和輸液幫浦，一條院內網路、一條設備網路。",c:["接病患設備：病患安全","醫療級電源轉接器 19 V","床邊吊臂上，長邊 ≤150 mm"],
+     w:{board:"Pico-ITX 雙網款剛好 2 COM、2 LAN。",temp:"病房恆溫",power:"19 V 需要寬壓輸入",prot:"接病患設備，COM 要隔離",store:"病歷暫存要斷電保護",supply:"醫療設備用十年",cert:"要 IEC 60601-1 醫療認證"}},
+  6:{n:"醫療影像工作站",s:"超音波／內視鏡推車上的工作站：一張 GPU 做影像運算，一張影像擷取卡接探頭。",c:["GPU 要 x16 槽，擷取卡要 x4 槽","影像大量寫入","推車機箱，長邊 ≤320 mm"],
+     w:{board:"Micro-ATX 有 x16＋x4，剛好放兩張卡；ATX 多出的槽是浪費。",temp:"手術室恆溫",power:"推車內 12 V",prot:"不接長線",store:"影像大量寫入，要企業級",supply:"醫療設備用十年",cert:"要醫療認證"}},
+  7:{n:"快充樁控制器",s:"高速公路旁的直流快充樁，年產一萬台。RS-485 接電表與功率模組，CAN 接模組，行動網路回後台；車端通訊由專用模組負責，不經這張控制板。",c:["冬天 −30°C，夏天機櫃 75°C","4 個 COM、1 個 CAN、行動網路","長線與雷擊；樁內長邊 ≤150 mm","年量 10,000 台"],
+     w:{board:"年量一萬台，COM Express 加客製底板介面剛好、開發費攤平，比標準板省。",temp:"−30～75°C 要 −40～85°C",power:"樁內 24 V 輔助電源，9～36 V",prot:"長線與雷擊，要隔離",store:"交易紀錄要斷電保護",supply:"充電網路用十年",cert:"充電樁整機認證由整機負責，控制板不需另買"}},
+  8:{n:"變電站自動化電腦",s:"無空調的變電站機房，接舊式保護電驛（RS-485），雙重站內網路，站內直流電池供電。",c:["−40～75°C，無空調","110 V 站用直流電池","4 COM、4 LAN；機架內長邊 ≤320 mm","用十五年以上"],
+     w:{board:"Mini-ITX 6 COM 款＋1 張 2 埠 LAN 卡剛好；Micro-ATX 太貴。",temp:"−40～75°C",power:"110 V 標稱直流要寬壓隔離；站用設備通常還要雙電源備援",prot:"高壓場域要隔離",store:"事件紀錄要斷電保護",supply:"變電站用十五年",cert:"要 IEC 61850-3 變電站認證"}},
+  9:{n:"船舶導航電腦",s:"駕駛台上的導航電腦，接 GPS、電羅經、AIS、測深儀，都是 NMEA 0183（RS-422）。",c:["4 個 NMEA 儀器（RS-422）","船上 24 V 直流","駕駛台 −15～55°C；長邊 ≤200 mm"],
+     w:{board:"3.5 吋 6 COM 款，內建 COM 就夠，最小。",temp:"−15～55°C 要 −20～70°C",power:"船用 24 V 要寬壓",prot:"船上長線，要隔離",store:"航行紀錄要斷電保護",supply:"船舶用十年",cert:"要 IEC 60945 船用認證"}},
+  10:{n:"列車通訊閘道",s:"座椅下的車載閘道：CAN 接車上控制網路，行動網路回控制中心，兩條車廂網路。",c:["−40～70°C、強振動","24～110 V 車用電源","CAN、行動網路；長邊 ≤150 mm","鐵道車輛用十五年"],
+     w:{board:"3.5 吋基本款有 2 個 M.2，CAN 和 LTE 都用 M.2 模組；Pico 只有 1 個 M.2。",temp:"−40～70°C",power:"鐵道 110 V 標稱系統要寬壓隔離",prot:"車內線，加強突波即可",store:"振動與斷電，要斷電保護",supply:"鐵道用十五年",cert:"要 EN 50155 鐵道認證"}},
+ },
+ en: {
+  1:{n:"Self-order Kiosk",s:"A kiosk next to a fast-food counter, wired to a receipt printer and a card reader, with one line back to HQ. The case is thin.",c:["Air-conditioned room","One COM each for printer and card reader","Board length ≤ 150 mm inside the case"],
+     w:{board:"The Pico-ITX dual-LAN version has exactly 2 COM and 2 LAN, and it is the smallest.",temp:"Indoor, air-conditioned",power:"12 V adapter in the store",prot:"Short indoor cables",store:"Order cache only",supply:"Stores refresh every 3 years",cert:"Not needed"}},
+  2:{n:"Smart Vending Machine",s:"Face payment needs an AI accelerator card; the bill acceptor, coin mech, motor board and card reader each need a COM.",c:["The AI card takes a PCIe slot","4 COM needed","Length ≤ 200 mm inside the cabinet"],
+     w:{board:"Mini-ITX 6-COM: the only slot goes to the AI card and the COM ports are on board. The basic one needs a COM card but has no slot left.",temp:"Indoor lobby",power:"12 V inside",prot:"Short internal cables",store:"Transaction cache",supply:"Refreshed every 3 years",cert:"Not needed"}},
+  3:{n:"Predictive-Maintenance DAQ",s:"A data station beside line motors. Two DAQ cards log vibration waveforms all day and send them to analytics.",c:["Two DAQ cards need two slots","Writes waveforms 24/7","Length ≤ 260 mm in the control cabinet"],
+     w:{board:"Micro-ATX has 4 slots for two DAQ cards; Mini-ITX has only one.",temp:"Air-conditioned cabinet",power:"12 V in the cabinet",prot:"Short cabinet wiring",store:"Continuous writes wear out consumer drives in a few years: enterprise endurance",supply:"Line equipment runs 10 years",cert:"Not needed"}},
+  4:{n:"Cold-Storage AGV",s:"A driverless cart in a −18°C freezer warehouse, on a 24 V battery, driving motors over CAN, with lidar and wireless on two LANs.",c:["Freezer at −18°C","24 V battery, drops out during swaps","Vibration; length ≤ 150 mm"],
+     w:{board:"Pico-ITX dual-LAN plus an M.2 CAN module is cheapest; a USB-to-CAN shakes loose.",temp:"−18°C needs −20–70°C",power:"24 V battery needs 9–36 V",prot:"Short on-board cables",store:"Battery swaps cut power: PLP needed",supply:"Logistics gear runs 10 years",cert:"Not needed"}},
+  5:{n:"Bedside Care Terminal",s:"A terminal at the bedside, wired to the patient monitor and infusion pump, with a hospital LAN and a device LAN.",c:["Connected to patient devices: patient safety","Medical adapter at 19 V","On a bed arm, length ≤ 150 mm"],
+     w:{board:"Pico-ITX dual-LAN has exactly 2 COM and 2 LAN.",temp:"Ward at room temperature",power:"19 V needs a wide input",prot:"Patient devices: isolated COM",store:"Records need PLP",supply:"Medical gear runs 10 years",cert:"IEC 60601-1 medical certification"}},
+  6:{n:"Medical Imaging Workstation",s:"An ultrasound/endoscopy cart: a GPU for image processing and a capture card for the probe.",c:["GPU needs x16, capture card needs x4","Heavy image writes","Cart enclosure, length ≤ 320 mm"],
+     w:{board:"Micro-ATX has x16 plus x4 for both cards; ATX's extra slots are waste.",temp:"Climate-controlled OR",power:"12 V inside the cart",prot:"No long lines",store:"Heavy image writes: enterprise",supply:"Medical gear runs 10 years",cert:"Medical certification"}},
+  7:{n:"DC Fast-Charger Controller",s:"Highway fast chargers, 10,000 a year. RS-485 to meters and power modules, CAN to the modules, cellular to the backend; vehicle-side communication runs on its own dedicated module, not through this board.",c:["−30°C in winter, 75°C cabinet in summer","4 COM, 1 CAN, cellular","Long lines and lightning; length ≤ 150 mm","10,000 units a year"],
+     w:{board:"At 10,000 a year a COM Express module on a custom carrier has exactly the I/O, with NRE spread thin: cheaper than a standard board.",temp:"−30–75°C needs −40–85°C",power:"24 V auxiliary, 9–36 V",prot:"Long lines and lightning: isolated",store:"Billing records need PLP",supply:"Charging networks run 10 years",cert:"The charger is certified as a whole; the controller needs no extra"}},
+  8:{n:"Substation Automation PC",s:"An unheated substation room: legacy protection relays on RS-485, redundant station networks, power from the station battery.",c:["−40–75°C, no HVAC","110 V DC station battery","4 COM, 4 LAN; length ≤ 320 mm in the rack","Runs 15+ years"],
+     w:{board:"Mini-ITX 6-COM plus one 2-port LAN card is just right; Micro-ATX costs more.",temp:"−40–75°C",power:"110 V nominal DC needs wide-range isolated; substation gear typically also wants dual-power redundancy",prot:"High-voltage site: isolated",store:"Event logs need PLP",supply:"Substations run 15 years",cert:"IEC 61850-3 substation certification"}},
+  9:{n:"Marine Navigation PC",s:"A navigation PC on the bridge, wired to GPS, gyro, AIS and echo sounder, all NMEA 0183 over RS-422.",c:["4 NMEA instruments (RS-422)","24 V DC ship power","Bridge −15–55°C; length ≤ 200 mm"],
+     w:{board:"The 3.5\" 6-COM board has the ports on board and is the smallest.",temp:"−15–55°C needs −20–70°C",power:"24 V ship power needs a wide input",prot:"Long runs on a ship: isolated",store:"Voyage logs need PLP",supply:"Ships run 10 years",cert:"IEC 60945 marine certification"}},
+  10:{n:"Train Communication Gateway",s:"A gateway under a seat: CAN to the train control network, cellular to the control center, two car networks.",c:["−40–70°C, heavy vibration","24–110 V train power","CAN and cellular; length ≤ 150 mm","Rolling stock runs 15 years"],
+     w:{board:"The basic 3.5\" has two M.2 sockets for CAN and LTE modules; Pico has only one.",temp:"−40–70°C",power:"Rail's 110 V nominal system needs wide-range isolated",prot:"Car wiring: surge+ is enough",store:"Vibration and power cuts: PLP",supply:"Rail runs 15 years",cert:"EN 50155 rail certification"}},
+ }
+};
+const T = (k, vars) => { let s = k.split(".").reduce((o, x) => o && o[x], TXT[LANG]); if (typeof s !== "string") return k; if (vars) for (const v in vars) s = s.replace("{" + v + "}", vars[v]); return s; };
+const L = (id) => LVT[LANG][id];
+const DOMS = ["retail","factory","medical","energy","transport"];
+const DOMC = {retail:"#ff9a6b",factory:"#5aa2ea",medical:"#7fe0c8",energy:"#ffc65a",transport:"#c79bff"};
+const FFIC = {pico:100, sbc:146, itx:170, matx:244, atx:305, come:125};
+const FFH = {pico:72, sbc:102, itx:170, matx:244, atx:244, come:95};
+
+/* ---------- 音效（WebAudio，無外部檔） ---------- */
+let AC = null;
+function beep(type) {
+  if (MUTE) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const seq = { click:[[660,.04]], add:[[520,.05],[780,.07]], err:[[200,.12]], ship:[[392,.08],[523,.08],[659,.08],[784,.16]], hit:[[150,.18]], star:[[880,.06],[1175,.1]], ok:[[523,.06],[784,.1]] }[type] || [[440,.05]];
+    let t = AC.currentTime;
+    for (const [f, d] of seq) { const o = AC.createOscillator(), g = AC.createGain(); o.type = type === "hit" || type === "err" ? "sawtooth" : "triangle"; o.frequency.value = f;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.15, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(AC.destination); o.start(t); o.stop(t + d + .02); t += d * .9; }
+  } catch {}
+}
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("on"), 1800); }
+
+/* ---------- 狀態 ---------- */
+let PROG = store.get("prog", {});            // {id: 最高分}
+let CUR = null;                                // 目前關卡
+let B = null;                                  // build
+let FF_LAST = {};                              // 每種板型最後選的款式 {ff: boardId}
+function starsOf(id) { return PROG[id] != null ? SQ.stars(PROG[id]) : 0; }
+function isOpen(id) { return id === 1 || PROG[id - 1] != null; }
+function show(id) { $$(".screen").forEach((s) => s.classList.toggle("on", s.id === id)); window.scrollTo(0, 0); }
+
+/* ---------- 標題與地圖 ---------- */
+function i18n() {
+  document.documentElement.lang = LANG === "zh" ? "zh-Hant" : "en";
+  $$("[data-t]").forEach((el) => el.textContent = T(el.dataset.t));
+  $$(".bLang").forEach((b) => b.textContent = LANG === "zh" ? "EN" : "中");
+  $$(".bSnd").forEach((b) => b.textContent = MUTE ? "✕" : "♪");
+  renderHowto();
+  $("#titleChips").innerHTML = TXT[LANG].chips.map((c, i) => `<span class="chip">${ic(["box","kiosk","card","cert"][i], 18)}${c}</span>`).join("");
+  if ($("#map").classList.contains("on")) renderMap();
+  if ($("#play").classList.contains("on")) renderAll();
+}
+function renderHowto() { const h = $("#howto"); if (h) h.innerHTML = TXT[LANG].howto.map((x, i) => `<div class="st"><span class="n">${i + 1}</span><div><b>${x[0]}</b><span>${x[1]}</span></div></div>`).join(""); }
+function renderMap() {
+  $("#storeWarn").style.display = STORE_OK ? "none" : "block";
+  let tot = 0;
+  $("#zones").innerHTML = DOMS.map((d) => {
+    const lvs = SQ.LEVELS.filter((l) => l.dom === d);
+    return `<div class="pn zone" style="--zc:${DOMC[d]}"><h3>${ic(lvs[0].icon, 30)}${T("dom." + d)}</h3><div class="zs">${T("domSub." + d)}</div>` +
+      lvs.map((l) => { const s = starsOf(l.id); tot += s; const open = isOpen(l.id);
+        return `<button class="lvl ${l.boss ? "boss" : ""}" data-l="${l.id}" ${open ? "" : "disabled"}><span class="no">${open ? l.id : ic("lock", 22)}</span><span><b>${L(l.id).n}</b><small>${[0,1,2].map((i) => `<span class="star ${i < s ? "on" : ""}"></span>`).join("")}${l.boss ? ` · ${T("boss")}` : ""}</small></span>${ic(l.icon, 34)}</button>`; }).join("") + `</div>`;
+  }).join("");
+  $("#totStars").textContent = tot;
+  $$(".lvl").forEach((b) => b.onclick = () => { beep("click"); startLevel(+b.dataset.l); });
+}
+
+/* ---------- 關卡 ---------- */
+function startLevel(id) {
+  CUR = SQ.LEVELS.find((l) => l.id === id);
+  B = { board: null, add: {}, t: [...CUR.need].map((n, i) => isUnlocked(SQ.TIERS[i].id) ? 0 : n) };
+  FF_LAST = {};
+  show("play"); renderAll(); openBrief();
+}
+function isUnlocked(key) { return SQ.unlockedAt(CUR.id).has(key); }
+function unlockLevel(key) { const l = SQ.LEVELS.find((x) => x.unlock.includes(key)); return l ? l.id : 1; }
+
+function openBrief() {
+  const t = L(CUR.id);
+  const mech = CUR.unlock.map((u) => `<div class="newmech">${ic({board:"box",usb:"dongle",pcie:"card",store:"ssd",temp:"thermo_hot",power:"dc_power",m2:"m2mod",prot:"surge",cert:"cert",supply:"cal10",custom:"box"}[u], 34)}<div><b>${T("newMech")}：${TXT[LANG].mech[u][0]}</b><span>${TXT[LANG].mech[u][1]}</span></div></div>`).join("");
+  $("#briefCard").innerHTML = `<div class="k">${T("lv", {n: CUR.id})} · ${T("dom." + CUR.dom)}${CUR.boss ? " · " + T("boss") : ""}</div>
+   <div style="display:flex;gap:16px;align-items:center;margin-top:8px"><div class="hex" style="width:76px;height:84px"><div class="in" style="width:64px;height:72px">${ic(CUR.icon, 44)}</div></div><h2>${t.n}</h2></div>
+   <p class="story" style="font-size:15px">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}${mech}
+   <div class="row"><button class="btn" id="bGo">${T("briefGo")}</button></div>`;
+  $("#mBrief").classList.add("on"); $("#bGo").onclick = () => { beep("click"); $("#mBrief").classList.remove("on"); };
+}
+
+function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTiers(); renderFF(); renderShip(); }
+function renderHud() {
+  $("#hudIc").innerHTML = ic(CUR.icon, 32); $("#hudNo").textContent = `${T("lv", {n: CUR.id})} · ${T("dom." + CUR.dom)}`; $("#hudName").textContent = L(CUR.id).n;
+  $("#hudDots").innerHTML = SQ.LEVELS.map((l) => `<i class="${l.id === CUR.id ? "c" : PROG[l.id] != null ? "d" : ""}"></i>`).join("");
+}
+function evalNow() { return B.board ? SQ.evaluate(CUR, B) : null; }
+function renderScn() {
+  const t = L(CUR.id), e = evalNow(), h = e ? e.have : { com: 0, lan: 0, can: 0, lte: 0 };
+  const r = (cls, label, val) => `<div class="req ${cls}">${label}<em>${val}</em></div>`;
+  const lenOk = e && SQ.BOARDS.find((b) => b.id === B.board).len <= CUR.maxLen;
+  let rq = r(e ? (lenOk ? "ok" : "no") : "", T("req.len", {v: CUR.maxLen}), e ? (lenOk ? "✓" : "✕") : "—");
+  for (const k of ["com","lan","can","lte"]) if (CUR.req[k]) rq += r(e ? (h[k] >= CUR.req[k] ? "ok" : "no") : "", T("req." + k, {v: CUR.req[k]}), e ? `${Math.min(h[k], 99)}/${CUR.req[k]}` : "—");
+  if (CUR.cards.length) rq += r(e ? (e.reasons.includes("noSlot") ? "no" : "ok") : "", T("req.cards", {v: CUR.cards.map((c) => TXT[LANG].card[c]).join("、")}), e ? (e.reasons.includes("noSlot") ? "✕" : "✓") : "—");
+  $("#scn").innerHTML = `<div class="top"><div class="ic">${ic(CUR.icon, 40)}</div><div><div class="k">${T("dom." + CUR.dom)}</div><h2>${t.n}</h2></div></div>
+   <p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}<div class="sect">I/O</div>${rq}`;
+}
+
+function renderScene() {
+  const box = $("#stage3d");
+  if (!B.board) { box.innerHTML = `<div class="empty">${ic("box", 64)}<div>${T("pickFF")}</div></div>`; return; }
+  const b = SQ.BOARDS.find((x) => x.id === B.board), e = evalNow();
+  const W0 = Math.max(box.clientWidth, 320), H0 = Math.max(box.clientHeight, 320);
+  const s = Math.min(W0 * 0.62, H0 * 0.95) / Math.max(CUR.maxLen, b.len);
+  const bw = b.len * s, bh = FFH[b.ff] * s, el = CUR.maxLen * s;
+  const big = b.len > CUR.maxLen;
+  let inner = `<div class="trace"></div>` + [[6,6],[bw-18,6],[6,bh-18],[bw-18,bh-18]].map(([x,y]) => `<i class="hole" style="left:${x}px;top:${y}px"></i>`).join("");
+  inner += `<div class="silk">${b.model}  ${b.len} × ${FFH[b.ff]} mm</div>`;
+  if (b.custom) {
+    inner += `<div class="cpu" style="left:${bw*.25}px;top:${bh*.2}px;width:${bw*.5}px;height:${bh*.55}px;background:#1b3d2c;box-shadow:0 0 0 2px #3fe0bb"><div class="fins" style="inset:6px"></div></div>`;
+  } else {
+    const c = Math.min(bw, bh) * .3;
+    inner += `<div class="cpu" style="left:${bw*.32}px;top:${bh*.18}px;width:${c}px;height:${c}px"><div class="fins"></div></div>`;
+    inner += [0,1].map((i) => `<div class="dimm" style="left:${bw*.72 + i*13}px;top:${bh*.12}px;height:${bh*.5}px"></div>`).join("");
+    // 擴充槽與立起來的卡
+    const slots = []; for (let i = 0; i < b.x16; i++) slots.push("x16"); for (let i = 0; i < b.x4; i++) slots.push("x4");
+    const cardsIn = []; CUR.cards.filter((c) => SQ.CARD_SLOT[c] === "x16").forEach((c) => cardsIn.push({ c, cls: c === "gpu" ? "gpu" : "cust", need: "x16" }));
+    CUR.cards.filter((c) => SQ.CARD_SLOT[c] === "x4").forEach((c) => cardsIn.push({ c, cls: "cust", need: "x4" }));
+    for (let i = 0; i < (B.add.com4 || 0); i++) cardsIn.push({ c: "com4", cls: "mine" });
+    for (let i = 0; i < (B.add.lan2 || 0); i++) cardsIn.push({ c: "lan2", cls: "mine" });
+    const placed = slots.map(() => null), used = new Set();
+    cardsIn.forEach((ci) => { let k = slots.findIndex((sl, j) => !used.has(j) && (ci.need === "x16" ? sl === "x16" : sl === "x4")); if (k < 0) k = slots.findIndex((sl, j) => !used.has(j)); if (k >= 0) { used.add(k); placed[k] = ci; } });
+    const sy0 = bh * .66, step = Math.min(22, (bh * .3) / Math.max(1, slots.length));
+    slots.forEach((sl, j) => { const y = sy0 + j * step, w = bw * (sl === "x16" ? .55 : .35), x = bw * .08;
+      inner += `<div class="slot ${sl}" style="left:${x}px;top:${y}px;width:${w}px"></div>`;
+      const p = placed[j]; if (p) { const lbl = p.cls === "mine" ? TXT[LANG].addon[p.c] : TXT[LANG].card[p.c]; const fh = Math.max(46, bh * .28);
+        inner += `<div class="stand ${p.cls}" style="left:${x}px;top:${y + 5}px;width:${w}px"><div class="face" style="width:${w}px;height:${fh}px;transform:rotateX(-90deg) translateY(-${fh}px)">${lbl}</div></div>`; } });
+    // M.2
+    const mods = []; for (let i = 0; i < (B.add.can || 0); i++) mods.push("CAN"); for (let i = 0; i < (B.add.lte || 0); i++) mods.push("LTE");
+    for (let i = 0; i < b.m2; i++) inner += `<div class="m2s ${mods[i] ? "used" : ""}" style="left:${bw*.62}px;top:${bh*.7 + i*22}px">${mods[i] ? `<b>${mods[i]}</b>` : ""}</div>`;
+    // 後方 I/O
+    let rx = 10, rear = "";
+    for (let i = 0; i < Math.min(b.com, 6); i++) { rear += `<div class="port db" style="left:${rx}px"><i></i></div>`; rx += 38; if (rx > bw - 70) break; }
+    for (let i = 0; i < b.lan && rx < bw - 30; i++) { rear += `<div class="port lan" style="left:${rx}px"><i></i></div>`; rx += 30; }
+    const nd = (B.add.ucom || 0) + (B.add.ucan || 0) + (B.add.ulte || 0);
+    for (let i = 0; i < nd; i++) rear += `<div class="dng" style="left:${bw - 26 - i * 22}px"></div>`;
+    inner += `<div class="rear" style="width:${bw}px">${rear}</div>`;
+  }
+  const info = [`${T("ff." + b.ff)}${b.custom ? "" : " · COM " + b.com + " · LAN " + b.lan}`];
+  if (!b.custom) info.push(`${T("slotX16")} ${b.x16} · ${T("slotX4")} ${b.x4} · ${T("m2")} ${b.m2}`);
+  box.innerHTML = `<div class="sceneinfo">${info.map((i) => `<span>${i}</span>`).join("")}</div>
+   <div class="scene" style="width:${Math.max(el, bw)}px;height:${Math.max(el, bh)}px;margin-left:-${Math.max(el, bw)/2}px;margin-top:-${Math.max(el, bh)/2 + 10}px;transform:perspective(1300px) rotateX(52deg) rotateZ(-32deg)">
+   <div class="enc ${big ? "bad" : ""}" style="left:0;top:0;width:${el}px;height:${el}px"><span>${T("req.len", {v: CUR.maxLen})}</span></div>
+   <div class="pcb ${b.custom ? "come" : ""}" style="left:${big ? 0 : (el - bw) / 2}px;top:${big ? 0 : (el - bh) / 2}px;width:${bw}px;height:${bh}px">${inner}</div></div>`;
+}
+
+function renderShelf() {
+  const b = B.board ? SQ.BOARDS.find((x) => x.id === B.board) : null;
+  $("#shelf").innerHTML = SQ.ADDON_ORDER.map((id) => {
+    const a = SQ.ADDONS[id], key = a.kind === "pcie" ? "pcie" : a.kind === "m2" ? "m2" : id === "ucom" ? "usb" : "m2";
+    const lock = !isUnlocked(key) || (b && b.custom), n = B.add[id] || 0;
+    const max = id === "ucom" ? 4 : a.kind === "usb" ? 1 : 2;
+    return `<div class="ad ${a.kind === "usb" ? "trap" : ""} ${lock ? "lock" : ""}">${ic(a.kind === "pcie" ? (id === "lan2" ? "lan" : "card") : a.kind === "m2" ? "m2mod" : "dongle", 24)}
+     <div class="nm">${TXT[LANG].addon[id]}<small>${TXT[LANG].addonSub[id]} · ${a.price}</small></div>
+     <div class="ct"><button data-a="${id}" data-d="-1" ${lock || !n ? "disabled" : ""} aria-label="-">−</button><b>${n}</b><button data-a="${id}" data-d="1" ${lock || n >= max || !b ? "disabled" : ""} aria-label="+">+</button></div></div>`;
+  }).join("");
+  $$("#shelf button").forEach((x) => x.onclick = (ev) => { const id = x.dataset.a, d = +x.dataset.d; B.add[id] = Math.max(0, (B.add[id] || 0) + d); if (!B.add[id]) delete B.add[id];
+    beep(d > 0 ? "add" : "click"); if (d > 0) floatCoin(ev, "-" + SQ.ADDONS[id].price); renderAll(); });
+}
+function floatCoin(ev, txt) { const f = document.createElement("div"); f.className = "floatcoin"; f.textContent = txt; f.style.left = ev.clientX + "px"; f.style.top = ev.clientY - 20 + "px"; document.body.appendChild(f); setTimeout(() => f.remove(), 700); }
+
+function renderTiers() {
+  $("#tiers").innerHTML = `<div class="hd"><b>${T("tierTitle")}</b><span>${T("tierSub")}</span></div>` + SQ.TIERS.map((Tr, i) => {
+    const un = isUnlocked(Tr.id), opts = TXT[LANG].tierOpt[Tr.id];
+    const costs = TXT[LANG].tierCost[Tr.id] || Tr.cost.map((c) => String(c));
+    const tag = un ? "" : `<small><span class="lockb">${ic("lock", 14)}${T("locked", {n: unlockLevel(Tr.id)})}</span></small>`;
+    return `<div class="tr ${un ? "" : "locked"}"><div class="tn">${ic({temp:"thermo_hot",power:"dc_power",prot:"surge",store:"ssd",supply:"cal10",cert:"cert"}[Tr.id], 24)}<span>${T("tier." + Tr.id)}</span>${tag}</div>
+     <div class="tg ${opts.length === 2 ? "two" : ""}">${opts.map((o, k) => `<button class="tc ${B.t[i] === k ? "on" : ""}" data-i="${i}" data-k="${k}"><b>${o}</b><small>${costs[k]}</small></button>`).join("")}</div></div>`;
+  }).join("");
+  $$("#tiers .tc").forEach((x) => x.onclick = () => { const i = +x.dataset.i; if (!isUnlocked(SQ.TIERS[i].id)) { beep("err"); toast(T("needToast", {n: unlockLevel(SQ.TIERS[i].id)})); return; }
+    B.t[i] = +x.dataset.k; beep("click"); renderAll(); });
+}
+
+function renderFF() {
+  const sel = B.board ? SQ.BOARDS.find((x) => x.id === B.board) : null;
+  $("#ffr").innerHTML = SQ.FORMS.map((ff) => {
+    const vars = SQ.BOARDS.filter((b) => b.ff === ff), lock = ff === "come" && !isUnlocked("custom");
+    const cur = sel && sel.ff === ff ? sel : (FF_LAST[ff] ? SQ.BOARDS.find((b) => b.id === FF_LAST[ff]) : vars[0]);
+    const over = cur.len > CUR.maxLen, sc = 62 / Math.max(CUR.maxLen, 305);
+    const silW = Math.min(cur.len * sc * 1.9, 150), silH = Math.min(FFH[ff] * sc * 1.9, 70), lim = CUR.maxLen * sc * 1.9;
+    const badge = lock ? `<span class="bd lk">${T("locked", {n: unlockLevel("custom")})}</span>` : over ? `<span class="bd big">${T("tooBig")}</span>` : `<span class="bd fit">${T("fits")}</span>`;
+    const spec = cur.custom ? `<span>${T("comeIo")}</span><span class="pr"><i class="coin"></i>${fmt(cur.price + SQ.COME_NRE / CUR.vol)}</span>`
+      : `<span>COM ${cur.com}</span><span>LAN ${cur.lan}</span><span>${T("slotX16")}${cur.x16}${cur.x4 ? "+" + T("slotX4") + cur.x4 : ""}</span><span>${T("m2")} ${cur.m2}</span><span class="pr"><i class="coin"></i>${cur.price}</span>`;
+    const varBtns = vars.length > 1 ? `<div class="var">${vars.map((v) => `<button data-b="${v.id}" class="${sel && sel.id === v.id ? "on" : ""}">${(ff === "sbc" ? TXT[LANG].varSbc : TXT[LANG].var)[v.v]}</button>`).join("")}</div>` : "";
+    const note = cur.custom ? `<div class="hint" style="margin-top:4px">${T("comeNote", {nre: fmt(SQ.COME_NRE), vol: fmt(CUR.vol)})}</div>` : "";
+    return `<div class="ff ${sel && sel.ff === ff ? "sel" : ""} ${over ? "over" : ""} ${lock ? "lock" : ""}" data-b="${cur.id}" role="button" tabindex="0">
+      <div class="h"><b>${T("ff." + ff)}</b>${badge}</div><div class="box"><div class="lim" style="width:${lim}px;height:${lim}px"></div><div class="sil" style="width:${silW}px;height:${silH}px"></div></div>
+      <div class="model">${cur.model}</div><div class="spec">${spec}</div>${varBtns}${note}</div>`;
+  }).join("");
+  $$("#ffr .ff").forEach((x) => { const pick = (id) => { if (x.classList.contains("lock")) { beep("err"); toast(T("needToast", {n: unlockLevel("custom")})); return; }
+      const nb = SQ.BOARDS.find((b) => b.id === id); B.board = id; FF_LAST[nb.ff] = id; if (nb.custom) B.add = {}; beep("add"); renderAll(); };
+    x.onclick = (ev) => { const vb = ev.target.closest("button[data-b]"); pick(vb ? vb.dataset.b : (B.board && SQ.BOARDS.find((b) => b.id === B.board).ff === SQ.BOARDS.find((b) => b.id === x.dataset.b).ff ? B.board : x.dataset.b)); };
+    x.onkeydown = (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); x.click(); } }; });
+}
+
+function renderShip() {
+  const e = evalNow();
+  const cost = e ? e.buy : 0;
+  $("#hudCost").textContent = fmt(cost); $("#costBig").textContent = fmt(cost);
+  const why = $("#why");
+  if (!e) { why.className = "why"; why.textContent = T("reason.noBoard"); $("#bShip").disabled = true; return; }
+  if (e.ok) { why.className = "why ok"; why.textContent = "✓ " + T("ready"); $("#bShip").disabled = false; }
+  else { why.className = "why"; why.textContent = "✕ " + [...new Set(e.reasons)].map((r) => T("reason." + r)).join("；"); $("#bShip").disabled = true; }
+}
+
+/* ---------- 出貨與十年結算 ---------- */
+function ship() {
+  if ($("#mSim").classList.contains("on")) return;
+  const r = SQ.score(CUR, B); if (!r.e.ok) return;
+  beep("ship");
+  const prev = PROG[CUR.id]; if (prev == null || r.score > prev) { PROG[CUR.id] = r.score; store.set("prog", PROG); }
+  const events = r.items.filter((x) => x.kind === "under").map((x) => ({ id: x.id, y: TXT[LANG].evYear[x.id] || 3, v: x.v }));
+  const card = $("#simCard");
+  card.innerHTML = `<div class="k">${T("lv", {n: CUR.id})} · ${L(CUR.id).n}</div><h2>${T("simTitle")}</h2>
+   <div class="years">${[...Array(10)].map((_, i) => `<div class="yr" id="y${i + 1}"><span class="ev"></span>${T("year", {n: i + 1})}</div>`).join("")}</div>
+   <div class="evlog" id="evlog"></div><div class="row" id="skipRow"><button class="btn ghost" id="bSkip">${T("skip")}</button></div><div class="result" id="res"></div>`;
+  $("#mSim").classList.add("on");
+  $("#bSkip").focus();
+  let y = 0, done = false;
+  const step = () => {
+    if (done) return; y++;
+    const evs = events.filter((x) => x.y === y), cell = $("#y" + y);
+    if (evs.length) { cell.classList.add("hit"); cell.querySelector(".ev").innerHTML = ic("bolt", 26); beep("hit");
+      evs.forEach((x) => $("#evlog").insertAdjacentHTML("beforeend", `<div><b style="color:#ff8a80">${T("year", {n: y})}</b>　${TXT[LANG].ev[x.id]}　<b style="color:#ff8a80">−${fmt(x.v)}</b></div>`)); }
+    else { cell.classList.add("lit"); cell.querySelector(".ev").innerHTML = ic("badge", 22); }
+    if (y < 10) step._t = setTimeout(step, evs.length ? 650 : 260); else finish();
+  };
+  const finish = () => { if (done) return; done = true; clearTimeout(step._t);
+    for (let i = 1; i <= 10; i++) { const c = $("#y" + i); if (!c.classList.contains("hit") && !c.classList.contains("lit")) { const hit = events.some((x) => x.y === i); c.classList.add(hit ? "hit" : "lit"); c.querySelector(".ev").innerHTML = ic(hit ? "bolt" : "badge", hit ? 26 : 22); } }
+    $("#evlog").innerHTML = events.length ? events.map((x) => `<div><b style="color:#ff8a80">${T("year", {n: x.y})}</b>　${TXT[LANG].ev[x.id]}　<b style="color:#ff8a80">−${fmt(x.v)}</b></div>`).join("") : `<div style="color:var(--green)">${T("calm")}</div>`;
+    $("#skipRow").remove(); showResult(r); };
+  $("#bSkip").onclick = finish;
+  step._t = setTimeout(step, 400);
+}
+function showResult(r) {
+  const res = $("#res"), st = SQ.stars(r.score), best = r.best, t = L(CUR.id);
+  const nm = (bid) => { const b = SQ.BOARDS.find((x) => x.id === bid); const vs = SQ.BOARDS.filter((x) => x.ff === b.ff); return T("ff." + b.ff) + (vs.length > 1 ? " " + (b.ff === "sbc" ? TXT[LANG].varSbc : TXT[LANG].var)[b.v] : "") + ` (${b.model})`; };
+  const addStr = (a) => Object.entries(a).map(([k, v]) => `${TXT[LANG].addon[k]}×${v}`).join("、");
+  const pick = nm(B.board) + (addStr(B.add) ? " ＋ " + addStr(B.add) : ""), right = nm(best.board) + (addStr(best.add) ? " ＋ " + addStr(best.add) : "");
+  const hwItem = r.items.filter((x) => ["hw","ucom","ucan","ulte","prot_usb"].includes(x.id)).reduce((s, x) => s + (x.kind === "over" ? x.v : -x.v), 0);
+  let rows = `<tr><td>${T("boardRow")}</td><td data-l="${T("yourPick")}">${pick}</td><td class="r" data-l="${T("right")}">${right}</td><td class="${hwItem > 0 ? "o" : hwItem < 0 ? "u" : "r"}" data-l="${T("diff")}">${hwItem > 0 ? T("over", {v: fmt(hwItem)}) : hwItem < 0 ? T("under", {v: fmt(-hwItem)}) : (B.board === best.board && addStr(B.add) === addStr(best.add) ? T("same") : "—")}</td><td class="w">${t.w.board}</td></tr>`;
+  SQ.TIERS.forEach((Tr, i) => {
+    const o = TXT[LANG].tierOpt[Tr.id], k = B.t[i], n = CUR.need[i], it = r.items.find((x) => x.id === Tr.id);
+    const cls = k > n ? "o" : k < n ? "u" : "r", d = it ? (it.kind === "over" ? T("over", {v: fmt(it.v)}) : T("under", {v: fmt(it.v)})) : T("same");
+    rows += `<tr><td>${T("tier." + Tr.id)}${isUnlocked(Tr.id) ? "" : " " + ic("lock", 12).replace('class="ic"', 'class="ic" style="display:inline"')}</td><td class="${cls}" data-l="${T("yourPick")}">${o[k]}</td><td class="r" data-l="${T("right")}">${o[n]}</td><td class="${cls}" data-l="${T("diff")}">${d}</td><td class="w">${t.w[Tr.id]}</td></tr>`;
+  });
+  const last = CUR.id === 10, nextOpen = !last;
+  res.innerHTML = `<div class="bigscore"><b id="scNum">0</b><div><div class="stars">${[0,1,2].map((i) => `<span class="star ${i < st ? "on" : ""}"></span>`).join("")}</div>
+    <div style="font:800 18px var(--tc);margin-top:6px">${TXT[LANG].stars[st]}</div></div></div>
+   <table class="cmp"><tr><th></th><th>${T("yourPick")}</th><th>${T("right")}</th><th>${T("diff")}</th><th class="w">${T("reason2")}</th></tr>${rows}</table>
+   ${last && st >= 1 ? `<div class="newmech" style="margin-top:14px">${ic("badge", 34)}<div><b>${T("allDone")}</b><span>${T("allDoneSub", {s: SQ.LEVELS.reduce((s, l) => s + starsOf(l.id), 0)})}</span></div></div>` : ""}
+   <div class="row"><button class="btn ghost" id="bMap2">${T("toMap")}</button><button class="btn ghost" id="bRetry">${T("retry")}</button>${nextOpen ? `<button class="btn" id="bNext">${T("next")}</button>` : ""}</div>`;
+  res.classList.add("on");
+  let v = 0; const tgt = r.score, num = $("#scNum"); const tick = () => { v = Math.min(tgt, v + Math.max(1, Math.round(tgt / 25))); num.textContent = v; if (v < tgt) setTimeout(tick, 24); else $$("#res .stars .star").forEach((s, i) => setTimeout(() => { s.classList.add("show"); if (s.classList.contains("on")) beep("star"); }, 180 * i)); };
+  tick();
+  $("#bRetry").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); };
+  $("#bMap2").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); show("map"); renderMap(); };
+  if (nextOpen) $("#bNext").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); startLevel(CUR.id + 1); };
+  renderHud();
+}
+
+/* ---------- 綁定 ---------- */
+$("#bStart").onclick = () => { beep("ok"); show("map"); renderMap(); };
+$("#bMapBack").onclick = () => { beep("click"); show("title"); };
+$("#bToMap").onclick = () => { beep("click"); show("map"); renderMap(); };
+$("#bBrief").onclick = () => { beep("click"); openBrief(); };
+$("#bShip").onclick = ship;
+$$(".bLang").forEach((x) => x.onclick = () => { LANG = LANG === "zh" ? "en" : "zh"; store.set("lang", LANG); beep("click"); i18n(); if ($("#mBrief").classList.contains("on")) openBrief(); });
+$$(".bSnd").forEach((x) => x.onclick = () => { MUTE = !MUTE; store.set("mute", MUTE); i18n(); beep("click"); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") { $("#mBrief").classList.remove("on"); } });
+let _rz; window.addEventListener("resize", () => { clearTimeout(_rz); _rz = setTimeout(() => { if ($("#play").classList.contains("on")) renderScene(); }, 120); });
+i18n();
+// 測試用掛鉤（不影響遊玩）
+window.__sq = { startLevel, get B() { return B; }, set B(v) { B = v; }, renderAll, ship, show, renderMap, prog: () => PROG };
+</script>
+</body>
+</html>
