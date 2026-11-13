@@ -54,10 +54,10 @@ svg.ic{display:block}
 /* ---------- 地圖 ---------- */
 .trophyRow{padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .tropSlots{display:flex;gap:6px;flex-wrap:wrap}
-.tslot{width:36px;height:36px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0b1d15;border:1.5px solid #24443a;color:var(--mute);opacity:.5;flex:none}
-.tslot svg{width:16px;height:16px}
-.tslot b{font:800 9px var(--tc);margin-top:-2px}
-.tslot.done{opacity:1;background:linear-gradient(160deg,#fff0b0,#e08a18 60%,#8a4d06);border-color:var(--gold);color:#2a1600}
+.tslot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:none;color:var(--mute);opacity:.6}
+.tslot b{font:800 10px var(--tc)}
+.tslot.done{opacity:1;color:var(--gold)}
+.tslot.done svg{filter:drop-shadow(0 0 4px rgba(255,198,90,.5))}
 .trophyRow #bClaim{margin-left:auto}
 @media (max-width:720px){.trophyRow{flex-direction:column;align-items:stretch}.trophyRow #bClaim{margin-left:0;width:100%}}
 /* ---------- 證書 ---------- */
@@ -74,7 +74,7 @@ svg.ic{display:block}
 .mhd h2{margin:0;font:900 56px var(--tc);letter-spacing:2px}.mhd .tot{margin-left:auto;display:flex;align-items:center;gap:8px;font:800 18px var(--game)}
 .zones{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
 .zone{padding:16px;border-radius:18px;position:relative;overflow:hidden}
-.zone h3{margin:0 0 4px;font:900 26px/1.25 var(--tc);display:flex;align-items:center;gap:8px}.zone h3 span{min-width:0;overflow-wrap:break-word}.zone .zs{font:13px var(--tc);color:var(--mute);margin-bottom:12px}
+.zone h3{margin:0 0 4px;font:900 22px/1.25 var(--tc);display:flex;align-items:center;gap:8px}.zone h3 span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zone .zs{font:13px/1.4 var(--tc);color:var(--mute);margin-bottom:12px;min-height:2.8em}
 .zone::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:var(--zc);opacity:.12}
 .lvl{width:100%;display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:10px;border-radius:14px;text-align:left;background:#0b1d15;border:1.5px solid #24443a;transition:transform .12s,border-color .12s}
 .lvl:hover:not([disabled]){transform:translateY(-2px);border-color:var(--zc)}
@@ -82,7 +82,7 @@ svg.ic{display:block}
 .lvl b{display:block;font:800 22px/1.25 var(--tc)}.lvl small{display:flex;gap:3px;margin-top:4px}.lvl small .star{width:15px;height:15px}
 .lvl[disabled]{opacity:.45;cursor:not-allowed}.lvl.boss{border-color:#7a3a2c;background:linear-gradient(90deg,#2a1210,#0b1d15)}
 /* ---------- 遊戲 ---------- */
-.hud{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.hud{position:relative;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px}
 .hex{width:56px;height:62px;flex:none;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:linear-gradient(160deg,#fff0b0,#e08a18 60%,#8a4d06);display:grid;place-items:center}
 .hex .in{width:47px;height:53px;clip-path:inherit;background:radial-gradient(circle at 50% 35%,#1d3a2c,#07140d);display:grid;place-items:center}
 .ttl small{display:block;font:700 12px var(--game);letter-spacing:3px;color:var(--gold)}.ttl b{font:900 52px/1.05 var(--tc);letter-spacing:1px}
@@ -96,7 +96,6 @@ svg.ic{display:block}
 .stage3d,.scn,.shipbox{min-height:0;overflow-y:auto}
 .scn{padding:16px}.tierPage{padding:14px;height:100%;overflow-y:auto;display:flex;flex-direction:column}
 .tierPage .tr{flex:1;display:flex;flex-direction:column;justify-content:center}
-.tierPage .tg{max-width:520px;width:100%;margin:0 auto}
 .ffbox{padding:14px}.shipbox{padding:14px;display:flex;flex-direction:column;gap:10px}
 .pager{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
 .pagerHd{display:flex;align-items:center;justify-content:center;gap:16px;flex:0 0 auto}
@@ -104,7 +103,7 @@ svg.ic{display:block}
 .pages{position:relative;flex:1;min-height:0}
 .page{display:none;height:100%;overflow-y:auto}
 .page.on{display:block}
-.scn .top{display:flex;gap:12px;align-items:center}.scn .ic{width:60px;height:60px;flex:none;border-radius:14px;display:grid;place-items:center;background:radial-gradient(circle,#2b5a44,#0b2219);border:2px solid var(--gold)}
+.scn .top{display:flex;gap:12px;align-items:center}.scn .top>div{min-width:0}.scn .ic{width:60px;height:60px;flex:none;border-radius:14px;display:grid;place-items:center;background:radial-gradient(circle,#2b5a44,#0b2219);border:2px solid var(--gold)}
 /* 步驟序號 */
 .stepno{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:linear-gradient(180deg,#1f6e53,#0f3a2b);border:1px solid var(--teal);color:var(--ink);font:800 12px var(--tc);flex:0 0 auto;box-shadow:0 0 10px rgba(63,224,187,.35)}
 .stepk{display:flex;align-items:center;gap:8px;margin-bottom:8px;font:800 12px var(--tc);letter-spacing:.5px;color:var(--teal);text-transform:uppercase}
@@ -114,13 +113,15 @@ svg.ic{display:block}
 /* 選板型前，規格與擴充先弱化，引導視線 */
 .pn.needBoard{position:relative;opacity:.4;pointer-events:none;filter:saturate(.4)}
 .pn.needBoard::after{content:attr(data-hint);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font:800 13px/1.5 var(--tc);color:var(--gold);background:rgba(6,14,10,.6);border-radius:16px;opacity:1}
-.scn h2{margin:2px 0 0;font:900 30px/1.15 var(--tc)}
+.scn h2{margin:2px 0 0;font:900 22px/1.2 var(--tc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .story{font:13.5px/1.65 var(--tc);color:#c1d2c8;margin:10px 0}
+.clueGrid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}
 .clue{display:flex;gap:8px;align-items:flex-start;font:13px/1.4 var(--tc);color:#d8e5dd;margin:3px 0}.clue i{flex:none;width:8px;height:8px;margin-top:5px;transform:rotate(45deg);background:var(--gold)}
 .briefCtx .story{font-size:15px}
-.briefCtx.sec{opacity:.65}.briefCtx.sec .story{font-size:12.5px;margin:8px 0 4px}.briefCtx.sec .clue{font-size:11.5px;color:var(--mute)}.briefCtx.sec .clue i{width:6px;height:6px;margin-top:5px}
+.briefCtx.sec{opacity:.78}.briefCtx.sec .story{margin:8px 0 4px}.briefCtx.sec .clue{color:var(--mute)}.briefCtx.sec .clue i{width:6px;height:6px;margin-top:5px}
 .mechk{font:800 13px var(--game);letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin:16px 0 6px}
-.req{display:flex;align-items:center;gap:10px;padding:5px 10px;margin-top:5px;border-radius:10px;background:#0a1912;border:1px solid #21402f;font:700 13px var(--tc)}
+.reqGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:5px}
+.req{padding:5px 10px;border-radius:10px;background:#0a1912;border:1px solid #21402f;font:700 13px var(--tc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ctxk{font:800 12px var(--tc);letter-spacing:.5px;color:var(--mute);text-transform:uppercase;margin-bottom:8px}
 .sect{font:800 13px var(--game);letter-spacing:1.2px;color:var(--mute);margin:14px 0 4px}
 /* 3D 場景 */
@@ -175,8 +176,9 @@ svg.ic{display:block}
 .tiers .hd,.ffbox .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}.tiers .hd b,.ffbox .hd b{font:800 34px var(--tc);letter-spacing:1px}.tiers .hd span,.ffbox .hd span{font:12px var(--tc);color:var(--mute)}
 .tr{margin-bottom:6px;padding:5px 10px 6px;border-radius:12px;background:#0a1912;border:1px solid #21402f}
 .tn{display:flex;align-items:center;gap:8px;margin-bottom:2px;height:24px}.tn span{font:800 14px var(--tc)}.tn small{margin-left:auto;font:700 11px var(--tc);color:var(--mute)}
-.tg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.tg.two{grid-template-columns:repeat(2,1fr)}
-.tc{padding:8px 6px;border-radius:8px;background:#071510;border:1.5px solid #1f3a2c;text-align:center;transition:all .12s}
+.tg{display:grid;grid-template-columns:repeat(3,minmax(120px,160px));gap:8px;justify-content:center}.tg.two{grid-template-columns:repeat(2,minmax(120px,160px))}
+.tc{display:flex;flex-direction:column;padding:8px 6px;border-radius:8px;background:#071510;border:1.5px solid #1f3a2c;text-align:center;transition:all .12s}
+.tc .box{height:44px;margin:0 0 7px}
 .tc b{display:block;font:700 12px/1.3 var(--tc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tc small{display:block;font:600 10.5px/1.2 var(--mono);color:var(--mute)}
 .tc:hover:not(:disabled){border-color:#3f7a62}
 .tc.on{background:linear-gradient(180deg,#1f6e53,#0f3a2b);border-color:var(--teal);box-shadow:0 0 14px rgba(63,224,187,.4)}
@@ -197,7 +199,8 @@ svg.ic{display:block}
 .lim{position:absolute;border:2px dashed rgba(255,198,90,.75);border-radius:4px}
 .sil{position:relative;border-radius:3px;background:linear-gradient(135deg,#2a9a6c,#0e4a31);box-shadow:0 0 0 1px #4fd1a0}
 .spec{display:flex;flex-wrap:wrap;gap:4px;font:700 11px var(--game);color:#c8d6cd}.spec span{padding:1px 5px;border-radius:5px;background:#0a1c15}
-.spec .pr{margin-left:auto;display:flex;align-items:center;gap:3px;background:none}.spec .coin{width:12px;height:12px}
+.prRow{display:flex;align-items:center;justify-content:flex-end;gap:3px;margin-top:5px;font:700 11px var(--game);color:#c8d6cd}
+.prRow .coin{width:12px;height:12px}
 .var{display:flex;gap:4px;margin-top:6px}.var button{flex:1;padding:8px 0;border-radius:6px;font:700 13px var(--tc);background:#0a1c15;border:1px solid #21402f;color:var(--mute)}
 .var button.on{background:#1f6e53;border-color:var(--teal);color:var(--ink)}
 /* 出貨 */
@@ -213,29 +216,32 @@ svg.ic{display:block}
 .modal{position:fixed;inset:0;z-index:40;display:none;place-items:center;padding:20px;background:rgba(2,8,6,.75);backdrop-filter:blur(3px)}
 .modal.on{display:grid}
 .card{width:min(820px,100%);max-height:calc(100vh - 40px);overflow:auto;padding:24px 26px;border-radius:20px}
-.card h2{margin:4px 0 10px;font:900 56px/1.1 var(--tc)}
+.card h2{margin:2px 0 8px;font:900 34px/1.15 var(--tc)}
+.card h2.failTitle{color:var(--red)}
+.failReasons{margin:10px 0 0;padding-left:20px;color:#ffb0a8;font:13.5px/1.7 var(--tc)}
 .newmech{display:flex;gap:14px;align-items:center;padding:14px 16px;margin:10px 0;border-radius:14px;background:linear-gradient(90deg,rgba(255,198,90,.16),rgba(255,198,90,.03));border:1.5px solid rgba(255,198,90,.6);box-shadow:0 0 22px rgba(255,198,90,.12)}
 .newmech .nmic{flex:none;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:rgba(255,198,90,.16);border:1px solid rgba(255,198,90,.55)}
 .newmech b{display:block;font:800 16px var(--tc);color:var(--gold)}.newmech span{font:13.5px/1.6 var(--tc);color:#e1ebe5}
-.row{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}
+.row{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px}
 /* 十年結算 */
-.years{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:18px 0 8px}
-.yr{position:relative;height:96px;border-radius:12px;background:#0a1912;border:1.5px solid #21402f;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:8px;font:800 12px var(--game);color:var(--mute);transition:all .25s}
+.years{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:10px 0 6px}
+.yr{position:relative;height:62px;border-radius:12px;background:#0a1912;border:1.5px solid #21402f;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:5px;font:800 11px var(--game);color:var(--mute);transition:all .25s}
 .yr.lit{border-color:var(--green);color:var(--green);background:#0f2a1f}
 .yr.hit{border-color:var(--red);color:#fff;background:linear-gradient(180deg,#5a1612,#2a0b09);box-shadow:0 0 20px rgba(255,79,69,.5);animation:shake .35s}
-.yr .ev{position:absolute;top:8px}
+.yr .ev{position:absolute;top:5px}
+.yr .ev svg{width:18px;height:18px}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-.evlog{min-height:52px;font:14px/1.6 var(--tc)}
+.evlog{min-height:0;font:13px/1.45 var(--tc)}
 .evlog div{animation:pop .3s}
 @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .result{display:none}.result.on{display:block;animation:pop .35s}
-.bigscore{display:flex;align-items:center;gap:20px;margin:6px 0 14px}
-.bigscore b{font:900 84px/1 var(--game);background:linear-gradient(180deg,#fff6d2,#ffc65a 55%,#d1840f);-webkit-background-clip:text;background-clip:text;color:transparent}
-.bigscore .stars .star{width:44px;height:44px;margin-right:4px;transform:scale(.3);opacity:0;transition:all .35s cubic-bezier(.2,1.6,.4,1)}
+.bigscore{display:flex;align-items:center;gap:16px;margin:4px 0 10px}
+.bigscore b{font:900 52px/1 var(--game);background:linear-gradient(180deg,#fff6d2,#ffc65a 55%,#d1840f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bigscore .stars .star{width:32px;height:32px;margin-right:3px;transform:scale(.3);opacity:0;transition:all .35s cubic-bezier(.2,1.6,.4,1)}
 .bigscore .stars .star.show{transform:scale(1);opacity:1}
-.cmp{width:100%;border-collapse:collapse;font:13.5px/1.45 var(--tc)}
-.cmp th{font:700 12px var(--tc);color:var(--mute);text-align:left;padding:6px 8px;border-bottom:1px solid #21402f}
-.cmp td{padding:7px 8px;border-bottom:1px solid #16301f;vertical-align:top}
+.cmp{width:100%;border-collapse:collapse;font:13px/1.35 var(--tc)}
+.cmp th{font:700 11px var(--tc);color:var(--mute);text-align:left;padding:4px 8px;border-bottom:1px solid #21402f}
+.cmp td{padding:5px 8px;border-bottom:1px solid #16301f;vertical-align:top}
 .cmp .o{color:var(--amber)}.cmp .u{color:#ff8a80}.cmp .r{color:var(--green)}
 .cmp td.w{color:#b9cbc0;font-size:12.5px}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;z-index:60;padding:10px 18px;border-radius:12px;background:#1d0f0d;border:1px solid var(--red);font:700 14px var(--tc);transition:all .25s;pointer-events:none}
@@ -243,7 +249,7 @@ svg.ic{display:block}
 .floatcoin{position:fixed;z-index:70;font:900 20px var(--game);color:var(--gold);pointer-events:none;animation:fly .7s forwards;text-shadow:0 2px 0 #000}
 @keyframes fly{to{transform:translateY(-50px);opacity:0}}
 .mark{text-align:center;font:11px/1.6 var(--tc);color:#557264;margin-top:16px}
-.mark.playMark{margin:2px 0 6px;font-size:9.5px;line-height:1.3;flex:0 0 auto}
+.mark.playMark{position:absolute;left:0;top:100%;margin:5px 0 0;font-size:9px;line-height:1.3;max-width:640px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
 /* ---------- 窄螢幕 ---------- */
 @media (max-width:1180px){
  .ffr{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -272,7 +278,10 @@ svg.ic{display:block}
  .zone h3{font-size:21px}
  .lvl b{font-size:19px}
  .card{padding:18px}
- .bigscore b{font-size:64px}
+ .card h2{font-size:28px}
+ .yr{height:54px}
+ .bigscore b{font-size:42px}
+ .bigscore .stars .star{width:26px;height:26px}
  .cmp,.cmp tbody,.cmp tr,.cmp td{display:block}
  .cmp tr:first-child{display:none}
  .cmp tr{padding:8px 0;border-bottom:1px solid #16301f}
@@ -311,7 +320,8 @@ svg.ic{display:block}
   <div class="hex"><div class="in" id="hudIc"></div></div><div class="ttl"><small id="hudNo"></small><b id="hudName"></b></div>
   <div class="dots" id="hudDots"></div><div class="sp"></div>
   <button class="icon-btn" id="bBrief" aria-label="brief">?</button>
-  <div class="costpill"><span class="coin"></span><b id="hudCost">0</b><small data-t="perUnit"></small></div><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div>
+  <div class="costpill"><span class="coin"></span><b id="hudCost">0</b><small data-t="perUnit"></small></div><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button>
+  <p class="mark playMark" data-t="mark"></p></div>
  <div class="topRow">
   <div class="pn stage3d" id="stage3d"></div>
   <div class="pn scn" id="scn"></div>
@@ -321,7 +331,6 @@ svg.ic{display:block}
  </div>
  <div class="pager">
   <div class="pagerHd"><button class="icon-btn" id="bPagePrev" aria-label="prev">‹</button><div class="pageDots" id="pageDots"></div><button class="icon-btn" id="bPageNext" aria-label="next">›</button></div>
-  <p class="mark playMark" data-t="mark"></p>
   <div class="pages">
    <div class="page" data-page="0"><div class="pn ffbox"><div class="hd"><i class="stepno">1</i><b data-t="pickFF"></b><span data-t="pickFFsub"></span></div><div class="ffr" id="ffr"></div></div></div>
    <div class="page" data-page="1"><div class="pn shelf" id="shelf"></div></div>
@@ -407,6 +416,7 @@ const TXT = {
   perPort:"／埠", preset:"本關預設",
   req:{len:"機構 ≤ {v} mm",com:"COM × {v}",lan:"LAN × {v}",can:"CAN × {v}",lte:"行動網路 × {v}",cards:"必插：{v}"},
   reason:{noBoard:"先選一塊板子",tooBig:"板子放不進機構",noSlot:"擴充槽不夠插必要的卡",noM2:"M.2 插槽不夠",customNoAddon:"客製底板不能再插卡",need_com:"COM 不夠",need_lan:"LAN 不夠",need_can:"缺 CAN",need_lte:"缺行動網路"},
+  failTitle:"時間到，配置不合格", failSub:"這個配置連基本介面需求都沒滿足，無法出貨，不計分也不會解鎖下一關：",
   ready:"可以出貨", briefGo:"開始配置", newMech:"新機制", newMechKicker:"本關教學", brief:"任務簡報",
   mech:{board:["板型","板子越大，內建介面與擴充槽越多，但越貴、越佔空間。先找放得下又夠用的最小板。"],
    usb:["USB 轉接器","缺介面時插個轉接器很便宜，但現場會鬆脫、沒有隔離，十年內會出事，會算進損失。"],
@@ -458,6 +468,7 @@ const TXT = {
   perPort:"/port", preset:"Preset here",
   req:{len:"Enclosure ≤ {v} mm",com:"COM × {v}",lan:"LAN × {v}",can:"CAN × {v}",lte:"Cellular × {v}",cards:"Must fit: {v}"},
   reason:{noBoard:"Pick a board first",tooBig:"The board does not fit the enclosure",noSlot:"Not enough slots for the required cards",noM2:"Not enough M.2 sockets",customNoAddon:"A custom carrier takes no add-ons",need_com:"Not enough COM",need_lan:"Not enough LAN",need_can:"CAN missing",need_lte:"Cellular missing"},
+  failTitle:"Time's up — build not valid", failSub:"This build doesn't even meet the basic I/O requirements, so it can't ship. No score, and the next level stays locked:",
   ready:"Ready to ship", briefGo:"Start building", newMech:"New mechanic", newMechKicker:"This level's lesson", brief:"Briefing",
   mech:{board:["Form factor","Bigger boards bring more I/O and slots, but cost more and take more space. Find the smallest board that fits and is enough."],
    usb:["USB adapters","An adapter is a cheap fix for a missing port, but in the field it loosens and has no isolation. It counts as a loss."],
@@ -484,47 +495,47 @@ const TXT = {
 };
 const LVT = {
  zh: {
-  1:{n:"自助點餐機",s:"速食店櫃檯旁的點餐機，接收據印表機與刷卡機，一條網路回總部。機殼很薄。",c:["冷氣房，室溫","印表機、刷卡機各一個 COM","機殼內板子長邊不超過 150 mm"],
+  1:{n:"自助點餐機",s:"速食店櫃檯旁的點餐機，接收據印表機與刷卡機，一條網路回總部。機殼很薄。",c:["機殼內板子長邊不超過 150 mm","冷氣房，室溫","印表機、刷卡機各一個 COM"],
      w:{board:"Pico-ITX 多介面款剛好有 2 個 COM、2 個 LAN，又最小。",temp:"室內冷氣房",power:"店內 12 V 轉接器",prot:"線短、室內",store:"只存點餐暫存",supply:"店面三年換一代",cert:"不需要"}},
-  2:{n:"智慧販賣機",s:"刷臉付款需要一張 AI 加速卡；紙鈔機、硬幣機、出貨馬達、讀卡機各要一個 COM。",c:["AI 加速卡要佔一個 PCIe 槽","需要 4 個 COM","機箱內長邊不超過 200 mm"],
+  2:{n:"智慧販賣機",s:"刷臉付款需要一張 AI 加速卡；紙鈔機、硬幣機、出貨馬達、讀卡機各要一個 COM。",c:["機箱內長邊不超過 200 mm","AI 加速卡要佔一個 PCIe 槽","需要 4 個 COM"],
      w:{board:"Mini-ITX 6 COM 款：唯一的槽給 AI 卡，COM 已內建。基本款要加 COM 卡卻沒槽。",temp:"室內大廳",power:"機內 12 V",prot:"機內短線",store:"交易暫存",supply:"三年改款",cert:"不需要"}},
-  3:{n:"預測性維護資料站",s:"產線馬達旁的資料站，兩張資料擷取卡全天記錄振動波形，送往分析伺服器。",c:["兩張資料擷取卡要兩個槽","24 小時連續寫入波形","控制櫃內長邊不超過 260 mm"],
+  3:{n:"預測性維護資料站",s:"產線馬達旁的資料站，兩張資料擷取卡全天記錄振動波形，送往分析伺服器。",c:["控制櫃內長邊不超過 260 mm","兩張資料擷取卡要兩個槽","24 小時連續寫入波形"],
      w:{board:"Micro-ATX 有 4 個槽，兩張擷取卡放得下；Mini-ITX 只有 1 個槽。",temp:"空調控制櫃",power:"櫃內 12 V",prot:"櫃內短線",store:"連續寫入波形，消費級幾年就寫壞，要企業級高耐寫",supply:"產線設備用十年",cert:"不需要"}},
-  4:{n:"冷鏈倉儲 AGV",s:"在 −18°C 冷凍倉裡搬貨的無人搬運車，24 V 電池供電，用 CAN 控制馬達驅動器，雷達與無線各一條網路。",c:["冷凍倉 −18°C","24 V 電池，換電池時會瞬斷","車體振動；車上空間小，長邊 ≤150 mm"],
+  4:{n:"冷鏈倉儲 AGV",s:"在 −18°C 冷凍倉裡搬貨的無人搬運車，24 V 電池供電，用 CAN 控制馬達驅動器，雷達與無線各一條網路。",c:["車上空間小，長邊 ≤150 mm","冷凍倉 −18°C","24 V 電池，換電池時會瞬斷","車體振動"],
      w:{board:"Pico-ITX 多介面款加 M.2 CAN 模組最省；USB 轉 CAN 會在振動中鬆脫。",temp:"−18°C 需要 −20～70°C",power:"24 V 電池需要 9～36 V 寬壓",prot:"車內短線",store:"換電池瞬斷，要斷電保護",supply:"物流設備用十年",cert:"不需要"}},
-  5:{n:"床邊照護終端",s:"病床旁的終端，接生理監視器和輸液幫浦，一條院內網路、一條設備網路。",c:["接病患設備：病患安全","醫療級電源轉接器 19 V","床邊吊臂上，長邊 ≤150 mm"],
+  5:{n:"床邊照護終端",s:"病床旁的終端，接生理監視器和輸液幫浦，一條院內網路、一條設備網路。",c:["床邊吊臂上，長邊 ≤150 mm","接病患設備：病患安全","醫療級電源轉接器 19 V"],
      w:{board:"Pico-ITX 多介面款剛好 2 COM、2 LAN。",temp:"病房恆溫",power:"19 V 需要寬壓輸入",prot:"接病患設備，COM 要隔離",store:"病歷暫存要斷電保護",supply:"醫療設備用十年",cert:"要 IEC 60601-1 醫療認證"}},
-  6:{n:"醫療影像工作站",s:"超音波／內視鏡推車上的工作站：一張 GPU 做影像運算，一張影像擷取卡接探頭。",c:["GPU 要 x16 槽，擷取卡要 x4 槽","影像大量寫入","推車機箱，長邊 ≤320 mm"],
+  6:{n:"醫療影像工作站",s:"超音波／內視鏡推車上的工作站：一張 GPU 做影像運算，一張影像擷取卡接探頭。",c:["推車機箱，長邊 ≤320 mm","GPU 要 x16 槽，擷取卡要 x4 槽","影像大量寫入"],
      w:{board:"Micro-ATX 有 x16＋x4，剛好放兩張卡；ATX 多出的槽是浪費。",temp:"手術室恆溫",power:"推車內 12 V",prot:"不接長線",store:"影像大量寫入，要企業級",supply:"醫療設備用十年",cert:"要醫療認證"}},
-  7:{n:"快充樁控制器",s:"高速公路旁的直流快充樁，年產一萬台。RS-485 接電表與功率模組，CAN 接模組，行動網路回後台；車端通訊由專用模組負責，不經這張控制板。",c:["冬天 −30°C，夏天機櫃 75°C","4 個 COM、1 個 CAN、行動網路","長線與雷擊；樁內長邊 ≤150 mm","年量 10,000 台"],
+  7:{n:"快充樁控制器",s:"高速公路旁的直流快充樁，年產一萬台。RS-485 接電表與功率模組，CAN 接模組，行動網路回後台；車端通訊由專用模組負責，不經這張控制板。",c:["樁內長邊 ≤150 mm","冬天 −30°C，夏天機櫃 75°C","4 個 COM、1 個 CAN、行動網路","長線與雷擊","年量 10,000 台"],
      w:{board:"年量一萬台，COM Express 加客製底板介面剛好、開發費攤平，比標準板省。",temp:"−30～75°C 要 −40～85°C",power:"樁內 24 V 輔助電源，9～36 V",prot:"長線與雷擊，要隔離",store:"交易紀錄要斷電保護",supply:"充電網路用十年",cert:"充電樁整機認證由整機負責，控制板不需另買"}},
-  8:{n:"變電站自動化電腦",s:"無空調的變電站機房，接舊式保護電驛（RS-485），雙重站內網路，站內直流電池供電。",c:["−40～75°C，無空調","110 V 站用直流電池","4 COM、4 LAN；機架內長邊 ≤320 mm","用十五年以上"],
+  8:{n:"變電站自動化電腦",s:"無空調的變電站機房，接舊式保護電驛（RS-485），雙重站內網路，站內直流電池供電。",c:["機架內長邊 ≤320 mm","−40～75°C，無空調","110 V 站用直流電池","4 COM、4 LAN","用十五年以上"],
      w:{board:"Mini-ITX 6 COM 款＋1 張 2 埠 LAN 卡剛好；Micro-ATX 太貴。",temp:"−40～75°C",power:"110 V 標稱直流要寬壓隔離；站用設備通常還要雙電源備援",prot:"高壓場域要隔離",store:"事件紀錄要斷電保護",supply:"變電站用十五年",cert:"要 IEC 61850-3 變電站認證"}},
-  9:{n:"船舶導航電腦",s:"駕駛台上的導航電腦，接 GPS、電羅經、AIS、測深儀，都是 NMEA 0183（RS-422）。",c:["4 個 NMEA 儀器（RS-422）","船上 24 V 直流","駕駛台 −15～55°C；長邊 ≤200 mm"],
+  9:{n:"船舶導航電腦",s:"駕駛台上的導航電腦，接 GPS、電羅經、AIS、測深儀，都是 NMEA 0183（RS-422）。",c:["長邊 ≤200 mm","4 個 NMEA 儀器（RS-422）","船上 24 V 直流","駕駛台 −15～55°C"],
      w:{board:"3.5 吋 6 COM 款，內建 COM 就夠，最小。",temp:"−15～55°C 要 −20～70°C",power:"船用 24 V 要寬壓",prot:"船上長線，要隔離",store:"航行紀錄要斷電保護",supply:"船舶用十年",cert:"要 IEC 60945 船用認證"}},
-  10:{n:"列車通訊閘道",s:"座椅下的車載閘道：CAN 接車上控制網路，行動網路回控制中心，兩條車廂網路。",c:["−40～70°C、強振動","24～110 V 車用電源","CAN、行動網路；長邊 ≤150 mm","鐵道車輛用十五年"],
+  10:{n:"列車通訊閘道",s:"座椅下的車載閘道：CAN 接車上控制網路，行動網路回控制中心，兩條車廂網路。",c:["長邊 ≤150 mm","−40～70°C、強振動","24～110 V 車用電源","CAN、行動網路","鐵道車輛用十五年"],
      w:{board:"3.5 吋基本款有 2 個 M.2，CAN 和 LTE 都用 M.2 模組；Pico 只有 1 個 M.2。",temp:"−40～70°C",power:"鐵道 110 V 標稱系統要寬壓隔離",prot:"車內線，加強突波即可",store:"振動與斷電，要斷電保護",supply:"鐵道用十五年",cert:"要 EN 50155 鐵道認證"}},
  },
  en: {
-  1:{n:"Self-order Kiosk",s:"A kiosk next to a fast-food counter, wired to a receipt printer and a card reader, with one line back to HQ. The case is thin.",c:["Air-conditioned room","One COM each for printer and card reader","Board length ≤ 150 mm inside the case"],
+  1:{n:"Self-order Kiosk",s:"A kiosk next to a fast-food counter, wired to a receipt printer and a card reader, with one line back to HQ. The case is thin.",c:["Board length ≤ 150 mm inside the case","Air-conditioned room","One COM each for printer and card reader"],
      w:{board:"The Pico-ITX More I/O version has exactly 2 COM and 2 LAN, and it is the smallest.",temp:"Indoor, air-conditioned",power:"12 V adapter in the store",prot:"Short indoor cables",store:"Order cache only",supply:"Stores refresh every 3 years",cert:"Not needed"}},
-  2:{n:"Smart Vending Machine",s:"Face payment needs an AI accelerator card; the bill acceptor, coin mech, motor board and card reader each need a COM.",c:["The AI card takes a PCIe slot","4 COM needed","Length ≤ 200 mm inside the cabinet"],
+  2:{n:"Smart Vending Machine",s:"Face payment needs an AI accelerator card; the bill acceptor, coin mech, motor board and card reader each need a COM.",c:["Length ≤ 200 mm inside the cabinet","The AI card takes a PCIe slot","4 COM needed"],
      w:{board:"Mini-ITX 6-COM: the only slot goes to the AI card and the COM ports are on board. The basic one needs a COM card but has no slot left.",temp:"Indoor lobby",power:"12 V inside",prot:"Short internal cables",store:"Transaction cache",supply:"Refreshed every 3 years",cert:"Not needed"}},
-  3:{n:"Predictive-Maintenance DAQ",s:"A data station beside line motors. Two DAQ cards log vibration waveforms all day and send them to analytics.",c:["Two DAQ cards need two slots","Writes waveforms 24/7","Length ≤ 260 mm in the control cabinet"],
+  3:{n:"Predictive-Maintenance DAQ",s:"A data station beside line motors. Two DAQ cards log vibration waveforms all day and send them to analytics.",c:["Length ≤ 260 mm in the control cabinet","Two DAQ cards need two slots","Writes waveforms 24/7"],
      w:{board:"Micro-ATX has 4 slots for two DAQ cards; Mini-ITX has only one.",temp:"Air-conditioned cabinet",power:"12 V in the cabinet",prot:"Short cabinet wiring",store:"Continuous writes wear out consumer drives in a few years: enterprise endurance",supply:"Line equipment runs 10 years",cert:"Not needed"}},
-  4:{n:"Cold-Storage AGV",s:"A driverless cart in a −18°C freezer warehouse, on a 24 V battery, driving motors over CAN, with lidar and wireless on two LANs.",c:["Freezer at −18°C","24 V battery, drops out during swaps","Vibration; length ≤ 150 mm"],
+  4:{n:"Cold-Storage AGV",s:"A driverless cart in a −18°C freezer warehouse, on a 24 V battery, driving motors over CAN, with lidar and wireless on two LANs.",c:["Length ≤ 150 mm","Freezer at −18°C","24 V battery, drops out during swaps","Vibration"],
      w:{board:"Pico-ITX More I/O plus an M.2 CAN module is cheapest; a USB-to-CAN shakes loose.",temp:"−18°C needs −20–70°C",power:"24 V battery needs 9–36 V",prot:"Short on-board cables",store:"Battery swaps cut power: PLP needed",supply:"Logistics gear runs 10 years",cert:"Not needed"}},
-  5:{n:"Bedside Care Terminal",s:"A terminal at the bedside, wired to the patient monitor and infusion pump, with a hospital LAN and a device LAN.",c:["Connected to patient devices: patient safety","Medical adapter at 19 V","On a bed arm, length ≤ 150 mm"],
+  5:{n:"Bedside Care Terminal",s:"A terminal at the bedside, wired to the patient monitor and infusion pump, with a hospital LAN and a device LAN.",c:["On a bed arm, length ≤ 150 mm","Connected to patient devices: patient safety","Medical adapter at 19 V"],
      w:{board:"Pico-ITX More I/O has exactly 2 COM and 2 LAN.",temp:"Ward at room temperature",power:"19 V needs a wide input",prot:"Patient devices: isolated COM",store:"Records need PLP",supply:"Medical gear runs 10 years",cert:"IEC 60601-1 medical certification"}},
-  6:{n:"Medical Imaging Workstation",s:"An ultrasound/endoscopy cart: a GPU for image processing and a capture card for the probe.",c:["GPU needs x16, capture card needs x4","Heavy image writes","Cart enclosure, length ≤ 320 mm"],
+  6:{n:"Medical Imaging Workstation",s:"An ultrasound/endoscopy cart: a GPU for image processing and a capture card for the probe.",c:["Cart enclosure, length ≤ 320 mm","GPU needs x16, capture card needs x4","Heavy image writes"],
      w:{board:"Micro-ATX has x16 plus x4 for both cards; ATX's extra slots are waste.",temp:"Climate-controlled OR",power:"12 V inside the cart",prot:"No long lines",store:"Heavy image writes: enterprise",supply:"Medical gear runs 10 years",cert:"Medical certification"}},
-  7:{n:"DC Fast-Charger Controller",s:"Highway fast chargers, 10,000 a year. RS-485 to meters and power modules, CAN to the modules, cellular to the backend; vehicle-side communication runs on its own dedicated module, not through this board.",c:["−30°C in winter, 75°C cabinet in summer","4 COM, 1 CAN, cellular","Long lines and lightning; length ≤ 150 mm","10,000 units a year"],
+  7:{n:"DC Fast-Charger Controller",s:"Highway fast chargers, 10,000 a year. RS-485 to meters and power modules, CAN to the modules, cellular to the backend; vehicle-side communication runs on its own dedicated module, not through this board.",c:["Length ≤ 150 mm","−30°C in winter, 75°C cabinet in summer","4 COM, 1 CAN, cellular","Long lines and lightning","10,000 units a year"],
      w:{board:"At 10,000 a year a COM Express module on a custom carrier has exactly the I/O, with NRE spread thin: cheaper than a standard board.",temp:"−30–75°C needs −40–85°C",power:"24 V auxiliary, 9–36 V",prot:"Long lines and lightning: isolated",store:"Billing records need PLP",supply:"Charging networks run 10 years",cert:"The charger is certified as a whole; the controller needs no extra"}},
-  8:{n:"Substation Automation PC",s:"An unheated substation room: legacy protection relays on RS-485, redundant station networks, power from the station battery.",c:["−40–75°C, no HVAC","110 V DC station battery","4 COM, 4 LAN; length ≤ 320 mm in the rack","Runs 15+ years"],
+  8:{n:"Substation Automation PC",s:"An unheated substation room: legacy protection relays on RS-485, redundant station networks, power from the station battery.",c:["Length ≤ 320 mm in the rack","−40–75°C, no HVAC","110 V DC station battery","4 COM, 4 LAN","Runs 15+ years"],
      w:{board:"Mini-ITX 6-COM plus one 2-port LAN card is just right; Micro-ATX costs more.",temp:"−40–75°C",power:"110 V nominal DC needs wide-range isolated; substation gear typically also wants dual-power redundancy",prot:"High-voltage site: isolated",store:"Event logs need PLP",supply:"Substations run 15 years",cert:"IEC 61850-3 substation certification"}},
-  9:{n:"Marine Navigation PC",s:"A navigation PC on the bridge, wired to GPS, gyro, AIS and echo sounder, all NMEA 0183 over RS-422.",c:["4 NMEA instruments (RS-422)","24 V DC ship power","Bridge −15–55°C; length ≤ 200 mm"],
+  9:{n:"Marine Navigation PC",s:"A navigation PC on the bridge, wired to GPS, gyro, AIS and echo sounder, all NMEA 0183 over RS-422.",c:["Length ≤ 200 mm","4 NMEA instruments (RS-422)","24 V DC ship power","Bridge −15–55°C"],
      w:{board:"The 3.5\" 6-COM board has the ports on board and is the smallest.",temp:"−15–55°C needs −20–70°C",power:"24 V ship power needs a wide input",prot:"Long runs on a ship: isolated",store:"Voyage logs need PLP",supply:"Ships run 10 years",cert:"IEC 60945 marine certification"}},
-  10:{n:"Train Communication Gateway",s:"A gateway under a seat: CAN to the train control network, cellular to the control center, two car networks.",c:["−40–70°C, heavy vibration","24–110 V train power","CAN and cellular; length ≤ 150 mm","Rolling stock runs 15 years"],
+  10:{n:"Train Communication Gateway",s:"A gateway under a seat: CAN to the train control network, cellular to the control center, two car networks.",c:["Length ≤ 150 mm","−40–70°C, heavy vibration","24–110 V train power","CAN and cellular","Rolling stock runs 15 years"],
      w:{board:"The basic 3.5\" has two M.2 sockets for CAN and LTE modules; Pico has only one.",temp:"−40–70°C",power:"Rail's 110 V nominal system needs wide-range isolated",prot:"Car wiring: surge+ is enough",store:"Vibration and power cuts: PLP",supply:"Rail runs 15 years",cert:"EN 50155 rail certification"}},
  }
 };
@@ -592,11 +603,21 @@ function renderMap() {
   $$(".lvl").forEach((b) => b.onclick = () => { beep("click"); startLevel(+b.dataset.l); });
   renderTrophyRow();
 }
+function trophyIcon(done, s = 26) {
+  const style = done ? `fill="currentColor" stroke="none"` : `fill="none" stroke="currentColor" stroke-width="1.6"`;
+  return `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" aria-hidden="true"><g ${style} stroke-linecap="round" stroke-linejoin="round">
+   <path d="M7 3h10v5a5 5 0 0 1-10 0V3z"/>
+   <path d="M7 4H4v2a3 3 0 0 0 3 3"/>
+   <path d="M17 4h3v2a3 3 0 0 0-3 3"/>
+   <rect x="11" y="13" width="2" height="4"/>
+   <path d="M8 21h8l-1-2H9l-1 2z"/>
+  </g></svg>`;
+}
 function renderTrophyRow() {
   const el = $("#trophyRow"); if (!el) return;
   const allDone = SQ.LEVELS.every((l) => PROG[l.id] != null);
   el.innerHTML = `<div class="k">${T("trophyK")}</div>
-    <div class="tropSlots">${SQ.LEVELS.map((l) => `<div class="tslot${PROG[l.id] != null ? " done" : ""}">${ic("badge", 16)}<b>${l.id}</b></div>`).join("")}</div>
+    <div class="tropSlots">${SQ.LEVELS.map((l) => { const done = PROG[l.id] != null; return `<div class="tslot${done ? " done" : ""}">${trophyIcon(done)}<b>${l.id}</b></div>`; }).join("")}</div>
     ${allDone ? `<button class="btn" id="bClaim">${T("claimBtn")}</button>` : ""}`;
   if (allDone) $("#bClaim").onclick = () => { beep("ok"); openCert(); };
 }
@@ -695,6 +716,13 @@ function startLevel(id) {
   TIME_LEFT = TIME_BUDGET[id] || 0;
   show("play"); renderAll(); openBrief();
   playBgm();
+  goFullscreen();
+}
+function goFullscreen() {
+  const el = document.documentElement;
+  const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+  if (!req || document.fullscreenElement || document.webkitFullscreenElement) return;
+  try { const p = req.call(el); if (p && p.catch) p.catch(() => {}); } catch {}
 }
 function playBgm() {
   const el = FORMAL ? $("#bgmFormal") : $("#bgmPractice"), other = FORMAL ? $("#bgmPractice") : $("#bgmFormal");
@@ -778,7 +806,7 @@ function renderScn() {
   for (const k of ["com","lan","can","lte"]) if (CUR.req[k]) rq += r(T("req." + k, {v: CUR.req[k]}));
   if (CUR.cards.length) rq += r(T("req.cards", {v: CUR.cards.map((c) => TXT[LANG].card[c]).join("、")}));
   $("#scn").innerHTML = `<div class="ctxk">${T("ctxLabel")}</div><div class="top"><div class="ic">${ic(CUR.icon, 40)}</div><div><div class="k">${T("dom." + CUR.dom)}</div><h2>${t.n}</h2></div></div>
-   <p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}<div class="sect">I/O</div>${rq}`;
+   <p class="story">${t.s}</p><div class="clueGrid">${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}</div><div class="sect">I/O</div><div class="reqGrid">${rq}</div>`;
 }
 
 function renderScene() {
@@ -857,13 +885,14 @@ function renderTierPages() {
   tierOrder().forEach((i, slot) => {
     const Tr = SQ.TIERS[i], un = isUnlocked(Tr.id), opts = TXT[LANG].tierOpt[Tr.id];
     const costs = TXT[LANG].tierCost[Tr.id] || Tr.cost.map((c) => String(c));
-    const icon = ic({temp:"thermo_hot",power:"dc_power",prot:"surge",store:"ssd",supply:"cal10",cert:"cert"}[Tr.id], 24);
+    const iconName = {temp:"thermo_hot",power:"dc_power",prot:"surge",store:"ssd",supply:"cal10",cert:"cert"}[Tr.id];
+    const icon = ic(iconName, 24);
     const hd = `<div class="hd"><i class="stepno">${slot + 3}</i><b>${T("tier." + Tr.id)}</b></div>`;
     const body = !un
       ? `<div class="tr locked"><div class="tn">${icon}<span class="lockb">${ic("lock", 14)}${T("locked", {n: unlockLevel(Tr.id)})}</span></div>
          <div class="trWhy">${TXT[LANG].mech[Tr.id][1]} <b>${T("tierApplied", {v: opts[B.t[i]]})}</b></div></div>`
       : `<div class="tr"><div class="tn">${icon}</div>
-         <div class="tg ${opts.length === 2 ? "two" : ""}">${opts.map((o, k) => `<button class="tc ${TOUCHED.has(i) && B.t[i] === k ? "on" : ""}" data-i="${i}" data-k="${k}"><b>${o}</b><small>${costs[k]}</small></button>`).join("")}</div></div>`;
+         <div class="tg ${opts.length === 2 ? "two" : ""}">${opts.map((o, k) => `<button class="tc ${TOUCHED.has(i) && B.t[i] === k ? "on" : ""}" data-i="${i}" data-k="${k}"><div class="box">${ic(iconName, 28)}</div><b>${o}</b><small>${costs[k]}</small></button>`).join("")}</div></div>`;
     $(`#tierPage${slot}`).innerHTML = hd + body;
   });
   $$(".tierPage .tc").forEach((x) => x.onclick = () => { const i = +x.dataset.i; if (!isUnlocked(SQ.TIERS[i].id)) { beep("err"); toast(T("needToast", {n: unlockLevel(SQ.TIERS[i].id)})); return; }
@@ -878,13 +907,14 @@ function renderFF() {
     const sc = 62 / Math.max(CUR.maxLen, 305);
     const silW = Math.min(cur.len * sc * 1.9, 150), silH = Math.min(FFH[ff] * sc * 1.9, 70), lim = CUR.maxLen * sc * 1.9;
     const badge = lock ? `<span class="bd lk">${T("locked", {n: unlockLevel("custom")})}</span>` : `<span class="bd dim">${cur.len} × ${FFH[ff]} mm</span>`;
-    const spec = cur.custom ? `<span>${T("comeIo")}</span><span class="pr"><i class="coin"></i>${fmt(cur.price + SQ.COME_NRE / CUR.vol)}</span>`
-      : `<span>COM ${cur.com}</span><span>LAN ${cur.lan}</span><span>${T("slotX16")}${cur.x16}${cur.x4 ? "+" + T("slotX4") + cur.x4 : ""}</span><span>${T("m2")} ${cur.m2}</span><span class="pr"><i class="coin"></i>${cur.price}</span>`;
+    const spec = cur.custom ? `<span>${T("comeIo")}</span>`
+      : `<span>COM ${cur.com}</span><span>LAN ${cur.lan}</span><span>${T("slotX16")}${cur.x16}${cur.x4 ? "+" + T("slotX4") + cur.x4 : ""}</span><span>${T("m2")} ${cur.m2}</span>`;
+    const price = cur.custom ? fmt(cur.price + SQ.COME_NRE / CUR.vol) : cur.price;
     const varBtns = vars.length > 1 ? `<div class="var">${vars.map((v) => `<button data-b="${v.id}" class="${sel && sel.id === v.id ? "on" : ""}">${(ff === "sbc" ? TXT[LANG].varSbc : TXT[LANG].var)[v.v]}</button>`).join("")}</div>` : "";
     const note = cur.custom ? `<div class="hint" style="margin-top:4px">${T("comeNote", {nre: fmt(SQ.COME_NRE), vol: fmt(CUR.vol)})}</div>` : "";
     return `<div class="ff ${sel && sel.ff === ff ? "sel" : ""} ${lock ? "lock" : ""}" data-b="${cur.id}" role="button" tabindex="0">
       <div class="h"><b>${T("ff." + ff)}</b>${badge}</div><div class="box"><div class="lim" style="width:${lim}px;height:${lim}px"></div><div class="sil" style="width:${silW}px;height:${silH}px"></div></div>
-      <div class="model">${cur.model}</div><div class="spec">${spec}</div>${varBtns}${note}</div>`;
+      <div class="model">${cur.model}</div><div class="spec">${spec}</div><div class="prRow"><i class="coin"></i>${price}</div>${varBtns}${note}</div>`;
   }).join("");
   $$("#ffr .ff").forEach((x) => { const pick = (id) => { if (x.classList.contains("lock")) { beep("err"); toast(T("needToast", {n: unlockLevel("custom")})); return; }
       const nb = SQ.BOARDS.find((b) => b.id === id); if (id !== B.board && Object.keys(B.add).length) { B.add = {}; toast(T("addonReset")); } B.board = id; FF_LAST[nb.ff] = id; beep("add"); renderAll(); };
@@ -908,7 +938,8 @@ function renderShip() {
 /* ---------- 出貨與十年結算 ---------- */
 function ship(force) {
   if ($("#mSim").classList.contains("on")) return;
-  const r = SQ.score(CUR, B); if (!r.e.ok && !force) return;
+  const r = SQ.score(CUR, B);
+  if (!r.e.ok) { if (!force) return; showFail(r); return; }
   stopTimer();
   beep("ship");
   const prev = PROG[CUR.id]; if (prev == null || r.score > prev) { PROG[CUR.id] = r.score; store.set("prog", PROG); }
@@ -934,6 +965,19 @@ function ship(force) {
     $("#skipRow").remove(); showResult(r); };
   $("#bSkip").onclick = finish;
   step._t = setTimeout(step, 400);
+}
+function showFail(r) {
+  stopTimer();
+  beep("err");
+  const reasons = [...new Set(r.e.reasons)].map((x) => T("reason." + x));
+  $("#simCard").innerHTML = `<div class="k" style="color:var(--red)">${T("lv", {n: CUR.id})} · ${L(CUR.id).n}</div>
+   <h2 class="failTitle">${T("failTitle")}</h2>
+   <p class="story">${T("failSub")}</p>
+   <ul class="failReasons">${reasons.map((x) => `<li>${x}</li>`).join("")}</ul>
+   <div class="row"><button class="btn ghost" id="bFailMap">${T("toMap")}</button><button class="btn" id="bFailRetry">${T("retry")}</button></div>`;
+  $("#mSim").classList.add("on");
+  $("#bFailMap").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); stopBgm(); show("map"); renderMap(); };
+  $("#bFailRetry").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); if (FORMAL) { TIME_LEFT = TIME_BUDGET[CUR.id] || 0; startTimer(); } };
 }
 function showResult(r) {
   const res = $("#res"), st = SQ.stars(r.score), best = r.best, t = L(CUR.id);
@@ -963,7 +1007,7 @@ function showResult(r) {
 }
 
 /* ---------- 綁定 ---------- */
-$("#bStart").onclick = () => { beep("ok"); $("#bgmTitle").pause(); show("map"); renderMap(); };
+$("#bStart").onclick = () => { beep("ok"); $("#bgmTitle").pause(); show("map"); renderMap(); goFullscreen(); };
 $("#bMapBack").onclick = () => { beep("click"); stopBgm(); show("title"); playTitleBgm(); };
 $("#bToMap").onclick = () => { beep("click"); stopTimer(); stopBgm(); show("map"); renderMap(); };
 $("#bBrief").onclick = () => { beep("click"); openBrief(); };
@@ -978,7 +1022,7 @@ $$(".bSnd").forEach((x) => x.onclick = () => { MUTE = !MUTE; store.set("mute", M
 ["bgmTitle", "bgmPractice", "bgmFormal"].forEach((id) => wireBgmLoading($(`#${id}`)));
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") { $("#mBrief").classList.remove("on"); $("#mCert").classList.remove("on"); } });
 // 瀏覽器會擋在使用者互動前自動播放音訊，第一次互動時才真的播放標題配樂
-["pointerdown", "keydown"].forEach((ev) => document.addEventListener(ev, () => { if ($("#title").classList.contains("on")) playTitleBgm(); }, { once: true }));
+["click", "keydown"].forEach((ev) => document.addEventListener(ev, () => { if (!MUTE && $("#title").classList.contains("on")) playTitleBgm(); }, { once: true }));
 let _rz; window.addEventListener("resize", () => { clearTimeout(_rz); _rz = setTimeout(() => { if ($("#play").classList.contains("on")) renderScene(); }, 120); });
 i18n();
 // 測試用掛鉤（不影響遊玩）
