@@ -73,6 +73,15 @@ svg.ic{display:block}
 .scn{grid-area:scn;padding:16px}.scenebox{grid-area:scene;display:flex;flex-direction:column;min-height:440px}.tiers{grid-area:tiers;padding:14px}
 .ffbox{grid-area:ff;padding:14px}.shipbox{grid-area:ship;padding:14px;display:flex;flex-direction:column;gap:10px}
 .scn .top{display:flex;gap:12px;align-items:center}.scn .ic{width:60px;height:60px;flex:none;border-radius:14px;display:grid;place-items:center;background:radial-gradient(circle,#2b5a44,#0b2219);border:2px solid var(--gold)}
+/* 步驟序號 */
+.stepno{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:linear-gradient(180deg,#1f6e53,#0f3a2b);border:1px solid var(--teal);color:var(--ink);font:800 12px var(--tc);flex:0 0 auto;box-shadow:0 0 10px rgba(63,224,187,.35)}
+.stepk{display:flex;align-items:center;gap:8px;margin-bottom:8px;font:800 12px var(--tc);letter-spacing:.5px;color:var(--teal);text-transform:uppercase}
+.ffbox .hd .stepno,.tiers .hd .stepno{margin-right:2px}
+.shelf .shelfhd{grid-column:1/-1;display:flex;align-items:center;gap:8px;margin:2px 0 2px}.shelf .shelfhd b{font:800 13px var(--tc);letter-spacing:.5px}
+.shipbox .stepk{margin-bottom:-2px}
+/* 選板型前，規格與擴充先弱化，引導視線 */
+.pn.needBoard{position:relative;opacity:.4;pointer-events:none;filter:saturate(.4)}
+.pn.needBoard::after{content:attr(data-hint);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font:800 13px/1.5 var(--tc);color:var(--gold);background:rgba(6,14,10,.6);border-radius:16px;opacity:1}
 .scn h2{margin:2px 0 0;font:900 22px/1.2 var(--tc)}
 .story{font:13.5px/1.65 var(--tc);color:#c1d2c8;margin:10px 0}
 .clue{display:flex;gap:8px;align-items:flex-start;font:13px/1.5 var(--tc);color:#d8e5dd;margin:5px 0}.clue i{flex:none;width:8px;height:8px;margin-top:6px;transform:rotate(45deg);background:var(--gold)}
@@ -247,8 +256,8 @@ svg.ic{display:block}
   <div class="pn scn" id="scn"></div>
   <div class="scenebox"><div class="pn stage3d" id="stage3d"></div><div class="pn shelf" id="shelf"></div></div>
   <div class="pn tiers" id="tiers"></div>
-  <div class="pn ffbox"><div class="hd"><b data-t="pickFF"></b><span data-t="pickFFsub"></span></div><div class="ffr" id="ffr"></div></div>
-  <div class="pn shipbox"><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
+  <div class="pn ffbox"><div class="hd"><i class="stepno">2</i><b data-t="pickFF"></b><span data-t="pickFFsub"></span></div><div class="ffr" id="ffr"></div></div>
+  <div class="pn shipbox"><div class="stepk" id="shipStep"><i class="stepno">4</i></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
    <div class="why" id="why"></div><button class="btn shipbtn" id="bShip" data-t="ship"></button><div class="hint" data-t="shipHint"></div></div>
  </div>
  <p class="mark" data-t="mark"></p>
@@ -279,7 +288,7 @@ const TXT = {
   start:"開始遊戲 ▶", foot:"示意遊戲：名詞依 PICMG、TIA、ISO、IEC、JEDEC 等標準機構用語；價格與損失為遊戲簡化值，非真實報價；板型標的是真實參考型號，但埠數／插槽數仍是遊戲簡化值。",
   mapTitle:"產業地圖", mark:"價格與損失為遊戲簡化值 · 名詞依標準機構定義 · AnChieh Tsai",
   noStoreWarn:"瀏覽器儲存無法使用，進度不會保留，重新整理後會消失。",
-  perUnit:"／台", pickFF:"選板型", pickFFsub:"虛線框＝機構上限；板子依實際比例", unitCost:"目前成本",
+  perUnit:"／台", pickFF:"選板型", pickFFsub:"虛線框＝機構上限；板子依實際比例", unitCost:"目前成本", addonTitle:"補介面", needBoardHint:"先選板型 ↓",
   ship:"出貨", shipHint:"出貨後看十年結算：多付的錢與現場損失都會扣分。",
   chips:["10 關卡","5 大產業","9 種板型","6 項規格"],
   dom:{retail:"零售與娛樂",factory:"智慧製造",medical:"醫療",energy:"能源",transport:"交通"},
@@ -327,7 +336,7 @@ const TXT = {
   start:"Start ▶", foot:"Illustrative game: terms follow PICMG, TIA, ISO, IEC and JEDEC; prices and losses are simplified game values, not real quotes; board cards cite real reference models, but port/slot counts are still the game's own simplified values.",
   mapTitle:"Industry map", mark:"Prices and losses are simplified game values · Terms follow standards bodies · AnChieh Tsai",
   noStoreWarn:"Browser storage is unavailable — progress won't be saved and will disappear on reload.",
-  perUnit:"/ unit", pickFF:"Pick a form factor", pickFFsub:"Dashed box = enclosure limit; boards to scale", unitCost:"Cost now",
+  perUnit:"/ unit", pickFF:"Pick a form factor", pickFFsub:"Dashed box = enclosure limit; boards to scale", unitCost:"Cost now", addonTitle:"Add interfaces", needBoardHint:"Pick a board first ↓",
   ship:"SHIP", shipHint:"After shipping you see ten years: overpaying and field losses both cost points.",
   chips:["10 levels","5 industries","9 boards","6 specs"],
   dom:{retail:"Retail & Entertainment",factory:"Smart Factory",medical:"Medical",energy:"Energy",transport:"Transportation"},
@@ -453,6 +462,7 @@ function i18n() {
   $$("[data-t]").forEach((el) => el.textContent = T(el.dataset.t));
   $$(".bLang").forEach((b) => b.textContent = LANG === "zh" ? "EN" : "中");
   $$(".bSnd").forEach((b) => b.textContent = MUTE ? "✕" : "♪");
+  const ss = $("#shipStep"); if (ss) ss.innerHTML = `<i class="stepno">4</i>${TXT[LANG].howto[3][0]}`;
   renderHowto();
   $("#titleChips").innerHTML = TXT[LANG].chips.map((c, i) => `<span class="chip">${ic(["box","kiosk","card","cert"][i], 18)}${c}</span>`).join("");
   if ($("#map").classList.contains("on")) renderMap();
@@ -492,7 +502,11 @@ function openBrief() {
   $("#mBrief").classList.add("on"); $("#bGo").onclick = () => { beep("click"); $("#mBrief").classList.remove("on"); };
 }
 
-function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTiers(); renderFF(); renderShip(); }
+function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTiers(); renderFF(); renderShip(); renderFocus(); }
+function renderFocus() {
+  const need = !B.board;
+  [$("#shelf"), $("#tiers")].forEach((el) => { el.classList.toggle("needBoard", need); el.dataset.hint = T("needBoardHint"); });
+}
 function renderHud() {
   $("#hudIc").innerHTML = ic(CUR.icon, 32); $("#hudNo").textContent = `${T("lv", {n: CUR.id})} · ${T("dom." + CUR.dom)}`; $("#hudName").textContent = L(CUR.id).n;
   $("#hudDots").innerHTML = SQ.LEVELS.map((l) => `<i class="${l.id === CUR.id ? "c" : PROG[l.id] != null ? "d" : ""}"></i>`).join("");
@@ -505,7 +519,7 @@ function renderScn() {
   let rq = r(e ? (lenOk ? "ok" : "no") : "", T("req.len", {v: CUR.maxLen}), e ? (lenOk ? "✓" : "✕") : "—");
   for (const k of ["com","lan","can","lte"]) if (CUR.req[k]) rq += r(e ? (h[k] >= CUR.req[k] ? "ok" : "no") : "", T("req." + k, {v: CUR.req[k]}), e ? `${Math.min(h[k], 99)}/${CUR.req[k]}` : "—");
   if (CUR.cards.length) rq += r(e ? (e.reasons.includes("noSlot") ? "no" : "ok") : "", T("req.cards", {v: CUR.cards.map((c) => TXT[LANG].card[c]).join("、")}), e ? (e.reasons.includes("noSlot") ? "✕" : "✓") : "—");
-  $("#scn").innerHTML = `<div class="top"><div class="ic">${ic(CUR.icon, 40)}</div><div><div class="k">${T("dom." + CUR.dom)}</div><h2>${t.n}</h2></div></div>
+  $("#scn").innerHTML = `<div class="stepk"><i class="stepno">1</i>${TXT[LANG].howto[0][0]}</div><div class="top"><div class="ic">${ic(CUR.icon, 40)}</div><div><div class="k">${T("dom." + CUR.dom)}</div><h2>${t.n}</h2></div></div>
    <p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}<div class="sect">I/O</div>${rq}`;
 }
 
@@ -559,7 +573,7 @@ function renderScene() {
 
 function renderShelf() {
   const b = B.board ? SQ.BOARDS.find((x) => x.id === B.board) : null;
-  $("#shelf").innerHTML = SQ.ADDON_ORDER.map((id) => {
+  $("#shelf").innerHTML = `<div class="hd shelfhd"><i class="stepno">2</i><b>${T("addonTitle")}</b></div>` + SQ.ADDON_ORDER.map((id) => {
     const a = SQ.ADDONS[id], key = a.kind === "pcie" ? "pcie" : a.kind === "m2" ? "m2" : id === "ucom" ? "usb" : "m2";
     const lock = !isUnlocked(key) || (b && b.custom), n = B.add[id] || 0;
     const max = id === "ucom" ? 4 : a.kind === "usb" ? 1 : 2;
@@ -573,7 +587,7 @@ function renderShelf() {
 function floatCoin(ev, txt) { const f = document.createElement("div"); f.className = "floatcoin"; f.textContent = txt; f.style.left = ev.clientX + "px"; f.style.top = ev.clientY - 20 + "px"; document.body.appendChild(f); setTimeout(() => f.remove(), 700); }
 
 function renderTiers() {
-  $("#tiers").innerHTML = `<div class="hd"><b>${T("tierTitle")}</b><span>${T("tierSub")}</span></div>` + SQ.TIERS.map((Tr, i) => {
+  $("#tiers").innerHTML = `<div class="hd"><i class="stepno">3</i><b>${T("tierTitle")}</b><span>${T("tierSub")}</span></div>` + SQ.TIERS.map((Tr, i) => {
     const un = isUnlocked(Tr.id), opts = TXT[LANG].tierOpt[Tr.id];
     const costs = TXT[LANG].tierCost[Tr.id] || Tr.cost.map((c) => String(c));
     const tag = un ? "" : `<small><span class="lockb">${ic("lock", 14)}${T("locked", {n: unlockLevel(Tr.id)})}</span></small>`;
