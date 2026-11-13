@@ -69,9 +69,20 @@ svg.ic{display:block}
 .hud .sp{flex:1}
 .costpill{display:flex;align-items:center;gap:10px;height:46px;padding:0 16px 0 10px;border-radius:12px;background:linear-gradient(180deg,#183626,#0a1c13);border:1px solid #2f5541}
 .costpill b{font:700 24px var(--game);font-variant-numeric:tabular-nums}.costpill small{font:600 12px var(--tc);color:var(--mute)}
-.grid{display:grid;gap:14px;grid-template-columns:1fr 1fr;grid-template-areas:"stage3d scn" "ff ff" "shelf tiers" "ship ship"}
-.scn{grid-area:scn;padding:16px}.tiers{grid-area:tiers;padding:14px}
-.ffbox{grid-area:ff;padding:14px}.shipbox{grid-area:ship;padding:14px;display:flex;flex-direction:column;gap:10px}
+#play{height:100vh;overflow:hidden}
+#play .wrap{height:100%;display:flex;flex-direction:column;overflow:hidden}
+.topRow{display:grid;gap:14px;grid-template-columns:1.1fr 1fr .8fr;grid-template-rows:280px;margin-bottom:14px;flex:0 0 auto}
+.stage3d,.scn,.shipbox{min-height:0;overflow-y:auto}
+.scn{padding:16px}.tiers{padding:14px}
+.ffbox{padding:14px}.shipbox{padding:14px;display:flex;flex-direction:column;gap:10px}
+.pager{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
+.pagerHd{display:flex;align-items:center;justify-content:center;gap:16px;flex:0 0 auto}
+.pageDots{display:flex;gap:8px}.pageDots i{width:8px;height:8px;border-radius:50%;background:#21402f;display:block}.pageDots i.on{background:var(--teal)}
+.pages{position:relative;flex:1;min-height:0}
+.page{display:none;height:100%;overflow-y:auto}
+.page.on{display:block}
+.qrow{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;height:100%}
+.qrow .pn{height:100%;overflow-y:auto}
 .scn .top{display:flex;gap:12px;align-items:center}.scn .ic{width:60px;height:60px;flex:none;border-radius:14px;display:grid;place-items:center;background:radial-gradient(circle,#2b5a44,#0b2219);border:2px solid var(--gold)}
 /* 步驟序號 */
 .stepno{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:linear-gradient(180deg,#1f6e53,#0f3a2b);border:1px solid var(--teal);color:var(--ink);font:800 12px var(--tc);flex:0 0 auto;box-shadow:0 0 10px rgba(63,224,187,.35)}
@@ -92,7 +103,7 @@ svg.ic{display:block}
 .ctxk{font:800 12px var(--tc);letter-spacing:.5px;color:var(--mute);text-transform:uppercase;margin-bottom:8px}
 .sect{font:800 12px var(--game);letter-spacing:2px;color:var(--mute);margin:14px 0 4px}
 /* 3D 場景 */
-.stage3d{grid-area:stage3d;position:relative;min-height:420px;overflow:hidden;border-radius:16px}
+.stage3d{position:relative;overflow:hidden;border-radius:16px}
 .scene{position:absolute;left:50%;top:50%;transform-style:preserve-3d}
 .enc{position:absolute;border:3px dashed rgba(255,198,90,.85);border-radius:10px;background:rgba(255,198,90,.03);box-shadow:0 0 30px rgba(255,198,90,.2)}
 .enc.bad{border-color:rgba(255,79,69,.9);box-shadow:0 0 40px rgba(255,79,69,.4)}
@@ -126,7 +137,7 @@ svg.ic{display:block}
 .sceneinfo span.lv{border-color:var(--teal);color:var(--teal)}
 .empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:700 16px var(--tc);color:var(--mute)}
 /* 擴充 */
-.shelf{grid-area:shelf;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;padding:10px;align-content:start}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;padding:10px;align-content:start}
 .ad{display:flex;align-items:center;gap:6px;padding:5px 5px 5px 8px;border-radius:12px;background:#0a1912;border:1.5px solid #21402f;min-width:0;cursor:pointer}
 .ad.trap{border-color:rgba(255,79,69,.45)}.ad.lock{opacity:.4}
 .ad .nm{font:700 12.5px/1.25 var(--tc);flex:1;min-width:0}.ad .nm small{white-space:nowrap}.ad .nm small{display:block;font:600 11px var(--mono);color:var(--mute)}
@@ -207,14 +218,20 @@ svg.ic{display:block}
 @media (max-width:1180px){
  .ffr{grid-template-columns:repeat(3,minmax(0,1fr))}
  .zones{grid-template-columns:repeat(2,1fr)}
+ .topRow{grid-template-columns:1fr 1fr}
+ .shipbox{grid-column:1/-1}
 }
 @media (max-width:720px){
  .shelf{grid-template-columns:1fr}
  .wrap{padding:10px 12px 20px}
- .grid{grid-template-columns:1fr;grid-template-areas:"stage3d" "scn" "ff" "shelf" "tiers" "ship"}
+ .topRow{grid-template-columns:1fr}
+ .qrow{grid-template-columns:1fr}
  .ffr{grid-template-columns:repeat(2,minmax(0,1fr))}
  .zones{grid-template-columns:1fr}
- .stage3d{min-height:320px}
+ .topRow{grid-template-rows:140px auto auto}
+ .stage3d{height:140px}
+ .scn{max-height:150px}
+ .shipbox{max-height:130px;gap:4px}
  .years{grid-template-columns:repeat(5,1fr)}
  .ttl b{font-size:34px}.dots{display:none}
  .mhd h2{font-size:48px}
@@ -260,15 +277,19 @@ svg.ic{display:block}
   <div class="dots" id="hudDots"></div><div class="sp"></div>
   <button class="icon-btn" id="bBrief" aria-label="brief">?</button>
   <div class="costpill"><span class="coin"></span><b id="hudCost">0</b><small data-t="perUnit"></small></div><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div>
- <div class="grid">
+ <div class="topRow">
   <div class="pn stage3d" id="stage3d"></div>
   <div class="pn scn" id="scn"></div>
-  <div class="pn ffbox"><div class="hd"><i class="stepno">1</i><b data-t="pickFF"></b><span data-t="pickFFsub"></span></div><div class="ffr" id="ffr"></div></div>
-  <div class="pn shelf" id="shelf"></div>
-  <div class="pn tiers" id="tiers"></div>
   <div class="pn shipbox"><div class="stepk" id="shipStep"><i class="stepno">4</i></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
    <div class="costBreak" id="costBreak"></div>
    <div class="why" id="why"></div><button class="btn shipbtn" id="bShip" data-t="ship"></button><div class="hint" data-t="shipHint"></div></div>
+ </div>
+ <div class="pager">
+  <div class="pagerHd"><button class="icon-btn" id="bPagePrev" aria-label="prev">‹</button><div class="pageDots" id="pageDots"><i></i><i></i></div><button class="icon-btn" id="bPageNext" aria-label="next">›</button></div>
+  <div class="pages">
+   <div class="page" data-page="0"><div class="pn ffbox"><div class="hd"><i class="stepno">1</i><b data-t="pickFF"></b><span data-t="pickFFsub"></span></div><div class="ffr" id="ffr"></div></div></div>
+   <div class="page" data-page="1"><div class="qrow"><div class="pn shelf" id="shelf"></div><div class="pn tiers" id="tiers"></div></div></div>
+  </div>
  </div>
  <p class="mark" data-t="mark"></p>
 </div></section>
@@ -464,6 +485,7 @@ let B = null;                                  // build
 let FF_LAST = {};                              // 每種板型最後選的款式 {ff: boardId}
 let TOUCHED = new Set();                       // 玩家主動點過的規格項（index），未點過不預先亮選項
 let EXPANDED = new Set();                      // 點開完整說明的擴充品 id
+let PAGE = 0;                                  // 0=選板型 1=補介面+六項規格
 function starsOf(id) { return PROG[id] != null ? SQ.stars(PROG[id]) : 0; }
 function isOpen(id) { return id === 1 || PROG[id - 1] != null; }
 function show(id) { $$(".screen").forEach((s) => s.classList.toggle("on", s.id === id)); window.scrollTo(0, 0); }
@@ -501,6 +523,7 @@ function startLevel(id) {
   FF_LAST = {};
   TOUCHED = new Set();
   EXPANDED = new Set();
+  PAGE = 0;
   show("play"); renderAll(); openBrief();
 }
 function isUnlocked(key) { return SQ.unlockedAt(CUR.id).has(key); }
@@ -518,7 +541,12 @@ function openBrief() {
   $("#mBrief").classList.add("on"); $("#bGo").onclick = () => { beep("click"); $("#mBrief").classList.remove("on"); };
 }
 
-function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTiers(); renderFF(); renderShip(); renderFocus(); }
+function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTiers(); renderFF(); renderShip(); renderFocus(); renderPager(); }
+function renderPager() {
+  $$(".page").forEach((p) => p.classList.toggle("on", +p.dataset.page === PAGE));
+  $$("#pageDots i").forEach((d, i) => d.classList.toggle("on", i === PAGE));
+  $("#bPagePrev").disabled = PAGE === 0; $("#bPageNext").disabled = PAGE === 1;
+}
 function renderFocus() {
   const need = !B.board;
   [$("#shelf"), $("#tiers")].forEach((el) => { el.classList.toggle("needBoard", need); el.dataset.hint = T("needBoardHint"); });
@@ -608,8 +636,9 @@ function floatCoin(ev, txt) { const f = document.createElement("div"); f.classNa
 
 function renderTiers() {
   const hd = `<div class="hd"><i class="stepno">3</i><b>${T("tierTitle")}</b><span>${T("tierSub")}</span></div>`;
-  $("#tiers").innerHTML = hd + SQ.TIERS.map((Tr, i) => {
-    const un = isUnlocked(Tr.id), opts = TXT[LANG].tierOpt[Tr.id];
+  const order = SQ.TIERS.map((Tr, i) => i).sort((a, b) => unlockLevel(SQ.TIERS[a].id) - unlockLevel(SQ.TIERS[b].id));
+  $("#tiers").innerHTML = hd + order.map((i) => {
+    const Tr = SQ.TIERS[i], un = isUnlocked(Tr.id), opts = TXT[LANG].tierOpt[Tr.id];
     const costs = TXT[LANG].tierCost[Tr.id] || Tr.cost.map((c) => String(c));
     const icon = ic({temp:"thermo_hot",power:"dc_power",prot:"surge",store:"ssd",supply:"cal10",cert:"cert"}[Tr.id], 24);
     if (!un) return `<div class="tr locked"><div class="tn">${icon}<span>${T("tier." + Tr.id)}</span><small><span class="lockb">${ic("lock", 14)}${T("locked", {n: unlockLevel(Tr.id)})}</span></small></div>
@@ -718,6 +747,8 @@ $("#bMapBack").onclick = () => { beep("click"); show("title"); };
 $("#bToMap").onclick = () => { beep("click"); show("map"); renderMap(); };
 $("#bBrief").onclick = () => { beep("click"); openBrief(); };
 $("#bShip").onclick = ship;
+$("#bPagePrev").onclick = () => { if (PAGE > 0) { PAGE--; beep("click"); renderPager(); } };
+$("#bPageNext").onclick = () => { if (PAGE < 1) { PAGE++; beep("click"); renderPager(); } };
 $$(".bLang").forEach((x) => x.onclick = () => { LANG = LANG === "zh" ? "en" : "zh"; store.set("lang", LANG); beep("click"); i18n(); if ($("#mBrief").classList.contains("on")) openBrief(); });
 $$(".bSnd").forEach((x) => x.onclick = () => { MUTE = !MUTE; store.set("mute", MUTE); i18n(); beep("click"); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") { $("#mBrief").classList.remove("on"); } });
