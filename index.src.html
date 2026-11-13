@@ -71,18 +71,16 @@ svg.ic{display:block}
 .costpill b{font:700 24px var(--game);font-variant-numeric:tabular-nums}.costpill small{font:600 12px var(--tc);color:var(--mute)}
 #play{height:100vh;overflow:hidden}
 #play .wrap{height:100%;display:flex;flex-direction:column;overflow:hidden}
-.topRow{display:grid;gap:14px;grid-template-columns:1.1fr 1fr .8fr;grid-template-rows:280px;margin-bottom:14px;flex:0 0 auto}
+.topRow{display:grid;gap:14px;grid-template-columns:1.1fr 1fr .8fr;grid-template-rows:380px;margin-bottom:14px;flex:0 0 auto}
 .stage3d,.scn,.shipbox{min-height:0;overflow-y:auto}
-.scn{padding:16px}.tiers{padding:14px}
+.scn{padding:16px}.tierPage{padding:14px;height:100%;overflow-y:auto}
 .ffbox{padding:14px}.shipbox{padding:14px;display:flex;flex-direction:column;gap:10px}
 .pager{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
 .pagerHd{display:flex;align-items:center;justify-content:center;gap:16px;flex:0 0 auto}
-.pageDots{display:flex;gap:8px}.pageDots i{width:8px;height:8px;border-radius:50%;background:#21402f;display:block}.pageDots i.on{background:var(--teal)}
+.pageDots{display:flex;gap:7px}.pageDots i{width:8px;height:8px;border-radius:50%;background:#21402f;display:block;transition:all .15s}.pageDots i.done{background:var(--teal)}.pageDots i.cur{width:10px;height:10px;box-shadow:0 0 0 2px rgba(63,224,187,.5)}
 .pages{position:relative;flex:1;min-height:0}
 .page{display:none;height:100%;overflow-y:auto}
 .page.on{display:block}
-.qrow{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;height:100%}
-.qrow .pn{height:100%;overflow-y:auto}
 .scn .top{display:flex;gap:12px;align-items:center}.scn .ic{width:60px;height:60px;flex:none;border-radius:14px;display:grid;place-items:center;background:radial-gradient(circle,#2b5a44,#0b2219);border:2px solid var(--gold)}
 /* 步驟序號 */
 .stepno{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:linear-gradient(180deg,#1f6e53,#0f3a2b);border:1px solid var(--teal);color:var(--ink);font:800 12px var(--tc);flex:0 0 auto;box-shadow:0 0 10px rgba(63,224,187,.35)}
@@ -93,13 +91,13 @@ svg.ic{display:block}
 /* 選板型前，規格與擴充先弱化，引導視線 */
 .pn.needBoard{position:relative;opacity:.4;pointer-events:none;filter:saturate(.4)}
 .pn.needBoard::after{content:attr(data-hint);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font:800 13px/1.5 var(--tc);color:var(--gold);background:rgba(6,14,10,.6);border-radius:16px;opacity:1}
-.scn h2{margin:2px 0 0;font:900 44px/1.15 var(--tc)}
+.scn h2{margin:2px 0 0;font:900 30px/1.15 var(--tc)}
 .story{font:13.5px/1.65 var(--tc);color:#c1d2c8;margin:10px 0}
-.clue{display:flex;gap:8px;align-items:flex-start;font:13px/1.5 var(--tc);color:#d8e5dd;margin:5px 0}.clue i{flex:none;width:8px;height:8px;margin-top:6px;transform:rotate(45deg);background:var(--gold)}
+.clue{display:flex;gap:8px;align-items:flex-start;font:13px/1.4 var(--tc);color:#d8e5dd;margin:3px 0}.clue i{flex:none;width:8px;height:8px;margin-top:5px;transform:rotate(45deg);background:var(--gold)}
 .briefCtx .story{font-size:15px}
 .briefCtx.sec{opacity:.65}.briefCtx.sec .story{font-size:12.5px;margin:8px 0 4px}.briefCtx.sec .clue{font-size:11.5px;color:var(--mute)}.briefCtx.sec .clue i{width:6px;height:6px;margin-top:5px}
 .mechk{font:800 11.5px var(--game);letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin:16px 0 6px}
-.req{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-top:7px;border-radius:10px;background:#0a1912;border:1px solid #21402f;font:700 14px var(--tc)}
+.req{display:flex;align-items:center;gap:10px;padding:5px 10px;margin-top:5px;border-radius:10px;background:#0a1912;border:1px solid #21402f;font:700 13px var(--tc)}
 .ctxk{font:800 12px var(--tc);letter-spacing:.5px;color:var(--mute);text-transform:uppercase;margin-bottom:8px}
 .sect{font:800 12px var(--game);letter-spacing:2px;color:var(--mute);margin:14px 0 4px}
 /* 3D 場景 */
@@ -143,14 +141,14 @@ svg.ic{display:block}
 .ad .nm{font:700 12.5px/1.25 var(--tc);flex:1;min-width:0}.ad .nm small{white-space:nowrap}.ad .nm small{display:block;font:600 11px var(--mono);color:var(--mute)}
 .ad .nm .why{display:block;margin-top:4px;font:600 11.5px/1.5 var(--tc);color:#c8d6cd;white-space:normal}
 .ad .ct{display:flex;align-items:center;gap:4px}.ad .ct b{width:18px;text-align:center;font:800 16px var(--game)}
-.ad .ct button{width:26px;height:26px;border-radius:8px;background:#163a2b;border:1px solid #2f5541;font:900 18px var(--game);line-height:1}
+.ad .ct button{width:38px;height:38px;border-radius:10px;background:#163a2b;border:1px solid #2f5541;font:900 20px var(--game);line-height:1}
 .ad .ct button:disabled{opacity:.3;cursor:not-allowed}
 /* 分級 */
 .tiers .hd,.ffbox .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}.tiers .hd b,.ffbox .hd b{font:800 34px var(--tc);letter-spacing:1px}.tiers .hd span,.ffbox .hd span{font:12px var(--tc);color:var(--mute)}
 .tr{margin-bottom:6px;padding:5px 10px 6px;border-radius:12px;background:#0a1912;border:1px solid #21402f}
 .tn{display:flex;align-items:center;gap:8px;margin-bottom:2px;height:24px}.tn span{font:800 14px var(--tc)}.tn small{margin-left:auto;font:700 11px var(--tc);color:var(--mute)}
 .tg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.tg.two{grid-template-columns:repeat(2,1fr)}
-.tc{padding:2px 6px 3px;border-radius:8px;background:#071510;border:1.5px solid #1f3a2c;text-align:center;transition:all .12s}
+.tc{padding:8px 6px;border-radius:8px;background:#071510;border:1.5px solid #1f3a2c;text-align:center;transition:all .12s}
 .tc b{display:block;font:700 12px/1.3 var(--tc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tc small{display:block;font:600 10.5px/1.2 var(--mono);color:var(--mute)}
 .tc:hover:not(:disabled){border-color:#3f7a62}
 .tc.on{background:linear-gradient(180deg,#1f6e53,#0f3a2b);border-color:var(--teal);box-shadow:0 0 14px rgba(63,224,187,.4)}
@@ -172,7 +170,7 @@ svg.ic{display:block}
 .sil{position:relative;border-radius:3px;background:linear-gradient(135deg,#2a9a6c,#0e4a31);box-shadow:0 0 0 1px #4fd1a0}
 .spec{display:flex;flex-wrap:wrap;gap:4px;font:700 11px var(--game);color:#c8d6cd}.spec span{padding:1px 5px;border-radius:5px;background:#0a1c15}
 .spec .pr{margin-left:auto;display:flex;align-items:center;gap:3px;background:none}.spec .coin{width:12px;height:12px}
-.var{display:flex;gap:4px;margin-top:6px}.var button{flex:1;padding:3px 0;border-radius:6px;font:700 11px var(--tc);background:#0a1c15;border:1px solid #21402f;color:var(--mute)}
+.var{display:flex;gap:4px;margin-top:6px}.var button{flex:1;padding:8px 0;border-radius:6px;font:700 13px var(--tc);background:#0a1c15;border:1px solid #21402f;color:var(--mute)}
 .var button.on{background:#1f6e53;border-color:var(--teal);color:var(--ink)}
 /* 出貨 */
 .cost{display:flex;align-items:baseline;gap:10px}.cost b{font:800 34px var(--game);font-variant-numeric:tabular-nums}.cost small{font:13px var(--tc);color:var(--mute)}
@@ -228,7 +226,6 @@ svg.ic{display:block}
  .shelf{grid-template-columns:1fr}
  .wrap{padding:10px 12px 20px}
  .topRow{grid-template-columns:1fr}
- .qrow{grid-template-columns:1fr}
  .ffr{grid-template-columns:repeat(2,minmax(0,1fr))}
  .zones{grid-template-columns:1fr}
  .topRow{grid-template-rows:140px auto auto}
@@ -288,10 +285,16 @@ svg.ic{display:block}
    <div class="why" id="why"></div><button class="btn shipbtn" id="bShip" data-t="ship"></button><div class="hint" data-t="shipHint"></div></div>
  </div>
  <div class="pager">
-  <div class="pagerHd"><button class="icon-btn" id="bPagePrev" aria-label="prev">‹</button><div class="pageDots" id="pageDots"><i></i><i></i></div><button class="icon-btn" id="bPageNext" aria-label="next">›</button></div>
+  <div class="pagerHd"><button class="icon-btn" id="bPagePrev" aria-label="prev">‹</button><div class="pageDots" id="pageDots"></div><button class="icon-btn" id="bPageNext" aria-label="next">›</button></div>
   <div class="pages">
    <div class="page" data-page="0"><div class="pn ffbox"><div class="hd"><i class="stepno">1</i><b data-t="pickFF"></b><span data-t="pickFFsub"></span></div><div class="ffr" id="ffr"></div></div></div>
-   <div class="page" data-page="1"><div class="qrow"><div class="pn shelf" id="shelf"></div><div class="pn tiers" id="tiers"></div></div></div>
+   <div class="page" data-page="1"><div class="pn shelf" id="shelf"></div></div>
+   <div class="page" data-page="2"><div class="pn tierPage" id="tierPage0"></div></div>
+   <div class="page" data-page="3"><div class="pn tierPage" id="tierPage1"></div></div>
+   <div class="page" data-page="4"><div class="pn tierPage" id="tierPage2"></div></div>
+   <div class="page" data-page="5"><div class="pn tierPage" id="tierPage3"></div></div>
+   <div class="page" data-page="6"><div class="pn tierPage" id="tierPage4"></div></div>
+   <div class="page" data-page="7"><div class="pn tierPage" id="tierPage5"></div></div>
   </div>
  </div>
  <p class="mark" data-t="mark"></p>
@@ -553,11 +556,18 @@ function openBrief() {
   $("#mBrief").classList.add("on"); $("#bGo").onclick = () => { beep("click"); $("#mBrief").classList.remove("on"); startTimer(); };
 }
 
-function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTiers(); renderFF(); renderShip(); renderFocus(); renderPager(); renderTimer(); }
+function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTierPages(); renderFF(); renderShip(); renderFocus(); renderPager(); renderTimer(); }
+const PAGE_COUNT = 8;
+function pageDone(i) {
+  if (i === 0) return !!B.board;
+  if (i === 1) { const e = evalNow(); return !!(e && e.have.com >= CUR.req.com && e.have.lan >= CUR.req.lan && e.have.can >= CUR.req.can && e.have.lte >= CUR.req.lte && !e.reasons.includes("noSlot") && !e.reasons.includes("noM2")); }
+  const idx = tierOrder()[i - 2];
+  return isUnlocked(SQ.TIERS[idx].id) && TOUCHED.has(idx);
+}
 function renderPager() {
   $$(".page").forEach((p) => p.classList.toggle("on", +p.dataset.page === PAGE));
-  $$("#pageDots i").forEach((d, i) => d.classList.toggle("on", i === PAGE));
-  $("#bPagePrev").disabled = PAGE === 0; $("#bPageNext").disabled = PAGE === 1;
+  $("#pageDots").innerHTML = [...Array(PAGE_COUNT)].map((_, i) => `<i class="${i === PAGE ? "cur" : ""} ${pageDone(i) ? "done" : ""}"></i>`).join("");
+  $("#bPagePrev").disabled = PAGE === 0; $("#bPageNext").disabled = PAGE === PAGE_COUNT - 1;
 }
 
 /* ---------- 正式關時限 ---------- */
@@ -585,7 +595,8 @@ function timeUp() {
 }
 function renderFocus() {
   const need = !B.board;
-  [$("#shelf"), $("#tiers")].forEach((el) => { el.classList.toggle("needBoard", need); el.dataset.hint = T("needBoardHint"); });
+  const els = [$("#shelf"), ...[0,1,2,3,4,5].map((n) => $(`#tierPage${n}`))];
+  els.forEach((el) => { el.classList.toggle("needBoard", need); el.dataset.hint = T("needBoardHint"); });
 }
 function renderHud() {
   $("#hudIc").innerHTML = ic(CUR.icon, 32); $("#hudNo").textContent = `${T("lv", {n: CUR.id})} · ${T("dom." + CUR.dom)}`; $("#hudName").textContent = L(CUR.id).n;
@@ -670,19 +681,21 @@ function renderShelf() {
 }
 function floatCoin(ev, txt) { const f = document.createElement("div"); f.className = "floatcoin"; f.textContent = txt; f.style.left = ev.clientX + "px"; f.style.top = ev.clientY - 20 + "px"; document.body.appendChild(f); setTimeout(() => f.remove(), 700); }
 
-function renderTiers() {
-  const hd = `<div class="hd"><i class="stepno">3</i><b>${T("tierTitle")}</b><span>${T("tierSub")}</span></div>`;
-  const order = SQ.TIERS.map((Tr, i) => i).sort((a, b) => unlockLevel(SQ.TIERS[a].id) - unlockLevel(SQ.TIERS[b].id));
-  $("#tiers").innerHTML = hd + order.map((i) => {
+function tierOrder() { return SQ.TIERS.map((Tr, i) => i).sort((a, b) => unlockLevel(SQ.TIERS[a].id) - unlockLevel(SQ.TIERS[b].id)); }
+function renderTierPages() {
+  tierOrder().forEach((i, slot) => {
     const Tr = SQ.TIERS[i], un = isUnlocked(Tr.id), opts = TXT[LANG].tierOpt[Tr.id];
     const costs = TXT[LANG].tierCost[Tr.id] || Tr.cost.map((c) => String(c));
     const icon = ic({temp:"thermo_hot",power:"dc_power",prot:"surge",store:"ssd",supply:"cal10",cert:"cert"}[Tr.id], 24);
-    if (!un) return `<div class="tr locked"><div class="tn">${icon}<span>${T("tier." + Tr.id)}</span><small><span class="lockb">${ic("lock", 14)}${T("locked", {n: unlockLevel(Tr.id)})}</span></small></div>
-     <div class="trWhy">${TXT[LANG].mech[Tr.id][1]} <b>${T("tierApplied", {v: opts[B.t[i]]})}</b></div></div>`;
-    return `<div class="tr"><div class="tn">${icon}<span>${T("tier." + Tr.id)}</span></div>
-     <div class="tg ${opts.length === 2 ? "two" : ""}">${opts.map((o, k) => `<button class="tc ${TOUCHED.has(i) && B.t[i] === k ? "on" : ""}" data-i="${i}" data-k="${k}"><b>${o}</b><small>${costs[k]}</small></button>`).join("")}</div></div>`;
-  }).join("");
-  $$("#tiers .tc").forEach((x) => x.onclick = () => { const i = +x.dataset.i; if (!isUnlocked(SQ.TIERS[i].id)) { beep("err"); toast(T("needToast", {n: unlockLevel(SQ.TIERS[i].id)})); return; }
+    const hd = `<div class="hd"><i class="stepno">${slot + 3}</i><b>${T("tier." + Tr.id)}</b></div>`;
+    const body = !un
+      ? `<div class="tr locked"><div class="tn">${icon}<span class="lockb">${ic("lock", 14)}${T("locked", {n: unlockLevel(Tr.id)})}</span></div>
+         <div class="trWhy">${TXT[LANG].mech[Tr.id][1]} <b>${T("tierApplied", {v: opts[B.t[i]]})}</b></div></div>`
+      : `<div class="tr"><div class="tn">${icon}</div>
+         <div class="tg ${opts.length === 2 ? "two" : ""}">${opts.map((o, k) => `<button class="tc ${TOUCHED.has(i) && B.t[i] === k ? "on" : ""}" data-i="${i}" data-k="${k}"><b>${o}</b><small>${costs[k]}</small></button>`).join("")}</div></div>`;
+    $(`#tierPage${slot}`).innerHTML = hd + body;
+  });
+  $$(".tierPage .tc").forEach((x) => x.onclick = () => { const i = +x.dataset.i; if (!isUnlocked(SQ.TIERS[i].id)) { beep("err"); toast(T("needToast", {n: unlockLevel(SQ.TIERS[i].id)})); return; }
     B.t[i] = +x.dataset.k; TOUCHED.add(i); beep("click"); renderAll(); });
 }
 
@@ -785,7 +798,7 @@ $("#bToMap").onclick = () => { beep("click"); stopTimer(); show("map"); renderMa
 $("#bBrief").onclick = () => { beep("click"); openBrief(); };
 $("#bShip").onclick = ship;
 $("#bPagePrev").onclick = () => { if (PAGE > 0) { PAGE--; beep("click"); renderPager(); } };
-$("#bPageNext").onclick = () => { if (PAGE < 1) { PAGE++; beep("click"); renderPager(); } };
+$("#bPageNext").onclick = () => { if (PAGE < PAGE_COUNT - 1) { PAGE++; beep("click"); renderPager(); } };
 $$(".bLang").forEach((x) => x.onclick = () => { LANG = LANG === "zh" ? "en" : "zh"; store.set("lang", LANG); beep("click"); i18n(); if ($("#mBrief").classList.contains("on")) openBrief(); });
 $$(".bSnd").forEach((x) => x.onclick = () => { MUTE = !MUTE; store.set("mute", MUTE); i18n(); beep("click");
 });
