@@ -118,7 +118,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .pager{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
 .pagerHd{display:flex;align-items:center;justify-content:center;gap:16px;flex:0 0 auto}
 .pslots{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
-.pslot{flex:1;min-width:0;height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:3px 4px;border-radius:9px;background:#0a1912;border:1.5px solid #21402f;color:#4c6358;cursor:pointer;transition:all .12s;overflow:hidden}
+.pslot{flex:1;min-width:0;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:3px 4px;border-radius:9px;background:#0a1912;border:1.5px solid #21402f;color:#4c6358;cursor:pointer;transition:all .12s;overflow:hidden}
 .pslot.vis-only{justify-content:stretch;padding:0}
 .pslot.vis-only .pslotVis{flex:1}
 .pslot:hover{border-color:#3f7a62}
@@ -320,7 +320,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .shipbtn{height:42px;font-size:16px}
  .hint{font-size:10px}
  .pagerHd{gap:8px}
- .pslot{height:70px}
+ .pslot{max-height:70px}
  .pslot b{font-size:8.5px}
  .icon-btn{width:32px;height:32px}
  .ffr{gap:6px}
@@ -861,29 +861,33 @@ function slotFallbackIcon(i) {
     return ic(icon, 16); }
   return ic(TIER_ICON[SQ.TIERS[tierOrder()[i - 2]].id], 16);
 }
+// 板型／補介面／規格卡共用同一套寬高（OPT_COLS 欄、同一個固定高），隨便抓目前畫面上活著的一張卡量，
+// 比起去量「可能被隱藏、量到 0」的來源卡準確又不會有新舊尺寸不一致的問題。
+function liveCardSize() { const c = document.querySelector(".page.on .ff,.page.on .ad,.page.on .tc"); return c ? c.getBoundingClientRect() : null; }
 function renderPager() {
   $$(".page").forEach((p) => p.classList.toggle("on", +p.dataset.page === PAGE));
   $("#pageSlots").innerHTML = [...Array(PAGE_COUNT)].map((_, i) => {
     const label = slotLabel(i);
-    const src = slotSourceCard(i);
-    const hasClone = !!src && (SLOT_CACHE[i] || src.closest(".page")?.classList.contains("on"));
+    const hasClone = !!slotSourceCard(i) || !!SLOT_CACHE[i];
     return `<div class="pslot ${i === PAGE ? "cur" : ""} ${label ? "done" : ""} ${hasClone ? "vis-only" : ""}" data-i="${i}"><div class="pslotVis"></div>${!hasClone && label ? `<b>${label}</b>` : ""}</div>`;
   }).join("");
+  const sr = liveCardSize();
   $$("#pageSlots .pslot").forEach((el, i) => {
     const vis = el.querySelector(".pslotVis"), src = slotSourceCard(i);
     const onscreen = src && src.closest(".page")?.classList.contains("on");
-    if (onscreen) {
-      const sr = src.getBoundingClientRect(), pr = vis.getBoundingClientRect();
+    if (onscreen) { const c = src.cloneNode(true);
+      c.removeAttribute("id"); c.removeAttribute("data-i"); c.removeAttribute("data-k"); c.removeAttribute("data-b");
+      c.querySelectorAll("button").forEach((n) => n.remove());
+      c.querySelectorAll("[id]").forEach((n) => n.removeAttribute("id"));
+      SLOT_CACHE[i] = c;
+    }
+    const cached = SLOT_CACHE[i];
+    if (cached && sr) {
+      const pr = vis.getBoundingClientRect();
       const scale = Math.min(pr.width / sr.width, pr.height / sr.height) || 1;
-      const clone = src.cloneNode(true);
-      clone.removeAttribute("id"); clone.removeAttribute("data-i"); clone.removeAttribute("data-k"); clone.removeAttribute("data-b");
-      clone.querySelectorAll("button").forEach((n) => n.remove());
-      clone.querySelectorAll("[id]").forEach((n) => n.removeAttribute("id"));
+      const clone = cached.cloneNode(true);
       clone.style.cssText = `position:absolute;left:50%;top:50%;width:${sr.width}px;height:${sr.height}px;transform:translate(-50%,-50%) scale(${scale});pointer-events:none`;
       vis.appendChild(clone);
-      SLOT_CACHE[i] = clone.outerHTML;
-    } else if (src && SLOT_CACHE[i]) {
-      vis.innerHTML = SLOT_CACHE[i];
     } else { vis.classList.add("ic"); vis.innerHTML = slotFallbackIcon(i); }
   });
   $$("#pageSlots .pslot").forEach((x) => x.onclick = () => { PAGE = +x.dataset.i; beep("click"); renderPager(); });
@@ -1155,7 +1159,7 @@ $$(".bSnd").forEach((x) => x.onclick = () => { MUTE = !MUTE; store.set("mute", M
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") { $("#mBrief").classList.remove("on"); $("#mCert").classList.remove("on"); } });
 // 瀏覽器會擋在使用者互動前自動播放音訊，第一次互動時才真的播放標題配樂
 ["click", "keydown"].forEach((ev) => document.addEventListener(ev, () => { if (!MUTE && $("#title").classList.contains("on")) playTitleBgm(); }, { once: true }));
-let _rz; window.addEventListener("resize", () => { clearTimeout(_rz); _rz = setTimeout(() => { if ($("#play").classList.contains("on")) renderScene(); }, 120); });
+let _rz; window.addEventListener("resize", () => { clearTimeout(_rz); _rz = setTimeout(() => { if ($("#play").classList.contains("on")) { renderScene(); renderPager(); } }, 120); });
 i18n();
 // 測試用掛鉤（不影響遊玩）
 window.__sq = { startLevel, get B() { return B; }, set B(v) { B = v; }, renderAll, ship, show, renderMap, prog: () => PROG };
