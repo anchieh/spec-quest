@@ -216,11 +216,11 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .trWhy{font:12px/1.5 var(--tc);color:var(--mute)}.trWhy b{color:#c8d6cd;font-weight:700}
 /* 板型 */
 .ffr{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
-.ff{position:relative;min-width:0;aspect-ratio:1;overflow:hidden;border-radius:12px;padding:6px 7px;background:linear-gradient(180deg,#0f2419,#08160f);border:1.5px solid #24443a;text-align:left;transition:all .12s}
+.ff{position:relative;min-width:0;aspect-ratio:1;overflow:hidden;display:flex;flex-direction:column;border-radius:12px;padding:6px 7px;background:linear-gradient(180deg,#0f2419,#08160f);border:1.5px solid #24443a;text-align:left;transition:all .12s}
 .ff:hover:not(.lock){border-color:#3f7a62;transform:translateY(-2px)}
 .ff.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal),0 0 24px rgba(63,224,187,.4);background:linear-gradient(180deg,#14402f,#0a1d14)}
 .ff.lock{opacity:.4;cursor:not-allowed}
-.ff .h{display:flex;align-items:center;gap:5px}.ff .h b{font:800 14px var(--game)}
+.ff .h{display:flex;align-items:flex-start;gap:5px;min-height:38px;flex:none}.ff .h b{font:800 14px/1.2 var(--game)}
 .bd{margin-left:auto;font:800 11px var(--tc);padding:1px 6px;border-radius:5px;text-align:right}
 .bd.dim{border:1px solid var(--line);color:var(--mute);font:700 11px var(--mono)}.bd.lk{border:1px solid var(--gold);color:var(--gold)}
 .box{position:relative;height:30px;margin:4px 0 4px;display:grid;place-items:center;border-radius:8px;background:#06120c;overflow:hidden}
@@ -228,7 +228,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .lim{position:absolute;border:2px dashed rgba(255,198,90,.75);border-radius:4px}
 .sil{position:relative;border-radius:3px;background:linear-gradient(135deg,#2a9a6c,#0e4a31);box-shadow:0 0 0 1px #4fd1a0}
 .spec{display:flex;flex-wrap:wrap;gap:3px;font:700 11.5px var(--game);color:#c8d6cd}.spec span{padding:1px 4px;border-radius:5px;background:#0a1c15}
-.prRow{display:flex;align-items:center;justify-content:flex-end;gap:3px;margin-top:3px;font:700 12px var(--game);color:#c8d6cd}
+.prRow{display:flex;align-items:center;justify-content:flex-end;gap:3px;margin-top:auto;padding-top:3px;font:700 12px var(--game);color:#c8d6cd;flex:none}
 .prRow .coin{width:11px;height:11px}
 .var{display:flex;gap:3px;margin-top:3px}.var button{flex:1;padding:4px 0;border-radius:6px;font:700 12px var(--tc);background:#0a1c15;border:1px solid #21402f;color:var(--mute)}
 .var button.on{background:#1f6e53;border-color:var(--teal);color:var(--ink)}
@@ -1057,7 +1057,7 @@ function renderFF() {
     const note = cur.custom ? `<div class="hint" style="margin-top:4px">${T("comeNote", {nre: fmt(SQ.COME_NRE), vol: fmt(CUR.vol)})}</div>` : "";
     return `<div class="ff ${sel && sel.ff === ff ? "sel" : ""} ${lock ? "lock" : ""}" data-b="${cur.id}" role="button" tabindex="0">
       <div class="h"><b>${T("ff." + ff)}</b>${badge}</div><div class="box"><div class="lim" style="width:${lim}px;height:${lim}px"></div><div class="sil" style="width:${silW}px;height:${silH}px"></div></div>
-      <div class="spec">${spec}</div><div class="prRow"><i class="coin"></i>${price}</div>${varBtns}${note}</div>`;
+      <div class="spec">${spec}</div>${varBtns}${note}<div class="prRow"><i class="coin"></i>${price}</div></div>`;
   }).join("");
   $$("#ffr .ff").forEach((x) => { const pick = (id) => { if (x.classList.contains("lock")) { beep("err"); toast(T("needToast", {n: unlockLevel("custom")})); return; }
       const nb = SQ.BOARDS.find((b) => b.id === id); if (id !== B.board && Object.keys(B.add).length) { B.add = {}; toast(T("addonReset")); } B.board = id; FF_LAST[nb.ff] = id; beep("add"); flyToSlot(x, 0); renderAll(); };
