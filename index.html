@@ -272,6 +272,8 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;z-index:60;padding:10px 18px;border-radius:12px;background:#1d0f0d;border:1px solid var(--red);font:700 14px var(--tc);transition:all .25s;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%)}
 .floatcoin{position:fixed;z-index:70;font:900 20px var(--game);color:var(--gold);pointer-events:none;animation:fly .7s forwards;text-shadow:0 2px 0 #000}
+.flyGhost{position:fixed;width:18px;height:18px;border-radius:50%;background:var(--teal);box-shadow:0 0 14px rgba(63,224,187,.9);z-index:80;pointer-events:none;animation:flyUp .55s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes flyUp{0%{transform:translate(0,0) scale(1);opacity:1}70%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.25);opacity:0}}
 @keyframes fly{to{transform:translateY(-50px);opacity:0}}
 .mark{text-align:center;font:11px/1.6 var(--tc);color:#557264;margin-top:16px}
 .mark.playMark{position:absolute;left:0;top:100%;margin:5px 0 0;font-size:9px;line-height:1.3;max-width:640px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
@@ -935,7 +937,8 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.ad
 
 
 /* ---------- 狀態 ---------- */
-const OPT_COLS = Math.max(SQ.FORMS.length, SQ.ADDON_ORDER.length);  // 板型／補介面／規格選項共用的欄數，確保三種牌卡寬度一致
+const PAGE_COUNT = 8;                        // 板型1＋補介面1＋六項規格6
+const OPT_COLS = PAGE_COUNT;  // 牌卡欄數＝步驟格數，讓上排步驟格跟下排選項卡的格寬完全一致
 const TIER_ICON = {temp:"thermo_hot",power:"dc_power",prot:"surge",store:"ssd",supply:"cal10",cert:"cert"};
 let PROG = store.get("prog", {});            // {id: 最高分}
 let CUR = null;                                // 目前關卡
@@ -1126,7 +1129,6 @@ function openBrief() {
 }
 
 function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTierPages(); renderFF(); renderShip(); renderFocus(); renderPager(); renderTimer(); }
-const PAGE_COUNT = 8;
 function slotIcon(i) { if (i === 0) return "box"; if (i === 1) return "card"; return TIER_ICON[SQ.TIERS[tierOrder()[i - 2]].id]; }
 function slotLabel(i) {
   if (i === 0) { if (!B.board) return ""; const b = SQ.BOARDS.find((x) => x.id === B.board); return T("ff." + b.ff); }
@@ -1252,9 +1254,22 @@ function renderShelf() {
      <div class="ct"><button data-a="${id}" data-d="-1" ${lock || !n ? "disabled" : ""} aria-label="-">−</button><b>${n}</b><button data-a="${id}" data-d="1" ${lock || n >= max || !b ? "disabled" : ""} aria-label="+">+</button></div></div>`;
   }).join("");
   $$("#shelf button").forEach((x) => x.onclick = (ev) => { const id = x.dataset.a, d = +x.dataset.d; B.add[id] = Math.max(0, (B.add[id] || 0) + d); if (!B.add[id]) delete B.add[id];
-    beep(d > 0 ? "add" : "click"); if (d > 0) floatCoin(ev, "-" + SQ.ADDONS[id].price); renderAll(); });
+    beep(d > 0 ? "add" : "click"); if (d > 0) { floatCoin(ev, "-" + SQ.ADDONS[id].price); flyToSlot(x, 1); } renderAll(); });
 }
 function floatCoin(ev, txt) { const f = document.createElement("div"); f.className = "floatcoin"; f.textContent = txt; f.style.left = ev.clientX + "px"; f.style.top = ev.clientY - 20 + "px"; document.body.appendChild(f); setTimeout(() => f.remove(), 700); }
+function flyToSlot(fromEl, step) {
+  const target = $(`#pageSlots .pslot[data-i="${step}"]`);
+  if (!target || !fromEl) return;
+  const a = fromEl.getBoundingClientRect(), b = target.getBoundingClientRect();
+  const g = document.createElement("div"); g.className = "flyGhost";
+  g.style.left = (a.left + a.width / 2 - 9) + "px"; g.style.top = (a.top + a.height / 2 - 9) + "px";
+  g.style.setProperty("--dx", (b.left + b.width / 2 - (a.left + a.width / 2)) + "px");
+  g.style.setProperty("--dy", (b.top + b.height / 2 - (a.top + a.height / 2)) + "px");
+  document.body.appendChild(g);
+  const done = () => g.remove();
+  g.addEventListener("animationend", done, { once: true });
+  setTimeout(done, 650);
+}
 
 function tierOrder() { return SQ.TIERS.map((Tr, i) => i).sort((a, b) => unlockLevel(SQ.TIERS[a].id) - unlockLevel(SQ.TIERS[b].id)); }
 function renderTierPages() {
@@ -1272,7 +1287,7 @@ function renderTierPages() {
     $(`#tierPage${slot}`).innerHTML = hd + body;
   });
   $$(".tierPage .tc").forEach((x) => x.onclick = () => { const i = +x.dataset.i; if (!isUnlocked(SQ.TIERS[i].id)) { beep("err"); toast(T("needToast", {n: unlockLevel(SQ.TIERS[i].id)})); return; }
-    B.t[i] = +x.dataset.k; TOUCHED.add(i); beep("click"); renderAll(); });
+    B.t[i] = +x.dataset.k; TOUCHED.add(i); beep("click"); flyToSlot(x, tierOrder().indexOf(i) + 2); renderAll(); });
 }
 
 function renderFF() {
@@ -1294,7 +1309,7 @@ function renderFF() {
       <div class="spec">${spec}</div><div class="prRow"><i class="coin"></i>${price}</div>${varBtns}${note}</div>`;
   }).join("");
   $$("#ffr .ff").forEach((x) => { const pick = (id) => { if (x.classList.contains("lock")) { beep("err"); toast(T("needToast", {n: unlockLevel("custom")})); return; }
-      const nb = SQ.BOARDS.find((b) => b.id === id); if (id !== B.board && Object.keys(B.add).length) { B.add = {}; toast(T("addonReset")); } B.board = id; FF_LAST[nb.ff] = id; beep("add"); renderAll(); };
+      const nb = SQ.BOARDS.find((b) => b.id === id); if (id !== B.board && Object.keys(B.add).length) { B.add = {}; toast(T("addonReset")); } B.board = id; FF_LAST[nb.ff] = id; beep("add"); flyToSlot(x, 0); renderAll(); };
     x.onclick = (ev) => { const vb = ev.target.closest("button[data-b]"); pick(vb ? vb.dataset.b : (B.board && SQ.BOARDS.find((b) => b.id === B.board).ff === SQ.BOARDS.find((b) => b.id === x.dataset.b).ff ? B.board : x.dataset.b)); };
     x.onkeydown = (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); x.click(); } }; });
 }
