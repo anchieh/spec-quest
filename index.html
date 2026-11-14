@@ -118,12 +118,14 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .pager{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
 .pagerHd{display:flex;align-items:center;justify-content:center;gap:16px;flex:0 0 auto}
 .pslots{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
-.pslot{flex:1;min-width:0;height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:2px 4px;border-radius:9px;background:#0a1912;border:1.5px solid #21402f;color:#4c6358;cursor:pointer;transition:all .12s;overflow:hidden}
+.pslot{flex:1;min-width:0;height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:3px 4px;border-radius:9px;background:#0a1912;border:1.5px solid #21402f;color:#4c6358;cursor:pointer;transition:all .12s;overflow:hidden}
 .pslot:hover{border-color:#3f7a62}
-.pslot svg{opacity:.55}
-.pslot b{display:block;max-width:100%;font:800 10px var(--tc);color:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pslot.done{background:linear-gradient(180deg,#1f6e53,#0f3a2b);border-color:#2f6a52;color:var(--ink)}
-.pslot.done svg{opacity:1}
+.pslotVis{flex:1;width:100%;min-height:0;position:relative;overflow:hidden}
+.pslotVis.ic{display:flex;align-items:center;justify-content:center}
+.pslotVis svg{opacity:.55}
+.pslot b{display:block;max-width:100%;flex:none;font:800 10px var(--tc);color:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pslot.done{background:linear-gradient(180deg,#123a2c,#0a1f17);border-color:#2f6a52;color:var(--ink)}
+.pslot.done .pslotVis svg{opacity:1}
 .pslot.cur{border-color:var(--teal);box-shadow:0 0 0 2px rgba(63,224,187,.5)}
 .pages{position:relative;flex:1;min-height:0}
 .page{display:none;height:100%;overflow-y:auto}
@@ -316,7 +318,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .shipbtn{height:42px;font-size:16px}
  .hint{font-size:10px}
  .pagerHd{gap:8px}
- .pslot{height:36px}
+ .pslot{height:46px}
  .pslot b{font-size:8.5px}
  .icon-btn{width:32px;height:32px}
  .ffr{gap:6px}
@@ -945,6 +947,7 @@ let CUR = null;                                // 目前關卡
 let B = null;                                  // build
 let FF_LAST = {};                              // 每種板型最後選的款式 {ff: boardId}
 let TOUCHED = new Set();                       // 玩家主動點過的規格項（index），未點過不預先亮選項
+let SLOT_CACHE = {};                           // 步驟格縮圖快取：該步驟分頁不在前景時，沿用上次量到的縮圖
 let PAGE = 0;                                  // 0=選板型 1=補介面+六項規格
 let FORMAL = false;                            // 正式關（六項規格全解鎖）：設時限
 let TIME_LEFT = 0;
@@ -1086,6 +1089,7 @@ function startLevel(id) {
   B = { board: null, add: {}, t: [...CUR.need].map((n, i) => isUnlocked(SQ.TIERS[i].id) ? 0 : n) };
   FF_LAST = {};
   TOUCHED = new Set();
+  SLOT_CACHE = {};
   PAGE = 0;
   stopTimer();
   FORMAL = SQ.TIERS.every((Tr) => isUnlocked(Tr.id));
@@ -1135,27 +1139,43 @@ function slotLabel(i) {
   const idx = tierOrder()[i - 2];
   return TOUCHED.has(idx) ? TXT[LANG].tierOpt[SQ.TIERS[idx].id][B.t[idx]] : "";
 }
-// 跟實際牌卡 1:1 同格式的縮圖：板型用跟卡片一樣的綠色板子方塊，補介面用實際加了的那種圖示，規格沿用該級別自己的圖示
-function slotVisual(i) {
-  if (i === 0) {
-    if (!B.board) return ic("box", 16);
-    const b = SQ.BOARDS.find((x) => x.id === B.board), r = FFH[b.ff] / b.len;
-    const w = 20, h = Math.max(8, Math.min(20, Math.round(w * r)));
-    return `<div class="sil" style="width:${w}px;height:${h}px"></div>`;
-  }
-  if (i === 1) {
-    const got = SQ.ADDON_ORDER.find((id) => B.add && B.add[id]);
+// 已選的那一格，縮小複製貼到上面的格子裡，跟卡片本尊長得一模一樣；還沒選就用代表圖示
+function slotSourceCard(i) {
+  if (i === 0) return B.board ? $("#ffr .ff.sel") : null;
+  if (i === 1) return null;
+  const idx = tierOrder()[i - 2];
+  return TOUCHED.has(idx) ? $(`#tierPage${i - 2} .tc.on`) : null;
+}
+function slotFallbackIcon(i) {
+  if (i === 0) return ic("box", 16);
+  if (i === 1) { const got = SQ.ADDON_ORDER.find((id) => B.add && B.add[id]);
     const icon = got ? (SQ.ADDONS[got].kind === "pcie" ? (got === "lan2" ? "lan" : "card") : SQ.ADDONS[got].kind === "m2" ? "m2mod" : "dongle") : "card";
-    return ic(icon, 16);
-  }
+    return ic(icon, 16); }
   return ic(TIER_ICON[SQ.TIERS[tierOrder()[i - 2]].id], 16);
 }
 function renderPager() {
   $$(".page").forEach((p) => p.classList.toggle("on", +p.dataset.page === PAGE));
   $("#pageSlots").innerHTML = [...Array(PAGE_COUNT)].map((_, i) => {
     const label = slotLabel(i);
-    return `<div class="pslot ${i === PAGE ? "cur" : ""} ${label ? "done" : ""}" data-i="${i}">${slotVisual(i)}${label ? `<b>${label}</b>` : ""}</div>`;
+    return `<div class="pslot ${i === PAGE ? "cur" : ""} ${label ? "done" : ""}" data-i="${i}"><div class="pslotVis"></div>${label ? `<b>${label}</b>` : ""}</div>`;
   }).join("");
+  $$("#pageSlots .pslot").forEach((el, i) => {
+    const vis = el.querySelector(".pslotVis"), src = slotSourceCard(i);
+    const onscreen = src && src.closest(".page")?.classList.contains("on");
+    if (onscreen) {
+      const sr = src.getBoundingClientRect(), pr = vis.getBoundingClientRect();
+      const scale = Math.min(pr.width / sr.width, pr.height / sr.height) || 1;
+      const clone = src.cloneNode(true);
+      clone.removeAttribute("id"); clone.removeAttribute("data-i"); clone.removeAttribute("data-k"); clone.removeAttribute("data-b");
+      clone.querySelectorAll("button").forEach((n) => n.remove());
+      clone.querySelectorAll("[id]").forEach((n) => n.removeAttribute("id"));
+      clone.style.cssText = `position:absolute;left:0;top:0;width:${sr.width}px;height:${sr.height}px;transform:scale(${scale});transform-origin:top left;pointer-events:none`;
+      vis.appendChild(clone);
+      SLOT_CACHE[i] = clone.outerHTML;
+    } else if (src && SLOT_CACHE[i]) {
+      vis.innerHTML = SLOT_CACHE[i];
+    } else { vis.classList.add("ic"); vis.innerHTML = slotFallbackIcon(i); }
+  });
   $$("#pageSlots .pslot").forEach((x) => x.onclick = () => { PAGE = +x.dataset.i; beep("click"); renderPager(); });
   $("#bPagePrev").disabled = PAGE === 0; $("#bPageNext").disabled = PAGE === PAGE_COUNT - 1;
 }
