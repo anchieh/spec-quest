@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Spec Quest · 選型大挑戰</title>
 <meta name="description" content="A browser game about choosing industrial PC specs: just enough wins.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,7 +12,7 @@
  --game:"Chakra Petch","Noto Sans TC","Segoe UI",sans-serif;--tc:"Noto Sans TC","Microsoft JhengHei","PingFang TC","Segoe UI",sans-serif;--mono:"IBM Plex Mono",Consolas,monospace;color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;scrollbar-width:none;-ms-overflow-style:none}
 *::-webkit-scrollbar{display:none}
-html,body{margin:0;min-height:100%;background:var(--bg)}
+html,body{margin:0;min-height:100%;background:var(--bg);overscroll-behavior:none}
 body{font-family:var(--tc);color:var(--ink);overflow-x:hidden;
  background:radial-gradient(1100px 620px at 50% 30%,#12382a 0%,transparent 70%),linear-gradient(180deg,#05100c,#081a12 60%,#061009);background-attachment:fixed}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.4;background-image:linear-gradient(rgba(255,170,80,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,170,80,.07) 1px,transparent 1px);background-size:40px 40px}
@@ -223,7 +223,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .ff.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal),0 0 24px rgba(63,224,187,.4);background:linear-gradient(180deg,#14402f,#0a1d14)}
 .ff.lock{opacity:.4;cursor:not-allowed}
 .ff .h{display:flex;align-items:flex-start;gap:5px;min-height:38px;flex:none}.ff .h b{font:700 14px/1.2 var(--game)}
-.bd{margin-left:auto;font:700 11px var(--tc);padding:1px 6px;border-radius:5px;text-align:right}
+.bd{margin-left:auto;min-width:0;font:700 11px var(--tc);padding:1px 6px;border-radius:5px;text-align:right}
 .bd.dim{border:1px solid var(--line);color:var(--mute);font:600 11px var(--mono)}.bd.lk{border:1px solid var(--gold);color:var(--gold)}
 .box{position:relative;height:30px;margin:4px 0 4px;display:grid;place-items:center;border-radius:8px;background:#06120c;overflow:hidden}
 .ff .box{align-items:end;justify-items:center;padding-bottom:1px}
@@ -266,15 +266,16 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .evlog{min-height:0;font:13px/1.45 var(--tc)}
 .evlog div{animation:pop .3s}
 @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.simStage{position:relative;display:grid}
-.simStage>*{grid-area:1/1;min-width:0}
-.simTop{z-index:1}
-.result{z-index:2;opacity:0;pointer-events:none;transition:opacity .35s;background:linear-gradient(180deg,rgba(16,38,28,.98),rgba(7,20,14,.98));border-radius:14px}
+.simStage{display:flex;flex-direction:column;gap:10px;min-width:0}
+.simTop{flex:none}
+.result{flex:none;opacity:0;pointer-events:none;transition:opacity .4s}
 .result.on{opacity:1;pointer-events:auto}
-.bigscore{display:flex;align-items:center;gap:16px;margin:4px 0 10px}
-.bigscore b{font:700 52px/1 var(--game);background:linear-gradient(180deg,#fff6d2,#ffc65a 55%,#d1840f);-webkit-background-clip:text;background-clip:text;color:transparent}
-.bigscore .stars .star{width:32px;height:32px;margin-right:3px;transform:scale(.3);opacity:0;transition:all .35s cubic-bezier(.2,1.6,.4,1)}
+.simResHd{display:flex;align-items:flex-end;justify-content:flex-end;gap:14px;margin:0 0 8px}
+.bigscore{display:flex;align-items:center;gap:12px}
+.bigscore b{font:700 44px/1 var(--game);background:linear-gradient(180deg,#fff6d2,#ffc65a 55%,#d1840f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bigscore .stars .star{width:30px;height:30px;margin-right:2px;transform:scale(.3);opacity:0;transition:all .35s cubic-bezier(.2,1.6,.4,1)}
 .bigscore .stars .star.show{transform:scale(1);opacity:1}
+.bigscore .scLabel{font:700 20px var(--tc)}
 .cmp{width:100%;border-collapse:collapse;font:13px/1.35 var(--tc)}
 .cmp th{font:700 11px var(--tc);color:var(--mute);text-align:left;padding:4px 8px;border-bottom:1px solid #21402f}
 .cmp td{padding:5px 8px;border-bottom:1px solid #16301f;vertical-align:top}
@@ -306,9 +307,61 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .mark.playMark{display:none}
  .mviewBtn{display:grid}
  .wrap[data-mview="top"] .pager{display:none}
- .wrap[data-mview="bottom"] .topRow{display:none}
+ .wrap[data-mview="top"] .shipbox{display:none}
+ .wrap[data-mview="top"] .topRow{grid-template-columns:1fr 1fr}
+ .wrap[data-mview="bottom"] .topRow{display:contents}
+ .wrap[data-mview="bottom"] .stage3d,.wrap[data-mview="bottom"] .scn{display:none}
+ .wrap[data-mview="bottom"] .shipbox{position:fixed;right:8px;bottom:8px;width:min(185px,32vw);z-index:6;padding:7px 9px;gap:3px;max-height:calc(100% - 16px);overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+ .wrap[data-mview="bottom"] .shipbox .costBreak{display:none}
+ .wrap[data-mview="bottom"] .shipbox .icon-btn{width:22px;height:22px;font-size:10px}
+ .wrap[data-mview="bottom"] .shipbox .hint{display:none}
+ .wrap[data-mview="bottom"] .shipbox .stepk{font-size:9px;margin-bottom:2px}
+ .wrap[data-mview="bottom"] .shipbox .k{font-size:9px}
+ .wrap[data-mview="bottom"] .shipbox .cost b{font-size:20px}
+ .wrap[data-mview="bottom"] .shipbox .why{font-size:9.5px;min-height:0}
+ .wrap[data-mview="bottom"] .shipbox .shipbtn{height:32px;font-size:12px}
+ .wrap[data-mview="bottom"] .page{padding-right:130px}
  .topRow{flex:1 1 auto;min-height:0;grid-template-rows:none;margin-bottom:0;gap:8px;overflow-y:auto}
+ #map .wrap{height:100vh;overflow:hidden;display:flex;flex-direction:column}
+ .mapTop{flex:1 1 auto;min-height:0;overflow-y:auto}
+ .mapBottom{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+ .mapBottom .zones{flex:1 1 auto;min-height:0;overflow-y:auto;align-content:start;grid-auto-rows:min-content}
+ .wrap[data-mview="top"] .mapBottom{display:none}
+ .wrap[data-mview="bottom"] .mapTop{display:none}
+ .mhd{margin-bottom:6px}
+ .mhd h2{font-size:22px}
+ .trophyRow{padding:8px 10px}
+ .howto{padding:10px 12px;margin-top:8px}
+ .howto .n{width:26px;height:30px}
+ .howto b{font-size:12px}.howto span{font-size:10.5px}
+ .zone{padding:10px}
+ .zone h3{font-size:14px;margin-bottom:2px}
+ .zone .zs{font-size:10px;margin-bottom:6px;min-height:0}
+ .lvl{padding:8px;margin-bottom:6px}
+ .lvl b{font-size:14px}
+ .lvl small .star{width:11px;height:11px}
  .card{padding:16px 18px}
+ .card h2{font-size:20px;margin:0 0 4px}
+ .newmech{padding:6px 8px;margin:6px 0 0;gap:8px}
+ .newmech .nmic{width:30px;height:30px;border-radius:9px}
+ .newmech b{font-size:12px}.newmech span{font-size:10.5px}
+ .card .k{margin-bottom:2px}
+ .years{gap:3px;margin:2px 0 4px}
+ .yr{height:32px;font-size:9px;padding-bottom:3px}
+ .yr .ev svg{width:13px;height:13px}
+ .evlog{font-size:10.5px;min-height:0}
+ .simStage{gap:5px}
+ .simResHd{margin:0 0 4px;gap:8px}
+ .bigscore{gap:6px}
+ .bigscore b{font-size:26px}
+ .bigscore .stars .star{width:16px;height:16px;margin-right:1px}
+ .bigscore .scLabel{font-size:12px}
+ .cmp{font-size:10.5px}
+ .cmp th{padding:2px 5px;font-size:9.5px}
+ .cmp td{padding:2px 5px}
+ .cmp td.w{font-size:9.5px}
+ .row{margin-top:6px;gap:8px}
+ .row .btn{height:34px;font-size:12px;padding:0 14px}
  #title .hero{height:100vh;min-height:0;padding:8px 16px;display:block;overflow:hidden}
  .hero>div{height:100%;overflow-y:auto;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px}
  .heroboard{display:none}
@@ -489,13 +542,17 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  <p class="tapHint" data-t="start"></p>
 </div></div></section>
 
-<section class="screen" id="map"><div class="wrap">
- <div class="mhd"><button class="icon-btn" id="bMapBack" aria-label="back">←</button><h2 data-t="mapTitle"></h2><div class="tot"><span class="star on"></span><span id="totStars">0</span>/30</div><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div>
- <p class="mark" id="storeWarn" style="display:none;color:var(--red)" data-t="noStoreWarn"></p>
- <div class="pn trophyRow" id="trophyRow"></div>
- <div class="pn howto" id="howto"></div>
- <div class="zones" id="zones"></div>
- <p class="mark" data-t="mark"></p>
+<section class="screen" id="map"><div class="wrap" data-mview="top">
+ <div class="mapTop">
+  <div class="mhd"><button class="icon-btn" id="bMapBack" aria-label="back">←</button><h2 data-t="mapTitle"></h2><div class="tot"><span class="star on"></span><span id="totStars">0</span>/30</div><button class="icon-btn mviewBtn" id="bMapMView" aria-label="switch view">⇩</button><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div>
+  <p class="mark" id="storeWarn" style="display:none;color:var(--red)" data-t="noStoreWarn"></p>
+  <div class="pn trophyRow" id="trophyRow"></div>
+  <div class="pn howto" id="howto"></div>
+ </div>
+ <div class="mapBottom">
+  <div class="zones" id="zones"></div>
+  <p class="mark" data-t="mark"></p>
+ </div>
 </div></section>
 
 <section class="screen" id="play"><div class="wrap" data-mview="top">
@@ -972,6 +1029,7 @@ let TOUCHED = new Set();                       // 玩家主動點過的規格項
 let SLOT_CACHE = {};                           // 步驟格縮圖快取：該步驟分頁不在前景時，沿用上次量到的縮圖
 let PAGE = 0;                                  // 0=選板型 1=補介面+六項規格
 let MVIEW = "top";                             // 手機橫向：top=摘要／ship 面板，bottom=步驟選項
+let MAP_MVIEW = "top";                         // 手機橫向：產業地圖 top=標題+教學，bottom=關卡列表
 let FORMAL = false;                            // 正式關（六項規格全解鎖）：設時限
 let TIME_LEFT = 0;
 let TIMER_ID = null;
@@ -994,6 +1052,7 @@ function i18n() {
 }
 function renderHowto() { const h = $("#howto"); if (h) h.innerHTML = TXT[LANG].howto.map((x, i) => `<div class="st"><span class="n">${i + 1}</span><div><b>${x[0]}</b><span>${x[1]}</span></div></div>`).join(""); }
 function renderMap() {
+  setMapMView("top");
   $("#storeWarn").style.display = STORE_OK ? "none" : "block";
   let tot = 0;
   $("#zones").innerHTML = DOMS.map((d) => {
@@ -1126,6 +1185,11 @@ function setMView(v) {
   MVIEW = v;
   $("#play .wrap").dataset.mview = v;
   $("#bMView").textContent = v === "top" ? "⇩" : "⇧";
+}
+function setMapMView(v) {
+  MAP_MVIEW = v;
+  $("#map .wrap").dataset.mview = v;
+  $("#bMapMView").textContent = v === "top" ? "⇩" : "⇧";
 }
 function enableSwipeMView(el, getView, setView) {
   let y0 = null;
@@ -1475,8 +1539,7 @@ function buildResult(r) {
     rows += `<tr><td>${T("tier." + Tr.id)}${isUnlocked(Tr.id) ? "" : " " + ic("lock", 12).replace('class="ic"', 'class="ic" style="display:inline"')}</td><td class="${cls}" data-l="${T("yourPick")}">${o[k]}</td><td class="r" data-l="${T("right")}">${o[n]}</td><td class="${cls}" data-l="${T("diff")}">${d}</td><td class="w">${t.w[Tr.id]}</td></tr>`;
   });
   const last = CUR.id === 10, nextOpen = !last;
-  res.innerHTML = `<div class="bigscore"><b id="scNum">0</b><div><div class="stars">${[0,1,2].map((i) => `<span class="star ${i < st ? "on" : ""}"></span>`).join("")}</div>
-    <div style="font:700 18px var(--tc);margin-top:6px">${TXT[LANG].stars[st]}</div></div></div>
+  res.innerHTML = `<div class="simResHd"><div class="bigscore"><b id="scNum">0</b><div class="stars">${[0,1,2].map((i) => `<span class="star ${i < st ? "on" : ""}"></span>`).join("")}</div></div><div class="scLabel">${TXT[LANG].stars[st]}</div></div>
    <table class="cmp"><tr><th></th><th>${T("yourPick")}</th><th>${T("right")}</th><th>${T("diff")}</th><th class="w">${T("reason2")}</th></tr>${rows}</table>
    ${last && st >= 1 ? `<div class="newmech" style="margin-top:14px">${ic("badge", 34)}<div><b>${T("allDone")}</b><span>${T("allDoneSub", {s: SQ.LEVELS.reduce((s, l) => s + starsOf(l.id), 0)})}</span></div></div>` : ""}
    <div class="row"><button class="btn ghost" id="bMap2">${T("toMap")}</button><button class="btn ghost" id="bRetry">${T("retry")}</button>${nextOpen ? `<button class="btn" id="bNext">${T("next")}</button>` : ""}</div>`;
@@ -1500,6 +1563,8 @@ $("#bInfo").onclick = () => { beep("click"); openInfo(); };
 $("#bMapBack").onclick = () => { beep("click"); stopBgm(); show("title"); playTitleBgm(); };
 $("#bToMap").onclick = () => { beep("click"); stopTimer(); stopBgm(); show("map"); renderMap(); };
 $("#bMView").onclick = () => { beep("click"); setMView(MVIEW === "top" ? "bottom" : "top"); };
+$("#bMapMView").onclick = () => { beep("click"); setMapMView(MAP_MVIEW === "top" ? "bottom" : "top"); };
+enableSwipeMView($("#map .wrap"), () => MAP_MVIEW, setMapMView);
 $("#bFullscreen").onclick = () => { beep("click"); toggleFullscreen(); };
 enableSwipeMView($("#play .wrap"), () => MVIEW, setMView);
 $("#bBrief").onclick = () => { beep("click"); openBrief(); };
