@@ -118,7 +118,9 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .pager{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
 .pagerHd{display:flex;align-items:center;justify-content:center;gap:16px;flex:0 0 auto}
 .pslots{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
-.pslot{flex:1;min-width:0;height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:3px 4px;border-radius:9px;background:#0a1912;border:1.5px solid #21402f;color:#4c6358;cursor:pointer;transition:all .12s;overflow:hidden}
+.pslot{flex:1;min-width:0;height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:3px 4px;border-radius:9px;background:#0a1912;border:1.5px solid #21402f;color:#4c6358;cursor:pointer;transition:all .12s;overflow:hidden}
+.pslot.vis-only{justify-content:stretch;padding:0}
+.pslot.vis-only .pslotVis{flex:1}
 .pslot:hover{border-color:#3f7a62}
 .pslotVis{flex:1;width:100%;min-height:0;position:relative;overflow:hidden}
 .pslotVis.ic{display:flex;align-items:center;justify-content:center}
@@ -318,7 +320,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .shipbtn{height:42px;font-size:16px}
  .hint{font-size:10px}
  .pagerHd{gap:8px}
- .pslot{height:46px}
+ .pslot{height:70px}
  .pslot b{font-size:8.5px}
  .icon-btn{width:32px;height:32px}
  .ffr{gap:6px}
@@ -1157,7 +1159,9 @@ function renderPager() {
   $$(".page").forEach((p) => p.classList.toggle("on", +p.dataset.page === PAGE));
   $("#pageSlots").innerHTML = [...Array(PAGE_COUNT)].map((_, i) => {
     const label = slotLabel(i);
-    return `<div class="pslot ${i === PAGE ? "cur" : ""} ${label ? "done" : ""}" data-i="${i}"><div class="pslotVis"></div>${label ? `<b>${label}</b>` : ""}</div>`;
+    const src = slotSourceCard(i);
+    const hasClone = !!src && (SLOT_CACHE[i] || src.closest(".page")?.classList.contains("on"));
+    return `<div class="pslot ${i === PAGE ? "cur" : ""} ${label ? "done" : ""} ${hasClone ? "vis-only" : ""}" data-i="${i}"><div class="pslotVis"></div>${!hasClone && label ? `<b>${label}</b>` : ""}</div>`;
   }).join("");
   $$("#pageSlots .pslot").forEach((el, i) => {
     const vis = el.querySelector(".pslotVis"), src = slotSourceCard(i);
@@ -1169,7 +1173,7 @@ function renderPager() {
       clone.removeAttribute("id"); clone.removeAttribute("data-i"); clone.removeAttribute("data-k"); clone.removeAttribute("data-b");
       clone.querySelectorAll("button").forEach((n) => n.remove());
       clone.querySelectorAll("[id]").forEach((n) => n.removeAttribute("id"));
-      clone.style.cssText = `position:absolute;left:0;top:0;width:${sr.width}px;height:${sr.height}px;transform:scale(${scale});transform-origin:top left;pointer-events:none`;
+      clone.style.cssText = `position:absolute;left:50%;top:50%;width:${sr.width}px;height:${sr.height}px;transform:translate(-50%,-50%) scale(${scale});pointer-events:none`;
       vis.appendChild(clone);
       SLOT_CACHE[i] = clone.outerHTML;
     } else if (src && SLOT_CACHE[i]) {
@@ -1371,14 +1375,23 @@ function ship(force) {
   const prev = PROG[CUR.id]; if (prev == null || r.score > prev) { PROG[CUR.id] = r.score; store.set("prog", PROG); }
   const events = r.items.filter((x) => x.kind === "under").map((x) => ({ id: x.id, y: TXT[LANG].evYear[x.id] || 3, v: x.v }));
   const card = $("#simCard");
-  const years = [...Array(10)].map((_, i) => { const y = i + 1, hit = events.some((x) => x.y === y);
-    return `<div class="yr ${hit ? "hit" : "lit"}" id="y${y}"><span class="ev">${ic(hit ? "bolt" : "badge", hit ? 26 : 22)}</span>${T("year", {n: y})}</div>`; }).join("");
-  const evlog = events.length ? events.map((x) => `<div><b style="color:#ff8a80">${T("year", {n: x.y})}</b>　${TXT[LANG].ev[x.id]}　<b style="color:#ff8a80">−${fmt(x.v)}</b></div>`).join("") : `<div style="color:var(--green)">${T("calm")}</div>`;
   card.innerHTML = `<div class="k">${T("lv", {n: CUR.id})} · ${L(CUR.id).n}</div><h2>${T("simTitle")}</h2>
-   <div class="years">${years}</div>
-   <div class="evlog" id="evlog">${evlog}</div><div class="result" id="res"></div>`;
+   <div class="years">${[...Array(10)].map((_, i) => `<div class="yr" id="y${i + 1}"><span class="ev"></span>${T("year", {n: i + 1})}</div>`).join("")}</div>
+   <div class="evlog" id="evlog"></div><div class="result" id="res"></div>`;
   $("#mSim").classList.add("on");
-  showResult(r);
+  let y = 0, done = false;
+  const step = () => {
+    if (done) return; y++;
+    const evs = events.filter((x) => x.y === y), cell = $("#y" + y);
+    if (evs.length) { cell.classList.add("hit"); cell.querySelector(".ev").innerHTML = ic("bolt", 26); beep("hit");
+      evs.forEach((x) => $("#evlog").insertAdjacentHTML("beforeend", `<div><b style="color:#ff8a80">${T("year", {n: y})}</b>　${TXT[LANG].ev[x.id]}　<b style="color:#ff8a80">−${fmt(x.v)}</b></div>`)); }
+    else { cell.classList.add("lit"); cell.querySelector(".ev").innerHTML = ic("badge", 22); }
+    if (y < 10) step._t = setTimeout(step, evs.length ? 650 : 260); else finish();
+  };
+  const finish = () => { if (done) return; done = true; clearTimeout(step._t);
+    if (!events.length) $("#evlog").innerHTML = `<div style="color:var(--green)">${T("calm")}</div>`;
+    showResult(r); };
+  step._t = setTimeout(step, 400);
 }
 function showFail(r) {
   stopTimer();
