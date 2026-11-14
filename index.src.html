@@ -117,13 +117,14 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .ffbox{padding:14px}.shipbox{padding:14px;display:flex;flex-direction:column;gap:10px}
 .pager{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
 .pagerHd{display:flex;align-items:center;justify-content:center;gap:16px;flex:0 0 auto}
-.pslots{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center}
-.pslot{width:76px;height:44px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:2px 4px;border-radius:9px;background:#0a1c15;border:1.5px solid #21402f;color:var(--mute);cursor:pointer;transition:all .12s;overflow:hidden}
+.pslots{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
+.pslot{flex:1;min-width:0;height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:2px 4px;border-radius:9px;background:#0a1912;border:1.5px solid #21402f;color:#4c6358;cursor:pointer;transition:all .12s;overflow:hidden}
 .pslot:hover{border-color:#3f7a62}
-.pslot svg{opacity:.75}
-.pslot b{display:block;max-width:100%;font:800 10px var(--tc);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pslot svg{opacity:.55}
+.pslot b{display:block;max-width:100%;font:800 10px var(--tc);color:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pslot.done{background:linear-gradient(180deg,#1f6e53,#0f3a2b);border-color:#2f6a52;color:var(--ink)}
 .pslot.done svg{opacity:1}
-.pslot.cur{border-color:var(--teal);background:#0f2a20;box-shadow:0 0 0 2px rgba(63,224,187,.45)}
+.pslot.cur{border-color:var(--teal);box-shadow:0 0 0 2px rgba(63,224,187,.5)}
 .pages{position:relative;flex:1;min-height:0}
 .page{display:none;height:100%;overflow-y:auto}
 .page.on{display:block}
@@ -313,7 +314,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .shipbtn{height:42px;font-size:16px}
  .hint{font-size:10px}
  .pagerHd{gap:8px}
- .pslot{width:50px;height:36px}
+ .pslot{height:36px}
  .pslot b{font-size:8.5px}
  .icon-btn{width:32px;height:32px}
  .ffr{gap:6px}
@@ -829,12 +830,6 @@ function openBrief() {
 
 function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTierPages(); renderFF(); renderShip(); renderFocus(); renderPager(); renderTimer(); }
 const PAGE_COUNT = 8;
-function pageDone(i) {
-  if (i === 0) return !!B.board;
-  if (i === 1) { const e = evalNow(); return !!(e && e.have.com >= CUR.req.com && e.have.lan >= CUR.req.lan && e.have.can >= CUR.req.can && e.have.lte >= CUR.req.lte && !e.reasons.includes("noSlot") && !e.reasons.includes("noM2")); }
-  const idx = tierOrder()[i - 2];
-  return isUnlocked(SQ.TIERS[idx].id) && TOUCHED.has(idx);
-}
 function slotIcon(i) { if (i === 0) return "box"; if (i === 1) return "card"; return TIER_ICON[SQ.TIERS[tierOrder()[i - 2]].id]; }
 function slotLabel(i) {
   if (i === 0) { if (!B.board) return ""; const b = SQ.BOARDS.find((x) => x.id === B.board); return T("ff." + b.ff); }
@@ -846,7 +841,7 @@ function renderPager() {
   $$(".page").forEach((p) => p.classList.toggle("on", +p.dataset.page === PAGE));
   $("#pageSlots").innerHTML = [...Array(PAGE_COUNT)].map((_, i) => {
     const label = slotLabel(i);
-    return `<div class="pslot ${i === PAGE ? "cur" : ""} ${pageDone(i) ? "done" : ""}" data-i="${i}">${ic(slotIcon(i), 16)}${label ? `<b>${label}</b>` : ""}</div>`;
+    return `<div class="pslot ${i === PAGE ? "cur" : ""} ${label ? "done" : ""}" data-i="${i}">${ic(slotIcon(i), 16)}${label ? `<b>${label}</b>` : ""}</div>`;
   }).join("");
   $$("#pageSlots .pslot").forEach((x) => x.onclick = () => { PAGE = +x.dataset.i; beep("click"); renderPager(); });
   $("#bPagePrev").disabled = PAGE === 0; $("#bPageNext").disabled = PAGE === PAGE_COUNT - 1;
