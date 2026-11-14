@@ -63,6 +63,7 @@ svg.ic{display:block}
 @media (max-width:1180px){.howto{grid-template-columns:1fr 1fr}}@media (max-width:720px) and (orientation:portrait){.howto{grid-template-columns:1fr}}
 .tapHint{margin-top:18px;font:700 15px var(--tc);color:var(--gold);letter-spacing:1px;animation:tapPulse 1.8s ease-in-out infinite}
 @keyframes tapPulse{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes mviewFlash{0%,100%{background:#0f2a1f;border-color:#2f5541;box-shadow:none;color:var(--ink)}50%{background:var(--gold);border-color:var(--gold);box-shadow:0 0 16px 2px rgba(255,198,90,.85);color:#2a1600}}
 /* ---------- 地圖 ---------- */
 .trophyRow{padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .tropSlots{display:flex;gap:6px;flex-wrap:wrap}
@@ -311,7 +312,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .ttl b{font-size:22px}
  .dots{display:none}
  .mark.playMark{display:none}
- .mviewBtn{display:grid;position:fixed;right:10px;top:48px;z-index:8;animation:tapPulse 1.8s ease-in-out infinite}
+ .mviewBtn{display:grid;position:fixed;right:10px;top:48px;z-index:8;animation:mviewFlash 1.6s ease-in-out infinite}
  .wrap[data-mview="top"] .pager{display:none}
  .wrap[data-mview="top"] .shipbox{display:none}
  .wrap[data-mview="top"] .topRow{grid-template-columns:1fr 1fr}
