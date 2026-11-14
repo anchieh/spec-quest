@@ -855,11 +855,9 @@ function slotSourceCard(i) {
   return TOUCHED.has(idx) ? $(`#tierPage${i - 2} .tc.on`) : null;
 }
 function slotFallbackIcon(i) {
-  if (i === 0) return ic("box", 16);
-  if (i === 1) { const got = SQ.ADDON_ORDER.find((id) => B.add && B.add[id]);
-    const icon = got ? (SQ.ADDONS[got].kind === "pcie" ? (got === "lan2" ? "lan" : "card") : SQ.ADDONS[got].kind === "m2" ? "m2mod" : "dongle") : "card";
-    return ic(icon, 16); }
-  return ic(TIER_ICON[SQ.TIERS[tierOrder()[i - 2]].id], 16);
+  if (i === 0) return ic("box", 48);
+  if (i === 1) return ic("card", 48);
+  return ic(TIER_ICON[SQ.TIERS[tierOrder()[i - 2]].id], 48);
 }
 // 板型／補介面／規格卡共用同一套寬高（OPT_COLS 欄、同一個固定高），隨便抓目前畫面上活著的一張卡量，
 // 比起去量「可能被隱藏、量到 0」的來源卡準確又不會有新舊尺寸不一致的問題。
