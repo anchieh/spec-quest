@@ -17,7 +17,7 @@ Progress is saved in the browser (localStorage).
 
 ## Notes
 
-- Terms follow PICMG, TIA, ISO, IEC and JEDEC. Prices and losses are simplified game values, not real quotes. Board cards reference real Avalue Technology models (e.g. EPX-TWLP) for realism; port/slot counts are still the game's own simplified values, not a 1:1 copy of any datasheet.
+- Terms follow PICMG, TIA, ISO, IEC and JEDEC. Prices, losses and board specs (port/slot counts, dimensions) are simplified game values, not real quotes or a 1:1 copy of any vendor's datasheet.
 - Every level has exactly one best answer, verified by an exhaustive solver (`test_engine.mjs`).
 - Source files: `engine.js` (rules, solver, scoring), `index.src.html` (UI), `build.mjs` (bundles into `index.html`).
 

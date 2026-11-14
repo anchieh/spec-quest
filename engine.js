@@ -3,17 +3,17 @@
 (function (G) {
   "use strict";
 
-  // 板型：id、名稱、長邊 mm、COM、LAN、x16 槽、x4 槽、M.2 槽、單價、市售真實型號參考（Avalue，2026-11-13 官網核對）
+  // 板型：id、名稱、長邊 mm、COM、LAN、x16 槽、x4 槽、M.2 槽、單價（遊戲簡化值，非特定廠商真實規格）
   const BOARDS = [
-    { id: "pico", ff: "pico", v: 0, len: 100, com: 1, lan: 1, x16: 0, x4: 0, m2: 1, price: 380, model: "EPX-APLP" },
-    { id: "pico2", ff: "pico", v: 1, len: 100, com: 2, lan: 2, x16: 0, x4: 0, m2: 1, price: 450, model: "EPX-TWLP" },
-    { id: "sbc", ff: "sbc", v: 0, len: 146, com: 2, lan: 2, x16: 0, x4: 0, m2: 2, price: 520, model: "ECM-RPL" },
-    { id: "sbc6", ff: "sbc", v: 1, len: 146, com: 6, lan: 2, x16: 0, x4: 0, m2: 2, price: 640, model: "ECM-APL" },
-    { id: "itx", ff: "itx", v: 0, len: 170, com: 2, lan: 2, x16: 1, x4: 0, m2: 2, price: 600, model: "MX610H" },
-    { id: "itx6", ff: "itx", v: 1, len: 170, com: 6, lan: 2, x16: 1, x4: 0, m2: 2, price: 700, model: "EMX-RPLP" },
-    { id: "matx", ff: "matx", v: 0, len: 244, com: 6, lan: 2, x16: 1, x4: 3, m2: 2, price: 880, model: "RX680R" },
-    { id: "atx", ff: "atx", v: 0, len: 305, com: 6, lan: 2, x16: 2, x4: 5, m2: 2, price: 1050, model: "BC680R" },
-    { id: "come", ff: "come", v: 0, len: 125, com: 0, lan: 0, x16: 0, x4: 0, m2: 0, price: 760, custom: true, model: "ESM-RPL" },
+    { id: "pico", ff: "pico", v: 0, len: 100, com: 1, lan: 1, x16: 0, x4: 0, m2: 1, price: 380 },
+    { id: "pico2", ff: "pico", v: 1, len: 100, com: 2, lan: 2, x16: 0, x4: 0, m2: 1, price: 450 },
+    { id: "sbc", ff: "sbc", v: 0, len: 146, com: 2, lan: 2, x16: 0, x4: 0, m2: 2, price: 520 },
+    { id: "sbc6", ff: "sbc", v: 1, len: 146, com: 6, lan: 2, x16: 0, x4: 0, m2: 2, price: 640 },
+    { id: "itx", ff: "itx", v: 0, len: 170, com: 2, lan: 2, x16: 1, x4: 0, m2: 2, price: 600 },
+    { id: "itx6", ff: "itx", v: 1, len: 170, com: 6, lan: 2, x16: 1, x4: 0, m2: 2, price: 700 },
+    { id: "matx", ff: "matx", v: 0, len: 244, com: 6, lan: 2, x16: 1, x4: 3, m2: 2, price: 880 },
+    { id: "atx", ff: "atx", v: 0, len: 305, com: 6, lan: 2, x16: 2, x4: 5, m2: 2, price: 1050 },
+    { id: "come", ff: "come", v: 0, len: 125, com: 0, lan: 0, x16: 0, x4: 0, m2: 0, price: 760, custom: true },
   ];
   const FORMS = ["pico", "sbc", "itx", "matx", "atx", "come"];
   const COME_NRE = 60000;
