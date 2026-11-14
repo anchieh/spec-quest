@@ -194,13 +194,13 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .ad.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal),0 0 24px rgba(63,224,187,.4);background:linear-gradient(180deg,#14402f,#0a1d14)}
 .ad.trap{border-color:rgba(255,79,69,.45)}.ad.lock{opacity:.4;cursor:not-allowed}
 .ad .h{display:flex;align-items:center;gap:6px}.ad .h b{font:800 13px var(--tc)}
-.ad .box{height:46px;margin:7px 0 6px;display:grid;place-items:center;border-radius:8px;background:#06120c}
+.ad .cnt{margin-left:auto;flex:none;min-width:18px;text-align:center;font:800 11px var(--tc);color:var(--ink);background:#163a2b;border:1px solid var(--teal);padding:1px 6px;border-radius:7px}
+.ad .ctRow{display:flex;align-items:center;gap:6px;margin:7px 0 6px}
+.ad .box{flex:1;min-width:0;height:46px;margin:0;display:grid;place-items:center;border-radius:8px;background:#06120c}
+.ad .ctRow button{flex:none;width:34px;height:46px;border-radius:8px;background:#163a2b;border:1px solid #2f5541;font:900 18px var(--game);line-height:1;color:var(--ink)}
+.ad .ctRow button:disabled{opacity:.3;cursor:not-allowed}
 .ad .nm small{display:block;font:600 11px var(--mono);color:var(--mute)}
 .ad .why{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;margin-top:4px;font:600 11.5px/1.5 var(--tc);color:#c8d6cd;white-space:normal}
-.ad .ct{display:flex;align-items:center;gap:4px;margin-top:auto;padding-top:8px}
-.ad .ct b{min-width:20px;text-align:center;font:800 16px var(--game)}
-.ad .ct button{flex:1;height:34px;border-radius:8px;background:#163a2b;border:1px solid #2f5541;font:900 18px var(--game);line-height:1;color:var(--ink)}
-.ad .ct button:disabled{opacity:.3;cursor:not-allowed}
 /* 分級 */
 .tiers .hd,.ffbox .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}.tiers .hd b,.ffbox .hd b{font:800 34px var(--tc);letter-spacing:1px}.tiers .hd span,.ffbox .hd span{font:12px var(--tc);color:var(--mute)}
 .tr{margin-bottom:6px;padding:5px 10px 6px;border-radius:12px;background:#0a1912;border:1px solid #21402f}
@@ -326,7 +326,10 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .ffr{gap:6px}
  .ff,.ad,.tc{height:140px}
  .ff,.ad{padding:6px 7px}
- .box,.ad .box{height:30px;margin:4px 0}
+ .box{height:30px;margin:4px 0}
+ .ad .box{height:30px;margin:0}
+ .ad .ctRow{margin:4px 0}
+ .ad .ctRow button{width:26px;height:30px;font-size:14px}
  .tc .box{height:40px;margin:0 0 5px}
  .ff .h b,.ad .h b{font-size:12px}
  .bd{font-size:9px}
@@ -1144,7 +1147,7 @@ function slotLabel(i) {
 // 已選的那一格，縮小複製貼到上面的格子裡，跟卡片本尊長得一模一樣；還沒選就用代表圖示
 function slotSourceCard(i) {
   if (i === 0) return B.board ? $("#ffr .ff.sel") : null;
-  if (i === 1) return null;
+  if (i === 1) { const got = SQ.ADDON_ORDER.find((id) => B.add && B.add[id]); return got ? $(`#shelf .ad[data-id="${got}"]`) : null; }
   const idx = tierOrder()[i - 2];
   return TOUCHED.has(idx) ? $(`#tierPage${i - 2} .tc.on`) : null;
 }
@@ -1286,10 +1289,9 @@ function renderShelf() {
     const max = id === "ucom" ? 4 : a.kind === "usb" ? 1 : 2;
     const icon = a.kind === "pcie" ? (id === "lan2" ? "lan" : "card") : a.kind === "m2" ? "m2mod" : "dongle";
     return `<div class="ad ${a.kind === "usb" ? "trap" : ""} ${lock ? "lock" : ""} ${n ? "sel" : ""}" data-id="${id}">
-     <div class="h">${ic(icon, 16)}<b>${TXT[LANG].addon[id]}</b></div>
-     <div class="box">${ic(icon, 28)}</div>
-     <div class="nm"><small>${TXT[LANG].addonSub[id]} · ${a.price}</small><span class="why">${TXT[LANG].mech[key][1]}</span></div>
-     <div class="ct"><button data-a="${id}" data-d="-1" ${lock || !n ? "disabled" : ""} aria-label="-">−</button><b>${n}</b><button data-a="${id}" data-d="1" ${lock || n >= max || !b ? "disabled" : ""} aria-label="+">+</button></div></div>`;
+     <div class="h">${ic(icon, 16)}<b>${TXT[LANG].addon[id]}</b>${n ? `<span class="cnt">${n}</span>` : ""}</div>
+     <div class="ctRow"><button data-a="${id}" data-d="-1" ${lock || !n ? "disabled" : ""} aria-label="-">−</button><div class="box">${ic(icon, 28)}</div><button data-a="${id}" data-d="1" ${lock || n >= max || !b ? "disabled" : ""} aria-label="+">+</button></div>
+     <div class="nm"><small>${TXT[LANG].addonSub[id]} · ${a.price}</small><span class="why">${TXT[LANG].mech[key][1]}</span></div></div>`;
   }).join("");
   $$("#shelf button").forEach((x) => x.onclick = (ev) => { const id = x.dataset.a, d = +x.dataset.d; B.add[id] = Math.max(0, (B.add[id] || 0) + d); if (!B.add[id]) delete B.add[id];
     beep(d > 0 ? "add" : "click"); if (d > 0) { floatCoin(ev, "-" + SQ.ADDONS[id].price); flyToSlot(x, 1); } renderAll(); });
