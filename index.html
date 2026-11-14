@@ -113,11 +113,17 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .topRow{display:grid;gap:14px;grid-template-columns:1.1fr 1fr .8fr;grid-template-rows:380px;margin-bottom:14px;flex:0 0 auto}
 .stage3d,.scn,.shipbox{min-height:0;overflow-y:auto}
 .scn{padding:16px}.tierPage{padding:14px;height:100%;overflow-y:auto;display:flex;flex-direction:column}
-.tierPage .tr{flex:1;display:flex;flex-direction:column;justify-content:center}
+.tierPage .tr{display:flex;flex-direction:column}
 .ffbox{padding:14px}.shipbox{padding:14px;display:flex;flex-direction:column;gap:10px}
 .pager{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
 .pagerHd{display:flex;align-items:center;justify-content:center;gap:16px;flex:0 0 auto}
-.pageDots{display:flex;align-items:center;gap:8px}.pageDots i{width:8px;height:8px;border-radius:50%;background:#21402f;display:block;flex:none;transition:all .15s}.pageDots i.done{background:var(--teal)}.pageDots i.cur{box-shadow:0 0 0 3px rgba(63,224,187,.5)}
+.pslots{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center}
+.pslot{width:76px;height:44px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:2px 4px;border-radius:9px;background:#0a1c15;border:1.5px solid #21402f;color:var(--mute);cursor:pointer;transition:all .12s;overflow:hidden}
+.pslot:hover{border-color:#3f7a62}
+.pslot svg{opacity:.75}
+.pslot b{display:block;max-width:100%;font:800 10px var(--tc);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pslot.done svg{opacity:1}
+.pslot.cur{border-color:var(--teal);background:#0f2a20;box-shadow:0 0 0 2px rgba(63,224,187,.45)}
 .pages{position:relative;flex:1;min-height:0}
 .page{display:none;height:100%;overflow-y:auto}
 .page.on{display:block}
@@ -307,6 +313,8 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .shipbtn{height:42px;font-size:16px}
  .hint{font-size:10px}
  .pagerHd{gap:8px}
+ .pslot{width:50px;height:36px}
+ .pslot b{font-size:8.5px}
  .icon-btn{width:32px;height:32px}
  .ffr{gap:6px}
  .ff,.ad,.tc{height:140px}
@@ -479,7 +487,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
    <div class="why" id="why"></div><button class="btn shipbtn" id="bShip" data-t="ship"></button><div class="hint" data-t="shipHint"></div></div>
  </div>
  <div class="pager">
-  <div class="pagerHd"><button class="icon-btn" id="bPagePrev" aria-label="prev">‹</button><div class="pageDots" id="pageDots"></div><button class="icon-btn" id="bPageNext" aria-label="next">›</button></div>
+  <div class="pagerHd"><button class="icon-btn" id="bPagePrev" aria-label="prev">‹</button><div class="pslots" id="pageSlots"></div><button class="icon-btn" id="bPageNext" aria-label="next">›</button></div>
   <div class="pages">
    <div class="page" data-page="0"><div class="pn ffbox"><div class="hd"><i class="stepno">1</i><b data-t="pickFF"></b><span data-t="pickFFsub"></span></div><div class="ffr" id="ffr"></div></div></div>
    <div class="page" data-page="1"><div class="pn shelf" id="shelf"></div></div>
@@ -927,6 +935,7 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.ad
 
 /* ---------- 狀態 ---------- */
 const OPT_COLS = Math.max(SQ.FORMS.length, SQ.ADDON_ORDER.length);  // 板型／補介面／規格選項共用的欄數，確保三種牌卡寬度一致
+const TIER_ICON = {temp:"thermo_hot",power:"dc_power",prot:"surge",store:"ssd",supply:"cal10",cert:"cert"};
 let PROG = store.get("prog", {});            // {id: 最高分}
 let CUR = null;                                // 目前關卡
 let B = null;                                  // build
@@ -1123,9 +1132,20 @@ function pageDone(i) {
   const idx = tierOrder()[i - 2];
   return isUnlocked(SQ.TIERS[idx].id) && TOUCHED.has(idx);
 }
+function slotIcon(i) { if (i === 0) return "box"; if (i === 1) return "card"; return TIER_ICON[SQ.TIERS[tierOrder()[i - 2]].id]; }
+function slotLabel(i) {
+  if (i === 0) { if (!B.board) return ""; const b = SQ.BOARDS.find((x) => x.id === B.board); return T("ff." + b.ff); }
+  if (i === 1) { const n = Object.values(B.add || {}).reduce((s, c) => s + c, 0); return n ? "×" + n : ""; }
+  const idx = tierOrder()[i - 2];
+  return TOUCHED.has(idx) ? TXT[LANG].tierOpt[SQ.TIERS[idx].id][B.t[idx]] : "";
+}
 function renderPager() {
   $$(".page").forEach((p) => p.classList.toggle("on", +p.dataset.page === PAGE));
-  $("#pageDots").innerHTML = [...Array(PAGE_COUNT)].map((_, i) => `<i class="${i === PAGE ? "cur" : ""} ${pageDone(i) ? "done" : ""}"></i>`).join("");
+  $("#pageSlots").innerHTML = [...Array(PAGE_COUNT)].map((_, i) => {
+    const label = slotLabel(i);
+    return `<div class="pslot ${i === PAGE ? "cur" : ""} ${pageDone(i) ? "done" : ""}" data-i="${i}">${ic(slotIcon(i), 16)}${label ? `<b>${label}</b>` : ""}</div>`;
+  }).join("");
+  $$("#pageSlots .pslot").forEach((x) => x.onclick = () => { PAGE = +x.dataset.i; beep("click"); renderPager(); });
   $("#bPagePrev").disabled = PAGE === 0; $("#bPageNext").disabled = PAGE === PAGE_COUNT - 1;
 }
 
@@ -1246,7 +1266,7 @@ function renderTierPages() {
   tierOrder().forEach((i, slot) => {
     const Tr = SQ.TIERS[i], un = isUnlocked(Tr.id), opts = TXT[LANG].tierOpt[Tr.id];
     const costs = TXT[LANG].tierCost[Tr.id] || Tr.cost.map((c) => String(c));
-    const iconName = {temp:"thermo_hot",power:"dc_power",prot:"surge",store:"ssd",supply:"cal10",cert:"cert"}[Tr.id];
+    const iconName = TIER_ICON[Tr.id];
     const icon = ic(iconName, 24);
     const hd = `<div class="hd"><i class="stepno">${slot + 3}</i><b>${T("tier." + Tr.id)}</b></div>`;
     const body = !un
