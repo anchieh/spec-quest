@@ -86,14 +86,13 @@ svg.ic{display:block}
 .zone{padding:16px;border-radius:18px;position:relative;overflow:hidden}
 .zone h3{margin:0 0 4px;font:900 22px/1.25 var(--tc);display:flex;align-items:center;gap:8px}.zone h3 span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zone .zs{font:13px/1.4 var(--tc);color:var(--mute);margin-bottom:12px;min-height:2.8em}
 .zone::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:var(--zc);opacity:.12}
-.lvl{width:100%;display:flex;align-items:center;gap:10px;padding:12px;margin-bottom:10px;border-radius:14px;text-align:left;background:#0b1d15;border:1.5px solid #24443a;transition:transform .12s,border-color .12s}
+.lvl{width:100%;display:flex;align-items:center;gap:10px;padding:12px;margin-bottom:10px;border-radius:14px;text-align:left;background:#0b1d15;border:1.5px solid #24443a;transition:transform .12s,border-color .12s;position:relative;overflow:hidden}
 .lvl:hover:not([disabled]){transform:translateY(-2px);border-color:var(--zc)}
+.lvl::before{content:"";position:absolute;inset:0;background:var(--zc);z-index:-2}
+.lvl::after{content:"";position:absolute;inset:0;background:inherit;clip-path:polygon(34px 0,100% 0,100% 100%,0 100%,0 34px);z-index:-1}
+.lvl .no{position:absolute;left:9px;top:7px;font:800 15px var(--game);font-style:normal;color:#03140e;line-height:1}
+.lvl .no svg{display:block}
 .lvlL{flex:none;display:flex;flex-direction:column;align-items:center;gap:5px}
-.lvl .no{width:38px;height:40px;flex:none;position:relative;color:#03140e;font:800 13px var(--game)}
-.lvl .no::before{content:"";position:absolute;inset:0;border-radius:7px;background:var(--zc)}
-.lvl .no::after{content:"";position:absolute;inset:0;border-radius:7px;background:#0b1d15;border:1.5px solid var(--zc);clip-path:polygon(55% 0,100% 0,100% 100%,0 100%,0 55%)}
-.lvl .no i{position:absolute;left:4px;top:3px;z-index:2;font-style:normal;line-height:1;display:block}
-.lvl .no i svg{display:block}
 .lvlN{min-width:0}
 .lvl b{display:block;font:800 22px/1.25 var(--tc)}.lvl small{display:flex;gap:3px;margin-top:4px}.lvl small .star{width:15px;height:15px}
 html[lang="zh-Hant"] .lvl b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -932,7 +931,6 @@ let CUR = null;                                // 目前關卡
 let B = null;                                  // build
 let FF_LAST = {};                              // 每種板型最後選的款式 {ff: boardId}
 let TOUCHED = new Set();                       // 玩家主動點過的規格項（index），未點過不預先亮選項
-let EXPANDED = new Set();                      // 點開完整說明的擴充品 id
 let PAGE = 0;                                  // 0=選板型 1=補介面+六項規格
 let FORMAL = false;                            // 正式關（六項規格全解鎖）：設時限
 let TIME_LEFT = 0;
@@ -962,22 +960,21 @@ function renderMap() {
     const lvs = SQ.LEVELS.filter((l) => l.dom === d);
     return `<div class="pn zone" style="--zc:${DOMC[d]}"><h3>${ic(lvs[0].icon, 26)}<span>${T("dom." + d)}</span></h3><div class="zs">${T("domSub." + d)}</div>` +
       lvs.map((l) => { const s = starsOf(l.id); tot += s; const open = isOpen(l.id);
-        return `<button class="lvl ${l.boss ? "boss" : ""}" data-l="${l.id}" ${open ? "" : "disabled"}><div class="lvlL"><span class="no"><i>${open ? l.id : ic("lock", 14)}</i></span>${ic(l.icon, 24)}</div><span class="lvlN"><b>${L(l.id).n}</b><small>${[0,1,2].map((i) => `<span class="star ${i < s ? "on" : ""}"></span>`).join("")}${l.boss ? ` · ${T("boss")}` : ""}</small></span></button>`; }).join("") + `</div>`;
+        return `<button class="lvl ${l.boss ? "boss" : ""}" data-l="${l.id}" ${open ? "" : "disabled"}><i class="no">${open ? l.id : ic("lock", 14)}</i><div class="lvlL">${ic(l.icon, 24)}</div><span class="lvlN"><b>${L(l.id).n}</b><small>${[0,1,2].map((i) => `<span class="star ${i < s ? "on" : ""}"></span>`).join("")}${l.boss ? ` · ${T("boss")}` : ""}</small></span></button>`; }).join("") + `</div>`;
   }).join("");
   $("#totStars").textContent = tot;
   $$(".lvl").forEach((b) => b.onclick = () => { beep("click"); startLevel(+b.dataset.l); });
   renderTrophyRow();
 }
 function trophyIcon(done, n, s = 32) {
-  const style = done ? `fill="currentColor" stroke="none"` : `fill="none" stroke="currentColor" stroke-width="1.6"`;
+  const rb = (c) => done ? `fill="${c}" stroke="none"` : `fill="none" stroke="currentColor" stroke-width="1.3"`;
   const textFill = done ? "#2a1600" : "currentColor";
-  return `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" aria-hidden="true"><g ${style} stroke-linecap="round" stroke-linejoin="round">
-   <path d="M5 4h14v3a7 7 0 0 1-14 0V4z"/>
-   <path d="M5 5H2v2a4 4 0 0 0 4 3.3"/>
-   <path d="M19 5h3v2a4 4 0 0 0-4 3.3"/>
-   <path d="M9.5 13h5l1 4h-7z"/>
-   <path d="M7.5 20h9l-1-2h-7z"/>
-  </g><text x="12" y="9.3" text-anchor="middle" font-size="7.5" font-weight="900" font-family="Chakra Petch,sans-serif" fill="${textFill}">${n}</text></svg>`;
+  return `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" aria-hidden="true" stroke-linejoin="round">
+   <path d="M7 2 L11.3 10.8 L7.3 11.4 Z" ${rb("#d8433a")}/>
+   <path d="M17 2 L12.7 10.8 L16.7 11.4 Z" ${rb("#2f6fb5")}/>
+   <circle cx="12" cy="15" r="6.6" fill="${done ? "#ffc766" : "none"}" stroke="${done ? "#b8700c" : "currentColor"}" stroke-width="1.4"/>
+   <text x="12" y="18" text-anchor="middle" font-size="7.6" font-weight="900" font-family="Chakra Petch,sans-serif" fill="${textFill}">${n}</text>
+  </svg>`;
 }
 function renderTrophyRow() {
   const el = $("#trophyRow"); if (!el) return;
@@ -1075,7 +1072,6 @@ function startLevel(id) {
   B = { board: null, add: {}, t: [...CUR.need].map((n, i) => isUnlocked(SQ.TIERS[i].id) ? 0 : n) };
   FF_LAST = {};
   TOUCHED = new Set();
-  EXPANDED = new Set();
   PAGE = 0;
   stopTimer();
   FORMAL = SQ.TIERS.every((Tr) => isUnlocked(Tr.id));
@@ -1112,8 +1108,8 @@ function openBrief() {
   const mechBlock = hasMech ? `<div class="mechk">${T("newMechKicker")}</div>${mech}` : "";
   $("#briefCard").innerHTML = `<div class="k">${T("lv", {n: CUR.id})} · ${T("dom." + CUR.dom)}${CUR.boss ? " · " + T("boss") : ""}</div>
    <div style="display:flex;gap:16px;align-items:center;margin-top:8px"><div class="hex" style="width:76px;height:84px"><div class="in" style="width:64px;height:72px">${ic(CUR.icon, 44)}</div></div><h2>${t.n}</h2></div>
+   <div class="briefCtx"><p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}</div>
    ${mechBlock}
-   <div class="briefCtx ${hasMech ? "sec" : ""}"><p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}</div>
    <div class="row"><button class="btn" id="bGo">${T("briefGo")}</button></div>`;
   $("#mBrief").classList.add("on"); $("#bGo").onclick = () => { beep("click"); $("#mBrief").classList.remove("on"); startTimer(); };
 }
@@ -1228,19 +1224,16 @@ function renderScene() {
 function renderShelf() {
   const b = B.board ? SQ.BOARDS.find((x) => x.id === B.board) : null;
   $("#shelf").innerHTML = `<div class="hd shelfhd"><i class="stepno">2</i><b>${T("addonTitle")}</b></div>` + SQ.ADDON_ORDER.map((id) => {
-    const a = SQ.ADDONS[id], key = a.kind === "pcie" ? "pcie" : a.kind === "m2" ? "m2" : id === "ucom" ? "usb" : "m2";
+    const a = SQ.ADDONS[id], key = a.kind === "pcie" ? "pcie" : a.kind === "m2" ? "m2" : a.kind === "usb" ? "usb" : "m2";
     const lock = !!(b && b.custom), n = B.add[id] || 0;
     const max = id === "ucom" ? 4 : a.kind === "usb" ? 1 : 2;
-    const open = EXPANDED.has(id);
     const icon = a.kind === "pcie" ? (id === "lan2" ? "lan" : "card") : a.kind === "m2" ? "m2mod" : "dongle";
-    return `<div class="ad ${a.kind === "usb" ? "trap" : ""} ${lock ? "lock" : ""} ${open ? "open" : ""} ${n ? "sel" : ""}" data-id="${id}">
+    return `<div class="ad ${a.kind === "usb" ? "trap" : ""} ${lock ? "lock" : ""} ${n ? "sel" : ""}" data-id="${id}">
      <div class="h">${ic(icon, 16)}<b>${TXT[LANG].addon[id]}</b></div>
      <div class="box">${ic(icon, 28)}</div>
-     <div class="nm"><small>${TXT[LANG].addonSub[id]} · ${a.price}</small>${open ? `<span class="why">${TXT[LANG].mech[key][1]}</span>` : ""}</div>
+     <div class="nm"><small>${TXT[LANG].addonSub[id]} · ${a.price}</small><span class="why">${TXT[LANG].mech[key][1]}</span></div>
      <div class="ct"><button data-a="${id}" data-d="-1" ${lock || !n ? "disabled" : ""} aria-label="-">−</button><b>${n}</b><button data-a="${id}" data-d="1" ${lock || n >= max || !b ? "disabled" : ""} aria-label="+">+</button></div></div>`;
   }).join("");
-  $$("#shelf .ad").forEach((card) => card.onclick = (ev) => { if (ev.target.closest("button")) return;
-    const id = card.dataset.id; if (EXPANDED.has(id)) EXPANDED.delete(id); else EXPANDED.add(id); beep("click"); renderAll(); });
   $$("#shelf button").forEach((x) => x.onclick = (ev) => { const id = x.dataset.a, d = +x.dataset.d; B.add[id] = Math.max(0, (B.add[id] || 0) + d); if (!B.add[id]) delete B.add[id];
     beep(d > 0 ? "add" : "click"); if (d > 0) floatCoin(ev, "-" + SQ.ADDONS[id].price); renderAll(); });
 }
