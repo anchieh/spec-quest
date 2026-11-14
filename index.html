@@ -795,7 +795,7 @@ const TXT = {
   evYear:{cert:1,temp:2,ucom:2,ucan:2,ulte:2,power:3,prot:4,prot_usb:4,store:5,supply:8},
   score:"分數", yourPick:"你的選擇", right:"剛好", diff:"差額", reason2:"為什麼",
   over:"多付 {v}", under:"損失 {v}", same:"剛好",
-  retry:"再試一次", next:"下一關 ▶", toMap:"回地圖", skip:"跳過動畫",
+  retry:"再試一次", next:"下一關 ▶", toMap:"回地圖",
   boardRow:"板型＋擴充", stars:["再想想","過關","不錯","完美"],
   allDone:"十關全破！", allDoneSub:"總星數 {s}/30。工業電腦選型的訣竅只有一個：剛好。",
   coinGain:"省下", needToast:"這項在第 {n} 關解鎖", tierApplied:"目前套用：{v}", costBreak:"板子＋擴充 {hw} ・ 六項規格 {spec}", timeUp:"時間到，直接送出目前配置", addonReset:"換了板型，原本加的擴充品已清空",
@@ -847,7 +847,7 @@ const TXT = {
   evYear:{cert:1,temp:2,ucom:2,ucan:2,ulte:2,power:3,prot:4,prot_usb:4,store:5,supply:8},
   score:"Score", yourPick:"Your pick", right:"Just right", diff:"Diff", reason2:"Why",
   over:"Over {v}", under:"Loss {v}", same:"Right",
-  retry:"Retry", next:"Next ▶", toMap:"Map", skip:"Skip",
+  retry:"Retry", next:"Next ▶", toMap:"Map",
   boardRow:"Board + add-ons", stars:["Think again","Cleared","Good","Perfect"],
   allDone:"All ten cleared!", allDoneSub:"Total stars {s}/30. There is one trick to industrial-PC specs: just enough.",
   coinGain:"Saved", needToast:"Unlocks at level {n}", tierApplied:"Applied now: {v}", costBreak:"Board + add-ons {hw} · Six specs {spec}", timeUp:"Time's up — shipping your current build", addonReset:"Board changed — your add-ons were cleared",
@@ -1303,26 +1303,14 @@ function ship(force) {
   const prev = PROG[CUR.id]; if (prev == null || r.score > prev) { PROG[CUR.id] = r.score; store.set("prog", PROG); }
   const events = r.items.filter((x) => x.kind === "under").map((x) => ({ id: x.id, y: TXT[LANG].evYear[x.id] || 3, v: x.v }));
   const card = $("#simCard");
+  const years = [...Array(10)].map((_, i) => { const y = i + 1, hit = events.some((x) => x.y === y);
+    return `<div class="yr ${hit ? "hit" : "lit"}" id="y${y}"><span class="ev">${ic(hit ? "bolt" : "badge", hit ? 26 : 22)}</span>${T("year", {n: y})}</div>`; }).join("");
+  const evlog = events.length ? events.map((x) => `<div><b style="color:#ff8a80">${T("year", {n: x.y})}</b>　${TXT[LANG].ev[x.id]}　<b style="color:#ff8a80">−${fmt(x.v)}</b></div>`).join("") : `<div style="color:var(--green)">${T("calm")}</div>`;
   card.innerHTML = `<div class="k">${T("lv", {n: CUR.id})} · ${L(CUR.id).n}</div><h2>${T("simTitle")}</h2>
-   <div class="years">${[...Array(10)].map((_, i) => `<div class="yr" id="y${i + 1}"><span class="ev"></span>${T("year", {n: i + 1})}</div>`).join("")}</div>
-   <div class="evlog" id="evlog"></div><div class="row" id="skipRow"><button class="btn ghost" id="bSkip">${T("skip")}</button></div><div class="result" id="res"></div>`;
+   <div class="years">${years}</div>
+   <div class="evlog" id="evlog">${evlog}</div><div class="result" id="res"></div>`;
   $("#mSim").classList.add("on");
-  $("#bSkip").focus();
-  let y = 0, done = false;
-  const step = () => {
-    if (done) return; y++;
-    const evs = events.filter((x) => x.y === y), cell = $("#y" + y);
-    if (evs.length) { cell.classList.add("hit"); cell.querySelector(".ev").innerHTML = ic("bolt", 26); beep("hit");
-      evs.forEach((x) => $("#evlog").insertAdjacentHTML("beforeend", `<div><b style="color:#ff8a80">${T("year", {n: y})}</b>　${TXT[LANG].ev[x.id]}　<b style="color:#ff8a80">−${fmt(x.v)}</b></div>`)); }
-    else { cell.classList.add("lit"); cell.querySelector(".ev").innerHTML = ic("badge", 22); }
-    if (y < 10) step._t = setTimeout(step, evs.length ? 650 : 260); else finish();
-  };
-  const finish = () => { if (done) return; done = true; clearTimeout(step._t);
-    for (let i = 1; i <= 10; i++) { const c = $("#y" + i); if (!c.classList.contains("hit") && !c.classList.contains("lit")) { const hit = events.some((x) => x.y === i); c.classList.add(hit ? "hit" : "lit"); c.querySelector(".ev").innerHTML = ic(hit ? "bolt" : "badge", hit ? 26 : 22); } }
-    $("#evlog").innerHTML = events.length ? events.map((x) => `<div><b style="color:#ff8a80">${T("year", {n: x.y})}</b>　${TXT[LANG].ev[x.id]}　<b style="color:#ff8a80">−${fmt(x.v)}</b></div>`).join("") : `<div style="color:var(--green)">${T("calm")}</div>`;
-    $("#skipRow").remove(); showResult(r); };
-  $("#bSkip").onclick = finish;
-  step._t = setTimeout(step, 400);
+  showResult(r);
 }
 function showFail(r) {
   stopTimer();
