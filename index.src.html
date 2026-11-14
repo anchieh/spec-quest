@@ -206,9 +206,9 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .tr{margin-bottom:6px;padding:5px 10px 6px;border-radius:12px;background:#0a1912;border:1px solid #21402f}
 .tn{display:flex;align-items:center;gap:8px;margin-bottom:2px;height:24px}.tn span{font:800 14px var(--tc)}.tn small{margin-left:auto;font:700 11px var(--tc);color:var(--mute)}
 .tg{display:grid;gap:10px}
-.tc{display:flex;flex-direction:column;justify-content:center;aspect-ratio:1;overflow:hidden;padding:6px 5px;border-radius:8px;background:#071510;border:1.5px solid #1f3a2c;text-align:center;transition:all .12s}
-.tc .box{height:42px;margin:0 0 6px}
-.tc b{display:block;font:700 13px/1.25 var(--tc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tc small{display:block;font:600 11px/1.2 var(--mono);color:var(--mute)}
+.tc{display:flex;flex-direction:column;aspect-ratio:1;overflow:hidden;padding:6px 7px;border-radius:8px;background:#071510;border:1.5px solid #1f3a2c;text-align:left;transition:all .12s}
+.tc .h{display:flex;align-items:center;gap:4px}.tc .h b{font:800 11.5px var(--tc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tc .box{height:42px;margin:4px 0}
 .tc:hover:not(:disabled){border-color:#3f7a62}
 .tc.on{background:linear-gradient(180deg,#1f6e53,#0f3a2b);border-color:var(--teal);box-shadow:0 0 14px rgba(63,224,187,.4)}
 .tr.locked{opacity:.75}.tr.locked .tc{cursor:not-allowed}.tr.locked .tc:not(.on){opacity:.35}
@@ -991,7 +991,8 @@ function renderScene() {
 
 function renderShelf() {
   const b = B.board ? SQ.BOARDS.find((x) => x.id === B.board) : null;
-  $("#shelf").style.gridTemplateColumns = `repeat(${OPT_COLS},minmax(0,1fr))`;
+  $("#shelf").style.width = `calc(${SQ.ADDON_ORDER.length}/${OPT_COLS}*100%)`;
+  $("#shelf").style.gridTemplateColumns = `repeat(${SQ.ADDON_ORDER.length},minmax(0,1fr))`;
   $("#shelf").innerHTML = `<div class="hd shelfhd"><i class="stepno">2</i><b>${T("addonTitle")}</b></div>` + SQ.ADDON_ORDER.map((id) => {
     const a = SQ.ADDONS[id], key = a.kind === "pcie" ? "pcie" : a.kind === "m2" ? "m2" : a.kind === "usb" ? "usb" : "m2";
     const lock = !!(b && b.custom), n = B.add[id] || 0;
@@ -1032,7 +1033,7 @@ function renderTierPages() {
       ? `<div class="tr locked"><div class="tn">${icon}<span class="lockb">${ic("lock", 14)}${T("locked", {n: unlockLevel(Tr.id)})}</span></div>
          <div class="trWhy">${TXT[LANG].mech[Tr.id][1]} <b>${T("tierApplied", {v: opts[B.t[i]]})}</b></div></div>`
       : `<div class="tr">
-         <div class="tg" style="grid-template-columns:repeat(${OPT_COLS},minmax(0,1fr))">${opts.map((o, k) => `<button class="tc ${TOUCHED.has(i) && B.t[i] === k ? "on" : ""}" data-i="${i}" data-k="${k}"><div class="box">${ic(iconName, 26)}</div><b>${o}</b><small>${costs[k]}</small></button>`).join("")}</div></div>`;
+         <div class="tg" style="width:calc(${opts.length}/${OPT_COLS}*100%);grid-template-columns:repeat(${opts.length},minmax(0,1fr))">${opts.map((o, k) => `<button class="tc ${TOUCHED.has(i) && B.t[i] === k ? "on" : ""}" data-i="${i}" data-k="${k}"><div class="h">${ic(iconName, 16)}<b>${o}</b></div><div class="box">${ic(iconName, 26)}</div><div class="prRow"><i class="coin"></i>${costs[k]}</div></button>`).join("")}</div></div>`;
     $(`#tierPage${slot}`).innerHTML = hd + body;
   });
   $$(".tierPage .tc").forEach((x) => x.onclick = () => { const i = +x.dataset.i; if (!isUnlocked(SQ.TIERS[i].id)) { beep("err"); toast(T("needToast", {n: unlockLevel(SQ.TIERS[i].id)})); return; }
@@ -1041,7 +1042,8 @@ function renderTierPages() {
 
 function renderFF() {
   const sel = B.board ? SQ.BOARDS.find((x) => x.id === B.board) : null;
-  $("#ffr").style.gridTemplateColumns = `repeat(${OPT_COLS},minmax(0,1fr))`;
+  $("#ffr").style.width = `calc(${SQ.FORMS.length}/${OPT_COLS}*100%)`;
+  $("#ffr").style.gridTemplateColumns = `repeat(${SQ.FORMS.length},minmax(0,1fr))`;
   $("#ffr").innerHTML = SQ.FORMS.map((ff) => {
     const vars = SQ.BOARDS.filter((b) => b.ff === ff), lock = ff === "come" && !isUnlocked("custom");
     const cur = sel && sel.ff === ff ? sel : (FF_LAST[ff] ? SQ.BOARDS.find((b) => b.id === FF_LAST[ff]) : vars[0]);
