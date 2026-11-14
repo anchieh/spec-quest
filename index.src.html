@@ -125,7 +125,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .pslotVis{flex:1;width:100%;min-height:0;position:relative;overflow:hidden}
 .pslotVis.ic{display:flex;align-items:center;justify-content:center}
 .pslotVis svg{opacity:.55}
-.pslot b{display:block;max-width:100%;flex:none;font:800 10px var(--tc);color:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pslot b{display:block;max-width:100%;flex:none;font:800 12px var(--tc);color:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pslot.done{background:linear-gradient(180deg,#123a2c,#0a1f17);border-color:#2f6a52;color:var(--ink)}
 .pslot.done .pslotVis svg{opacity:1}
 .pslot.cur{border-color:var(--teal);box-shadow:0 0 0 2px rgba(63,224,187,.5)}
@@ -193,14 +193,14 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .ad:hover:not(.lock){border-color:#3f7a62;transform:translateY(-2px)}
 .ad.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal),0 0 24px rgba(63,224,187,.4);background:linear-gradient(180deg,#14402f,#0a1d14)}
 .ad.trap{border-color:rgba(255,79,69,.45)}.ad.lock{opacity:.4;cursor:not-allowed}
-.ad .h{display:flex;align-items:center;gap:5px}.ad .h b{font:800 11.5px var(--tc)}
-.ad .cnt{margin-left:auto;flex:none;min-width:16px;text-align:center;font:800 9.5px var(--tc);color:var(--ink);background:#163a2b;border:1px solid var(--teal);padding:1px 5px;border-radius:6px}
+.ad .h{display:flex;align-items:center;gap:5px}.ad .h b{font:800 13px var(--tc)}
+.ad .cnt{margin-left:auto;flex:none;min-width:16px;text-align:center;font:800 11px var(--tc);color:var(--ink);background:#163a2b;border:1px solid var(--teal);padding:1px 5px;border-radius:6px}
 .ad .ctRow{display:flex;align-items:center;gap:4px;margin:4px 0 4px}
 .ad .box{flex:1;min-width:0;height:30px;margin:0;display:grid;place-items:center;border-radius:8px;background:#06120c}
 .ad .ctRow button{flex:none;width:26px;height:30px;border-radius:8px;background:#163a2b;border:1px solid #2f5541;font:900 14px var(--game);line-height:1;color:var(--ink)}
 .ad .ctRow button:disabled{opacity:.3;cursor:not-allowed}
-.ad .nm small{display:block;font:600 9.5px var(--mono);color:var(--mute)}
-.ad .why{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-top:2px;font:600 9.5px/1.4 var(--tc);color:#c8d6cd;white-space:normal}
+.ad .nm small{display:block;font:600 11px var(--mono);color:var(--mute)}
+.ad .why{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-top:2px;font:600 11px/1.35 var(--tc);color:#c8d6cd;white-space:normal}
 /* 分級 */
 .tiers .hd,.ffbox .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}.tiers .hd b,.ffbox .hd b{font:800 34px var(--tc);letter-spacing:1px}.tiers .hd span,.ffbox .hd span{font:12px var(--tc);color:var(--mute)}
 .tr{margin-bottom:6px;padding:5px 10px 6px;border-radius:12px;background:#0a1912;border:1px solid #21402f}
@@ -208,7 +208,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .tg{display:grid;gap:10px}
 .tc{display:flex;flex-direction:column;justify-content:center;aspect-ratio:1;overflow:hidden;padding:6px 5px;border-radius:8px;background:#071510;border:1.5px solid #1f3a2c;text-align:center;transition:all .12s}
 .tc .box{height:42px;margin:0 0 6px}
-.tc b{display:block;font:700 11px/1.25 var(--tc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tc small{display:block;font:600 9.5px/1.2 var(--mono);color:var(--mute)}
+.tc b{display:block;font:700 13px/1.25 var(--tc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tc small{display:block;font:600 11px/1.2 var(--mono);color:var(--mute)}
 .tc:hover:not(:disabled){border-color:#3f7a62}
 .tc.on{background:linear-gradient(180deg,#1f6e53,#0f3a2b);border-color:var(--teal);box-shadow:0 0 14px rgba(63,224,187,.4)}
 .tr.locked{opacity:.75}.tr.locked .tc{cursor:not-allowed}.tr.locked .tc:not(.on){opacity:.35}
@@ -220,17 +220,17 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .ff:hover:not(.lock){border-color:#3f7a62;transform:translateY(-2px)}
 .ff.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal),0 0 24px rgba(63,224,187,.4);background:linear-gradient(180deg,#14402f,#0a1d14)}
 .ff.lock{opacity:.4;cursor:not-allowed}
-.ff .h{display:flex;align-items:center;gap:5px}.ff .h b{font:800 12.5px var(--game)}
-.bd{margin-left:auto;font:800 9.5px var(--tc);padding:1px 6px;border-radius:5px;text-align:right}
-.bd.dim{border:1px solid var(--line);color:var(--mute);font:700 9.5px var(--mono)}.bd.lk{border:1px solid var(--gold);color:var(--gold)}
+.ff .h{display:flex;align-items:center;gap:5px}.ff .h b{font:800 14px var(--game)}
+.bd{margin-left:auto;font:800 11px var(--tc);padding:1px 6px;border-radius:5px;text-align:right}
+.bd.dim{border:1px solid var(--line);color:var(--mute);font:700 11px var(--mono)}.bd.lk{border:1px solid var(--gold);color:var(--gold)}
 .box{position:relative;height:30px;margin:4px 0 4px;display:grid;place-items:center;border-radius:8px;background:#06120c;overflow:hidden}
 .ff .box{align-items:end;justify-items:center;padding-bottom:1px}
 .lim{position:absolute;border:2px dashed rgba(255,198,90,.75);border-radius:4px}
 .sil{position:relative;border-radius:3px;background:linear-gradient(135deg,#2a9a6c,#0e4a31);box-shadow:0 0 0 1px #4fd1a0}
-.spec{display:flex;flex-wrap:wrap;gap:3px;font:700 9.5px var(--game);color:#c8d6cd}.spec span{padding:1px 4px;border-radius:5px;background:#0a1c15}
-.prRow{display:flex;align-items:center;justify-content:flex-end;gap:3px;margin-top:3px;font:700 10px var(--game);color:#c8d6cd}
+.spec{display:flex;flex-wrap:wrap;gap:3px;font:700 11.5px var(--game);color:#c8d6cd}.spec span{padding:1px 4px;border-radius:5px;background:#0a1c15}
+.prRow{display:flex;align-items:center;justify-content:flex-end;gap:3px;margin-top:3px;font:700 12px var(--game);color:#c8d6cd}
 .prRow .coin{width:11px;height:11px}
-.var{display:flex;gap:3px;margin-top:3px}.var button{flex:1;padding:4px 0;border-radius:6px;font:700 10.5px var(--tc);background:#0a1c15;border:1px solid #21402f;color:var(--mute)}
+.var{display:flex;gap:3px;margin-top:3px}.var button{flex:1;padding:4px 0;border-radius:6px;font:700 12px var(--tc);background:#0a1c15;border:1px solid #21402f;color:var(--mute)}
 .var button.on{background:#1f6e53;border-color:var(--teal);color:var(--ink)}
 /* 出貨 */
 .cost{display:flex;align-items:baseline;gap:10px}.cost b{font:800 34px var(--game);font-variant-numeric:tabular-nums}.cost small{font:13px var(--tc);color:var(--mute)}
@@ -263,7 +263,11 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .evlog{min-height:0;font:13px/1.45 var(--tc)}
 .evlog div{animation:pop .3s}
 @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.result{display:none}.result.on{display:block;animation:pop .35s}
+.simStage{position:relative;display:grid}
+.simStage>*{grid-area:1/1;min-width:0}
+.simTop{z-index:1}
+.result{z-index:2;opacity:0;pointer-events:none;transition:opacity .35s;background:linear-gradient(180deg,rgba(16,38,28,.98),rgba(7,20,14,.98));border-radius:14px}
+.result.on{opacity:1;pointer-events:auto}
 .bigscore{display:flex;align-items:center;gap:16px;margin:4px 0 10px}
 .bigscore b{font:900 52px/1 var(--game);background:linear-gradient(180deg,#fff6d2,#ffc65a 55%,#d1840f);-webkit-background-clip:text;background-clip:text;color:transparent}
 .bigscore .stars .star{width:32px;height:32px;margin-right:3px;transform:scale(.3);opacity:0;transition:all .35s cubic-bezier(.2,1.6,.4,1)}
@@ -695,8 +699,8 @@ function trophyIcon(done, n, s = 32) {
   const rb = (c) => done ? `fill="${c}" stroke="none"` : `fill="none" stroke="currentColor" stroke-width="1.3"`;
   const textFill = done ? "#2a1600" : "currentColor";
   return `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" aria-hidden="true" stroke-linejoin="round">
-   <path d="M7 2 L11.3 10.8 L7.3 11.4 Z" ${rb("#d8433a")}/>
-   <path d="M17 2 L12.7 10.8 L16.7 11.4 Z" ${rb("#2f6fb5")}/>
+   <path d="M4 2 L9.5 2 L8 11 Z" ${rb("#d8433a")}/>
+   <path d="M20 2 L14.5 2 L16 11 Z" ${rb("#2f6fb5")}/>
    <circle cx="12" cy="15" r="6.6" fill="${done ? "#ffc766" : "none"}" stroke="${done ? "#b8700c" : "currentColor"}" stroke-width="1.4"/>
    <text x="12" y="18" text-anchor="middle" font-size="7.6" font-weight="900" font-family="Chakra Petch,sans-serif" fill="${textFill}">${n}</text>
   </svg>`;
@@ -1083,9 +1087,15 @@ function ship(force) {
   const events = r.items.filter((x) => x.kind === "under").map((x) => ({ id: x.id, y: TXT[LANG].evYear[x.id] || 3, v: x.v }));
   const card = $("#simCard");
   card.innerHTML = `<div class="k">${T("lv", {n: CUR.id})} · ${L(CUR.id).n}</div><h2>${T("simTitle")}</h2>
-   <div class="years">${[...Array(10)].map((_, i) => `<div class="yr" id="y${i + 1}"><span class="ev"></span>${T("year", {n: i + 1})}</div>`).join("")}</div>
-   <div class="evlog" id="evlog"></div><div class="result" id="res"></div>`;
+   <div class="simStage">
+    <div class="simTop">
+     <div class="years">${[...Array(10)].map((_, i) => `<div class="yr" id="y${i + 1}"><span class="ev"></span>${T("year", {n: i + 1})}</div>`).join("")}</div>
+     <div class="evlog" id="evlog"></div>
+    </div>
+    <div class="result" id="res"></div>
+   </div>`;
   $("#mSim").classList.add("on");
+  const playScore = buildResult(r);
   let y = 0, done = false;
   const step = () => {
     if (done) return; y++;
@@ -1097,7 +1107,7 @@ function ship(force) {
   };
   const finish = () => { if (done) return; done = true; clearTimeout(step._t);
     if (!events.length) $("#evlog").innerHTML = `<div style="color:var(--green)">${T("calm")}</div>`;
-    showResult(r); };
+    $("#res").classList.add("on"); playScore(); };
   step._t = setTimeout(step, 400);
 }
 function showFail(r) {
@@ -1113,7 +1123,7 @@ function showFail(r) {
   $("#bFailMap").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); stopBgm(); show("map"); renderMap(); };
   $("#bFailRetry").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); if (FORMAL) { TIME_LEFT = TIME_BUDGET[CUR.id] || 0; startTimer(); } };
 }
-function showResult(r) {
+function buildResult(r) {
   const res = $("#res"), st = SQ.stars(r.score), best = r.best, t = L(CUR.id);
   const nm = (bid) => { const b = SQ.BOARDS.find((x) => x.id === bid); const vs = SQ.BOARDS.filter((x) => x.ff === b.ff); return T("ff." + b.ff) + (vs.length > 1 ? " " + (b.ff === "sbc" ? TXT[LANG].varSbc : TXT[LANG].var)[b.v] : ""); };
   const addStr = (a) => Object.entries(a).map(([k, v]) => `${TXT[LANG].addon[k]}×${v}`).join("、");
@@ -1131,13 +1141,11 @@ function showResult(r) {
    <table class="cmp"><tr><th></th><th>${T("yourPick")}</th><th>${T("right")}</th><th>${T("diff")}</th><th class="w">${T("reason2")}</th></tr>${rows}</table>
    ${last && st >= 1 ? `<div class="newmech" style="margin-top:14px">${ic("badge", 34)}<div><b>${T("allDone")}</b><span>${T("allDoneSub", {s: SQ.LEVELS.reduce((s, l) => s + starsOf(l.id), 0)})}</span></div></div>` : ""}
    <div class="row"><button class="btn ghost" id="bMap2">${T("toMap")}</button><button class="btn ghost" id="bRetry">${T("retry")}</button>${nextOpen ? `<button class="btn" id="bNext">${T("next")}</button>` : ""}</div>`;
-  res.classList.add("on");
-  let v = 0; const tgt = r.score, num = $("#scNum"); const tick = () => { v = Math.min(tgt, v + Math.max(1, Math.round(tgt / 25))); num.textContent = v; if (v < tgt) setTimeout(tick, 24); else $$("#res .stars .star").forEach((s, i) => setTimeout(() => { s.classList.add("show"); if (s.classList.contains("on")) beep("star"); }, 180 * i)); };
-  tick();
   $("#bRetry").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); if (FORMAL) { TIME_LEFT = TIME_BUDGET[CUR.id] || 0; startTimer(); } };
   $("#bMap2").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); stopBgm(); show("map"); renderMap(); };
   if (nextOpen) $("#bNext").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); startLevel(CUR.id + 1); };
   renderHud();
+  return () => { let v = 0; const tgt = r.score, num = $("#scNum"); const tick = () => { v = Math.min(tgt, v + Math.max(1, Math.round(tgt / 25))); num.textContent = v; if (v < tgt) setTimeout(tick, 24); else $$("#res .stars .star").forEach((s, i) => setTimeout(() => { s.classList.add("show"); if (s.classList.contains("on")) beep("star"); }, 180 * i)); }; tick(); };
 }
 
 /* ---------- 綁定 ---------- */
