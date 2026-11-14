@@ -308,16 +308,17 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .topRow{flex:1 1 auto;min-height:0;grid-template-rows:none;margin-bottom:0;gap:8px;overflow-y:auto}
  .modal{padding:0}
  .modal .card{width:100% !important;height:100% !important;max-width:none !important;max-height:none !important;border-radius:0;padding:16px 18px}
- #title .hero{height:100vh;min-height:0;padding:10px 16px;display:block;overflow:hidden}
- .hero>div{height:100%;overflow-y:auto;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px}
- .hero[data-mview="top"] .tag,.hero[data-mview="top"] .chips,.hero[data-mview="top"] #bStart,.hero[data-mview="top"] .foot{display:none}
- .hero[data-mview="bottom"] .heroboard,.hero[data-mview="bottom"] .k,.hero[data-mview="bottom"] .logo,.hero[data-mview="bottom"] .logo2{display:none}
- .heroboard{height:90px;width:190px;margin:0 auto 4px}
- .logo{font-size:clamp(30px,6vw,46px)}
- .logo2{font-size:clamp(16px,2.6vw,22px);margin-top:4px}
- .tag{font-size:12.5px;line-height:1.5;margin:4px auto 10px}
- .chips{margin:0 0 12px}
- .btn{height:42px;font-size:15px}
+ #title .hero{height:100vh;min-height:0;padding:8px 16px;display:block;overflow:hidden}
+ .hero>div{height:100%;overflow-y:auto;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px}
+ .heroboard{display:none}
+ .k{margin:0}
+ .logo{font-size:clamp(26px,5vw,38px);letter-spacing:2px}
+ .logo2{font-size:clamp(13px,2.2vw,17px);margin-top:3px}
+ .tag{font-size:11.5px;line-height:1.4;margin:5px auto 6px;max-width:92%}
+ .chips{margin:0 0 8px;gap:6px}
+ .chip{padding:5px 12px;font-size:12px}
+ .btn{height:36px;font-size:13px;padding:0 18px}
+ .foot{margin-top:6px;font-size:9px}
  .foot{margin-top:10px;font-size:10px}
  .scn{padding:10px}
  .scn .top{gap:8px}.scn .ic{width:36px;height:36px;border-radius:10px}
@@ -480,7 +481,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 <path d="M15 8.5 L33 17.5 V24" stroke="#eef2f6" stroke-width="2.2" fill="none"/></symbol></svg>
 <div class="rotateLock" id="rotateLock"><div class="rl-ic"></div><div class="rl-t">請將手機橫向，獲得最佳遊戲體驗</div><div class="rl-t2">Please rotate your device to landscape</div></div>
 
-<section class="screen on" id="title"><div class="tbar"><button class="icon-btn mviewBtn" id="bTitleMView" aria-label="switch view">⇩</button><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div><div class="hero" data-mview="top"><div>
+<section class="screen on" id="title"><div class="tbar"><button class="icon-btn" id="bFullscreen" aria-label="fullscreen">⛶</button><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div><div class="hero"><div>
  <div class="heroboard" aria-hidden="true"><div class="hb"><div class="trace"></div><div class="cpu" style="left:38%;top:26%;width:70px;height:70px"><div class="fins"></div></div><div class="m2s used" style="left:62%;top:70%"><b>LTE</b></div><div class="slot x16" style="left:8%;top:70%;width:46%"></div><div class="stand mine" style="left:8%;top:74%;width:46%"><div class="face" style="width:100%;height:60px;transform:rotateX(-90deg) translateY(-60px)">COM ×4</div></div></div></div>
  <div class="k" data-t="kicker"></div>
  <div class="logo">SPEC QUEST</div><div class="logo2" data-t="sub"></div>
@@ -972,14 +973,13 @@ let TOUCHED = new Set();                       // 玩家主動點過的規格項
 let SLOT_CACHE = {};                           // 步驟格縮圖快取：該步驟分頁不在前景時，沿用上次量到的縮圖
 let PAGE = 0;                                  // 0=選板型 1=補介面+六項規格
 let MVIEW = "top";                             // 手機橫向：top=摘要／ship 面板，bottom=步驟選項
-let TITLE_MVIEW = "top";                       // 手機橫向：首頁 top=視覺／logo，bottom=說明＋開始
 let FORMAL = false;                            // 正式關（六項規格全解鎖）：設時限
 let TIME_LEFT = 0;
 let TIMER_ID = null;
 const TIME_BUDGET = { 6: 90, 7: 80, 8: 70, 9: 60, 10: 50 };
 function starsOf(id) { return PROG[id] != null ? SQ.stars(PROG[id]) : 0; }
 function isOpen(id) { return id === 1 || PROG[id - 1] != null; }
-function show(id) { $$(".screen").forEach((s) => s.classList.toggle("on", s.id === id)); window.scrollTo(0, 0); if (id === "title") setTitleMView("top"); }
+function show(id) { $$(".screen").forEach((s) => s.classList.toggle("on", s.id === id)); window.scrollTo(0, 0); }
 
 /* ---------- 標題與地圖 ---------- */
 function i18n() {
@@ -1128,11 +1128,6 @@ function setMView(v) {
   $("#play .wrap").dataset.mview = v;
   $("#bMView").textContent = v === "top" ? "⇩" : "⇧";
 }
-function setTitleMView(v) {
-  TITLE_MVIEW = v;
-  $(".hero").dataset.mview = v;
-  $("#bTitleMView").textContent = v === "top" ? "⇩" : "⇧";
-}
 function enableSwipeMView(el, getView, setView) {
   let y0 = null;
   el.addEventListener("touchstart", (e) => { y0 = e.touches[0].clientY; }, { passive: true });
@@ -1150,6 +1145,14 @@ function goFullscreen() {
   const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
   if (!req || document.fullscreenElement || document.webkitFullscreenElement) return;
   try { const p = req.call(el); if (p && p.catch) p.catch(() => {}); } catch {}
+}
+function toggleFullscreen() {
+  if (document.fullscreenElement || document.webkitFullscreenElement) {
+    const exit = document.exitFullscreen || document.webkitExitFullscreen;
+    try { exit.call(document); } catch {}
+  } else {
+    goFullscreen();
+  }
 }
 function playBgm() {
   const el = FORMAL ? $("#bgmFormal") : $("#bgmPractice"), other = FORMAL ? $("#bgmPractice") : $("#bgmFormal");
@@ -1490,9 +1493,8 @@ $("#bStart").onclick = () => { beep("ok"); $("#bgmTitle").pause(); show("map"); 
 $("#bMapBack").onclick = () => { beep("click"); stopBgm(); show("title"); playTitleBgm(); };
 $("#bToMap").onclick = () => { beep("click"); stopTimer(); stopBgm(); show("map"); renderMap(); };
 $("#bMView").onclick = () => { beep("click"); setMView(MVIEW === "top" ? "bottom" : "top"); };
-$("#bTitleMView").onclick = () => { beep("click"); setTitleMView(TITLE_MVIEW === "top" ? "bottom" : "top"); };
+$("#bFullscreen").onclick = () => { beep("click"); toggleFullscreen(); };
 enableSwipeMView($("#play .wrap"), () => MVIEW, setMView);
-enableSwipeMView($(".hero"), () => TITLE_MVIEW, setTitleMView);
 $("#bBrief").onclick = () => { beep("click"); openBrief(); };
 $("#bShip").onclick = ship;
 $("#bPagePrev").onclick = () => { if (PAGE > 0) { PAGE--; beep("click"); renderPager(); } };
