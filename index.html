@@ -148,6 +148,9 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .pn.needBoard{position:relative;opacity:.4;pointer-events:none;filter:saturate(.4)}
 .pn.needBoard::after{content:attr(data-hint);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font:700 13px/1.5 var(--tc);color:var(--gold);background:rgba(6,14,10,.6);border-radius:16px;opacity:1}
 .scn h2{margin:2px 0 0;font:900 22px/1.2 var(--tc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.briefHd{display:flex;gap:16px;align-items:flex-start;margin-top:8px}
+.briefHdText{flex:1;min-width:0}
+.briefHdText h2{margin:2px 0 6px}
 .story{font:13.5px/1.65 var(--tc);color:#c1d2c8;margin:10px 0}
 .clueGrid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}
 .clue{display:flex;gap:8px;align-items:flex-start;font:13px/1.4 var(--tc);color:#d8e5dd;margin:3px 0}.clue i{flex:none;width:8px;height:8px;margin-top:5px;transform:rotate(45deg);background:var(--gold)}
@@ -308,8 +311,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .ttl b{font-size:22px}
  .dots{display:none}
  .mark.playMark{display:none}
- .mviewBtn{display:grid;position:fixed;right:10px;bottom:10px;z-index:8;animation:tapPulse 1.8s ease-in-out infinite}
- .wrap[data-mview="bottom"] #bMView{bottom:195px}
+ .mviewBtn{display:grid;position:fixed;right:10px;top:48px;z-index:8;animation:tapPulse 1.8s ease-in-out infinite}
  .wrap[data-mview="top"] .pager{display:none}
  .wrap[data-mview="top"] .shipbox{display:none}
  .wrap[data-mview="top"] .topRow{grid-template-columns:1fr 1fr}
@@ -354,10 +356,11 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .card{padding:16px 18px}
  #mBrief .card{padding-top:40px;padding-bottom:8px}
  .card h2{font-size:18px;margin:0 0 2px}
- #mBrief .hex{width:40px !important;height:44px !important}
- #mBrief .hex .in{width:34px !important;height:38px !important}
- #mBrief .hex .in .ic{width:22px !important;height:22px !important}
- #mBrief .card>div[style*="margin-top"]{margin-top:4px !important;gap:8px !important}
+ #mBrief .hex{width:56px !important;height:62px !important}
+ #mBrief .hex .in{width:47px !important;height:53px !important}
+ #mBrief .hex .in .ic{width:32px !important;height:32px !important}
+ .briefHd{margin-top:4px;gap:10px}
+ .briefHdText h2{font-size:17px;margin:0 0 3px}
  .newmech{padding:5px 7px;margin:4px 0 0;gap:7px}
  .newmech .nmic{width:24px;height:24px;border-radius:7px}
  .newmech b{font-size:12px}.newmech span{font-size:10.5px}
@@ -1270,8 +1273,8 @@ function openBrief() {
   const mech = CUR.unlock.map((u) => `<div class="newmech"><div class="nmic">${ic({board:"box",usb:"dongle",pcie:"card",store:"ssd",temp:"thermo_hot",power:"dc_power",m2:"m2mod",prot:"surge",cert:"cert",supply:"cal10",custom:"box"}[u], 30)}</div><div><b>${T("newMech")}：${TXT[LANG].mech[u][0]}</b><span>${TXT[LANG].mech[u][1]}</span></div></div>`).join("");
   const mechBlock = hasMech ? `<div class="mechk">${T("newMechKicker")}</div>${mech}` : "";
   $("#briefCard").innerHTML = `<div class="k">${T("lv", {n: CUR.id})} · ${T("dom." + CUR.dom)}${CUR.boss ? " · " + T("boss") : ""}</div>
-   <div style="display:flex;gap:16px;align-items:center;margin-top:8px"><div class="hex" style="width:76px;height:84px"><div class="in" style="width:64px;height:72px">${ic(CUR.icon, 44)}</div></div><h2>${t.n}</h2></div>
-   <div class="briefCtx"><p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}</div>
+   <div class="briefHd"><div class="hex" style="width:76px;height:84px"><div class="in" style="width:64px;height:72px">${ic(CUR.icon, 44)}</div></div>
+    <div class="briefHdText"><h2>${t.n}</h2><div class="briefCtx"><p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}</div></div></div>
    ${mechBlock}
    <div class="row"><button class="btn" id="bGo">${T("briefGo")}</button></div>`;
   $("#mBrief").classList.add("on"); $("#bGo").onclick = () => { beep("click"); $("#mBrief").classList.remove("on"); startTimer(); };
