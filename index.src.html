@@ -832,18 +832,32 @@ function openBrief() {
 }
 
 function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTierPages(); renderFF(); renderShip(); renderFocus(); renderPager(); renderTimer(); }
-function slotIcon(i) { if (i === 0) return "box"; if (i === 1) return "card"; return TIER_ICON[SQ.TIERS[tierOrder()[i - 2]].id]; }
 function slotLabel(i) {
   if (i === 0) { if (!B.board) return ""; const b = SQ.BOARDS.find((x) => x.id === B.board); return T("ff." + b.ff); }
   if (i === 1) { const n = Object.values(B.add || {}).reduce((s, c) => s + c, 0); return n ? "×" + n : ""; }
   const idx = tierOrder()[i - 2];
   return TOUCHED.has(idx) ? TXT[LANG].tierOpt[SQ.TIERS[idx].id][B.t[idx]] : "";
 }
+// 跟實際牌卡 1:1 同格式的縮圖：板型用跟卡片一樣的綠色板子方塊，補介面用實際加了的那種圖示，規格沿用該級別自己的圖示
+function slotVisual(i) {
+  if (i === 0) {
+    if (!B.board) return ic("box", 16);
+    const b = SQ.BOARDS.find((x) => x.id === B.board), r = FFH[b.ff] / b.len;
+    const w = 20, h = Math.max(8, Math.min(20, Math.round(w * r)));
+    return `<div class="sil" style="width:${w}px;height:${h}px"></div>`;
+  }
+  if (i === 1) {
+    const got = SQ.ADDON_ORDER.find((id) => B.add && B.add[id]);
+    const icon = got ? (SQ.ADDONS[got].kind === "pcie" ? (got === "lan2" ? "lan" : "card") : SQ.ADDONS[got].kind === "m2" ? "m2mod" : "dongle") : "card";
+    return ic(icon, 16);
+  }
+  return ic(TIER_ICON[SQ.TIERS[tierOrder()[i - 2]].id], 16);
+}
 function renderPager() {
   $$(".page").forEach((p) => p.classList.toggle("on", +p.dataset.page === PAGE));
   $("#pageSlots").innerHTML = [...Array(PAGE_COUNT)].map((_, i) => {
     const label = slotLabel(i);
-    return `<div class="pslot ${i === PAGE ? "cur" : ""} ${label ? "done" : ""}" data-i="${i}">${ic(slotIcon(i), 16)}${label ? `<b>${label}</b>` : ""}</div>`;
+    return `<div class="pslot ${i === PAGE ? "cur" : ""} ${label ? "done" : ""}" data-i="${i}">${slotVisual(i)}${label ? `<b>${label}</b>` : ""}</div>`;
   }).join("");
   $$("#pageSlots .pslot").forEach((x) => x.onclick = () => { PAGE = +x.dataset.i; beep("click"); renderPager(); });
   $("#bPagePrev").disabled = PAGE === 0; $("#bPageNext").disabled = PAGE === PAGE_COUNT - 1;
