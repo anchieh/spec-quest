@@ -54,8 +54,7 @@ svg.ic{display:block}
 /* ---------- 地圖 ---------- */
 .trophyRow{padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .tropSlots{display:flex;gap:6px;flex-wrap:wrap}
-.tslot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:none;color:var(--mute);opacity:.6}
-.tslot b{font:800 10px var(--tc)}
+.tslot{display:flex;align-items:center;justify-content:center;flex:none;color:var(--mute);opacity:.6}
 .tslot.done{opacity:1;color:var(--gold)}
 .tslot.done svg{filter:drop-shadow(0 0 4px rgba(255,198,90,.5))}
 .trophyRow #bClaim{margin-left:auto}
@@ -76,10 +75,14 @@ svg.ic{display:block}
 .zone{padding:16px;border-radius:18px;position:relative;overflow:hidden}
 .zone h3{margin:0 0 4px;font:900 22px/1.25 var(--tc);display:flex;align-items:center;gap:8px}.zone h3 span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zone .zs{font:13px/1.4 var(--tc);color:var(--mute);margin-bottom:12px;min-height:2.8em}
 .zone::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:var(--zc);opacity:.12}
-.lvl{width:100%;display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:10px;border-radius:14px;text-align:left;background:#0b1d15;border:1.5px solid #24443a;transition:transform .12s,border-color .12s}
+.lvl{width:100%;display:flex;align-items:center;gap:10px;padding:12px;margin-bottom:10px;border-radius:14px;text-align:left;background:#0b1d15;border:1.5px solid #24443a;transition:transform .12s,border-color .12s}
 .lvl:hover:not([disabled]){transform:translateY(-2px);border-color:var(--zc)}
-.lvl .no{width:44px;height:48px;flex:none;display:grid;place-items:center;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--zc);color:#03140e;font:900 18px var(--game)}
+.lvlL{flex:none;display:flex;flex-direction:column;align-items:center;gap:5px}
+.lvl .no{width:38px;height:40px;flex:none;display:grid;place-items:center;clip-path:polygon(30% 0,100% 0,100% 100%,0 100%,0 30%);background:var(--zc);color:#03140e;font:900 15px var(--game)}
+.lvlN{min-width:0}
 .lvl b{display:block;font:800 22px/1.25 var(--tc)}.lvl small{display:flex;gap:3px;margin-top:4px}.lvl small .star{width:15px;height:15px}
+html[lang="zh-Hant"] .lvl b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .lvl[disabled]{opacity:.45;cursor:not-allowed}.lvl.boss{border-color:#7a3a2c;background:linear-gradient(90deg,#2a1210,#0b1d15)}
 /* ---------- 遊戲 ---------- */
 .hud{position:relative;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px}
@@ -87,7 +90,8 @@ svg.ic{display:block}
 .hex .in{width:47px;height:53px;clip-path:inherit;background:radial-gradient(circle at 50% 35%,#1d3a2c,#07140d);display:grid;place-items:center}
 .ttl small{display:block;font:700 12px var(--game);letter-spacing:3px;color:var(--gold)}.ttl b{font:900 52px/1.05 var(--tc);letter-spacing:1px}
 .dots{display:flex;gap:5px}.dots i{width:24px;height:7px;border-radius:4px;background:#1d3a2c;transform:skewX(-20deg)}.dots i.d{background:var(--green)}.dots i.c{background:var(--gold);box-shadow:0 0 10px var(--gold)}
-.hud .sp{flex:1}
+.hud .sp,.shipTop .sp{flex:1}
+.shipTop{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .costpill{display:flex;align-items:center;gap:10px;height:46px;padding:0 16px 0 10px;border-radius:12px;background:linear-gradient(180deg,#183626,#0a1c13);border:1px solid #2f5541}
 .costpill b{font:700 24px var(--game);font-variant-numeric:tabular-nums}.costpill small{font:600 12px var(--tc);color:var(--mute)}
 #play{height:100vh;overflow:hidden}
@@ -176,7 +180,7 @@ svg.ic{display:block}
 .tiers .hd,.ffbox .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}.tiers .hd b,.ffbox .hd b{font:800 34px var(--tc);letter-spacing:1px}.tiers .hd span,.ffbox .hd span{font:12px var(--tc);color:var(--mute)}
 .tr{margin-bottom:6px;padding:5px 10px 6px;border-radius:12px;background:#0a1912;border:1px solid #21402f}
 .tn{display:flex;align-items:center;gap:8px;margin-bottom:2px;height:24px}.tn span{font:800 14px var(--tc)}.tn small{margin-left:auto;font:700 11px var(--tc);color:var(--mute)}
-.tg{display:grid;grid-template-columns:repeat(3,minmax(120px,160px));gap:8px;justify-content:center}.tg.two{grid-template-columns:repeat(2,minmax(120px,160px))}
+.tg{display:grid;grid-template-columns:repeat(3,160px);gap:8px;justify-content:center}.tg.two{grid-template-columns:repeat(2,160px)}
 .tc{display:flex;flex-direction:column;padding:8px 6px;border-radius:8px;background:#071510;border:1.5px solid #1f3a2c;text-align:center;transition:all .12s}
 .tc .box{height:44px;margin:0 0 7px}
 .tc b{display:block;font:700 12px/1.3 var(--tc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tc small{display:block;font:600 10.5px/1.2 var(--mono);color:var(--mute)}
@@ -261,6 +265,8 @@ svg.ic{display:block}
  .shelf{grid-template-columns:repeat(2,minmax(0,1fr))}
  .wrap{padding:10px 12px 20px}
  .ffr{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .tg{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .tg.two{grid-template-columns:repeat(2,minmax(0,1fr))}
  .zones{grid-template-columns:1fr}
  /* 手機：放棄單頁不捲動，改成可以正常上下滑動的版面，不然主要操作區會被壓到看不清楚 */
  #play{height:auto;overflow:visible}
@@ -400,14 +406,13 @@ svg.ic{display:block}
 <section class="screen" id="play"><div class="wrap">
  <div class="hud"><button class="icon-btn" id="bToMap" aria-label="map">≡</button>
   <div class="hex"><div class="in" id="hudIc"></div></div><div class="ttl"><small id="hudNo"></small><b id="hudName"></b></div>
-  <div class="dots" id="hudDots"></div><div class="sp"></div>
-  <button class="icon-btn" id="bBrief" aria-label="brief">?</button>
-  <div class="costpill"><span class="coin"></span><b id="hudCost">0</b><small data-t="perUnit"></small></div><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button>
+  <div class="dots" id="hudDots"></div>
   <p class="mark playMark" data-t="mark"></p></div>
  <div class="topRow">
   <div class="pn stage3d" id="stage3d"></div>
   <div class="pn scn" id="scn"></div>
-  <div class="pn shipbox"><div class="stepk" id="shipStep"><i class="stepno">4</i></div><div class="shipTimer" id="shipTimer" style="display:none"></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
+  <div class="pn shipbox"><div class="shipTop"><button class="icon-btn" id="bBrief" aria-label="brief">?</button><div class="sp"></div><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div>
+   <div class="stepk" id="shipStep"><i class="stepno">4</i></div><div class="shipTimer" id="shipTimer" style="display:none"></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
    <div class="costBreak" id="costBreak"></div>
    <div class="why" id="why"></div><button class="btn shipbtn" id="bShip" data-t="ship"></button><div class="hint" data-t="shipHint"></div></div>
  </div>
@@ -894,27 +899,28 @@ function renderMap() {
     const lvs = SQ.LEVELS.filter((l) => l.dom === d);
     return `<div class="pn zone" style="--zc:${DOMC[d]}"><h3>${ic(lvs[0].icon, 26)}<span>${T("dom." + d)}</span></h3><div class="zs">${T("domSub." + d)}</div>` +
       lvs.map((l) => { const s = starsOf(l.id); tot += s; const open = isOpen(l.id);
-        return `<button class="lvl ${l.boss ? "boss" : ""}" data-l="${l.id}" ${open ? "" : "disabled"}><span class="no">${open ? l.id : ic("lock", 22)}</span><span><b>${L(l.id).n}</b><small>${[0,1,2].map((i) => `<span class="star ${i < s ? "on" : ""}"></span>`).join("")}${l.boss ? ` · ${T("boss")}` : ""}</small></span>${ic(l.icon, 34)}</button>`; }).join("") + `</div>`;
+        return `<button class="lvl ${l.boss ? "boss" : ""}" data-l="${l.id}" ${open ? "" : "disabled"}><div class="lvlL"><span class="no">${open ? l.id : ic("lock", 18)}</span>${ic(l.icon, 24)}</div><span class="lvlN"><b>${L(l.id).n}</b><small>${[0,1,2].map((i) => `<span class="star ${i < s ? "on" : ""}"></span>`).join("")}${l.boss ? ` · ${T("boss")}` : ""}</small></span></button>`; }).join("") + `</div>`;
   }).join("");
   $("#totStars").textContent = tot;
   $$(".lvl").forEach((b) => b.onclick = () => { beep("click"); startLevel(+b.dataset.l); });
   renderTrophyRow();
 }
-function trophyIcon(done, s = 26) {
+function trophyIcon(done, n, s = 32) {
   const style = done ? `fill="currentColor" stroke="none"` : `fill="none" stroke="currentColor" stroke-width="1.6"`;
+  const textFill = done ? "#2a1600" : "currentColor";
   return `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" aria-hidden="true"><g ${style} stroke-linecap="round" stroke-linejoin="round">
-   <path d="M7 3h10v5a5 5 0 0 1-10 0V3z"/>
-   <path d="M7 4H4v2a3 3 0 0 0 3 3"/>
-   <path d="M17 4h3v2a3 3 0 0 0-3 3"/>
-   <rect x="11" y="13" width="2" height="4"/>
-   <path d="M8 21h8l-1-2H9l-1 2z"/>
-  </g></svg>`;
+   <path d="M5 4h14v3a7 7 0 0 1-14 0V4z"/>
+   <path d="M5 5H2v2a4 4 0 0 0 4 3.3"/>
+   <path d="M19 5h3v2a4 4 0 0 0-4 3.3"/>
+   <rect x="10.5" y="13" width="3" height="4"/>
+   <path d="M7.5 20h9l-1-2h-7z"/>
+  </g><text x="12" y="9.3" text-anchor="middle" font-size="7.5" font-weight="900" font-family="Chakra Petch,sans-serif" fill="${textFill}">${n}</text></svg>`;
 }
 function renderTrophyRow() {
   const el = $("#trophyRow"); if (!el) return;
   const allDone = SQ.LEVELS.every((l) => PROG[l.id] != null);
   el.innerHTML = `<div class="k">${T("trophyK")}</div>
-    <div class="tropSlots">${SQ.LEVELS.map((l) => { const done = PROG[l.id] != null; return `<div class="tslot${done ? " done" : ""}">${trophyIcon(done)}<b>${l.id}</b></div>`; }).join("")}</div>
+    <div class="tropSlots">${SQ.LEVELS.map((l) => { const done = PROG[l.id] != null; return `<div class="tslot${done ? " done" : ""}">${trophyIcon(done, l.id)}</div>`; }).join("")}</div>
     ${allDone ? `<button class="btn" id="bClaim">${T("claimBtn")}</button>` : ""}`;
   if (allDone) $("#bClaim").onclick = () => { beep("ok"); openCert(); };
 }
@@ -1222,7 +1228,7 @@ function renderFF() {
 function renderShip() {
   const e = evalNow();
   const cost = e ? e.buy : 0;
-  $("#hudCost").textContent = fmt(cost); $("#costBig").textContent = fmt(cost);
+  $("#costBig").textContent = fmt(cost);
   const cb = $("#costBreak");
   if (e) { const hwPart = e.hw * SQ.TIERS[0].cost[B.t[0]]; cb.textContent = T("costBreak", {hw: fmt(hwPart), spec: fmt(e.buy - hwPart)}); cb.style.display = ""; }
   else cb.style.display = "none";
