@@ -233,7 +233,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .ff:hover:not(.lock){border-color:#3f577a;transform:translateY(-2px)}
 .ff.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal),0 0 24px rgba(63,127,224,.4);background:linear-gradient(180deg,#142640,#0a121d)}
 .ff.lock{opacity:.4;cursor:not-allowed}
-.ff .h{display:flex;align-items:flex-start;gap:5px;min-height:38px;flex:none}.ff .h b{font:700 15px/1.2 var(--game)}
+.ff .h{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:38px;flex:none}.ff .h b{display:block;width:100%;white-space:nowrap;font:700 15px/1.2 var(--game)}
 .bd{margin-left:auto;min-width:0;font:700 12px var(--tc);padding:1px 6px;border-radius:5px;text-align:right}
 .bd.dim{border:1px solid var(--line);color:var(--mute);font:600 12px var(--mono)}.bd.lk{border:1px solid var(--gold);color:var(--gold)}
 .box{position:relative;height:30px;margin:4px 0 4px;display:grid;place-items:center;border-radius:8px;background:#060b12;overflow:hidden}
@@ -328,20 +328,24 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .wrap[data-mview="top"] #shipTimer2{display:block}
  .wrap[data-mview="top"] .topRow{grid-template-columns:1fr 1fr}
  .wrap[data-mview="top"] .stage3d{cursor:pointer}
+ #play .wrap[data-mview="bottom"]{display:grid;grid-template-columns:1fr 180px;grid-template-rows:auto 1fr;grid-template-areas:"hud hud" "pager ship";column-gap:10px;padding-bottom:46px}
+ .wrap[data-mview="bottom"] .hud{grid-area:hud}
  .wrap[data-mview="bottom"] .topRow{display:contents}
  .wrap[data-mview="bottom"] .stage3d,.wrap[data-mview="bottom"] .scn{display:none}
- .wrap[data-mview="bottom"] .shipbox{position:fixed;right:8px;bottom:8px;width:min(185px,32vw);z-index:6;padding:7px 9px;gap:3px;max-height:calc(100% - 16px);overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+ .wrap[data-mview="bottom"] .pager{grid-area:pager;min-height:0;min-width:0}
+ .wrap[data-mview="bottom"] .shipbox{grid-area:ship;position:relative;width:auto;min-height:0;padding:10px;gap:6px;max-height:none;overflow-y:auto;box-shadow:none}
  .wrap[data-mview="bottom"] .shipbox .costBreak{display:none}
  .wrap[data-mview="bottom"] .shipbox .icon-btn{width:22px;height:22px;font-size:10px}
  .wrap[data-mview="bottom"] .shipbox .hint{display:none}
- .wrap[data-mview="bottom"] .shipbox .stepk{font-size:9px;margin-bottom:2px}
- .wrap[data-mview="bottom"] .shipbox .k{font-size:9px}
- .wrap[data-mview="bottom"] .shipbox .cost b{font-size:20px}
- .wrap[data-mview="bottom"] .shipbox .why{font-size:9.5px;min-height:0}
- .wrap[data-mview="bottom"] .shipbox .shipbtn{height:32px;font-size:12px}
- #shipTimer{top:49px;right:20px;font-size:20px}
- #shipTimer2{position:fixed;top:auto;right:29px;bottom:68px;font-size:20px;z-index:7}
- .wrap[data-mview="bottom"] .page{padding-right:130px}
+ .wrap[data-mview="bottom"] .shipbox .stepk{font-size:10px;margin-bottom:3px}
+ .wrap[data-mview="bottom"] .shipbox .k{font-size:10px}
+ .wrap[data-mview="bottom"] .shipbox .cost b{font-size:24px}
+ .wrap[data-mview="bottom"] .shipbox .why{font-size:10.5px;min-height:0}
+ .wrap[data-mview="bottom"] .shipbox .shipbtn{height:36px;font-size:13px}
+ #shipTimer{top:63px;right:20px;font-size:20px}
+ #shipTimer2{position:fixed;top:120px;right:35px;bottom:auto;font-size:20px;z-index:7}
+ .wrap[data-mview="bottom"] .page{padding-right:0}
+ .wrap[data-mview="bottom"] .ffbox{height:100%}
  .topRow{flex:1 1 auto;min-height:0;grid-template-rows:none;margin-bottom:0;gap:8px;overflow-y:auto}
  #map .wrap{height:100vh;overflow:hidden;display:flex;flex-direction:column}
  .mapTop{flex:1 1 auto;min-height:0;overflow-y:auto;display:flex;flex-direction:column;justify-content:center}
@@ -440,10 +444,13 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .modalBack{left:10px;top:10px}
  .globalBar{right:10px;top:10px;gap:6px}
  .tbar{right:126px}
+ .ffbox .hd,.tiers .hd{flex-direction:column;align-items:flex-start;gap:2px;margin-bottom:6px}
+ .ffbox .hd b,.tiers .hd b{font-size:24px}
+ .ffbox .hd span,.tiers .hd span{font-size:11px;line-height:1.3;white-space:pre-line}
  .ffr{gap:6px}
  .ff,.ad,.tc{overflow-x:hidden;overflow-y:auto}
  .ff,.ad{padding:3px 4px}
- .ff .h{min-height:13px;gap:2px}
+ .ff .h{min-height:46px;gap:2px}
  .box{height:10px;margin:1px 0}
  .ad .box{height:30px;margin:0}
  .ad .ctRow{margin:3px 0}
@@ -610,7 +617,7 @@ const TXT = {
   trophyK:"全破關獎盃", claimBtn:"🏆 全部過關！點我拿證書",
   certTitle:"選型大挑戰 · 破關證書", certName:"輸入你的名字", certConfirm:"確認", certDownload:"下載證書圖片", certHint:"十個產業情境全部出貨完成，獲頒：",
   certLine1:"已完成全部 10 個產業情境的工業電腦選型挑戰", certLine2:"總星數 {s}/30", certClose:"關閉",
-  perUnit:"／台", pickFF:"選板型", pickFFsub:"虛線框＝機構上限；板子依實際比例", unitCost:"目前成本", addonTitle:"補介面", needBoardHint:"先選板型 ↓", ctxLabel:"情境（固定）",
+  perUnit:"／台", pickFF:"選板型", pickFFsub:"虛線框＝機構上限；\n板子依實際比例", unitCost:"目前成本", addonTitle:"補介面", needBoardHint:"先選板型 ↓", ctxLabel:"情境（固定）",
   ship:"出貨", shipHint:"出貨後看十年結算：多付的錢與現場損失都會扣分。",
   chips:["10 關卡","5 大產業","9 種板型","6 項規格"],
   dom:{retail:"零售與娛樂",factory:"智慧製造",medical:"醫療",energy:"能源",transport:"交通"},
@@ -662,7 +669,7 @@ const TXT = {
   trophyK:"Full-clear trophy", claimBtn:"🏆 All cleared! Claim your certificate",
   certTitle:"Spec Quest · Certificate of Completion", certName:"Enter your name", certConfirm:"Confirm", certDownload:"Download certificate", certHint:"Shipped all ten industry scenarios. Awarded to:",
   certLine1:"Completed the industrial-PC spec selection challenge across all 10 industry scenarios", certLine2:"Total stars {s}/30", certClose:"Close",
-  perUnit:"/ unit", pickFF:"Pick a form factor", pickFFsub:"Dashed box = enclosure limit; boards to scale", unitCost:"Cost now", addonTitle:"Add interfaces", needBoardHint:"Pick a board first ↓", ctxLabel:"Scenario (fixed)",
+  perUnit:"/ unit", pickFF:"Pick a form factor", pickFFsub:"Dashed box = enclosure limit;\nboards to scale", unitCost:"Cost now", addonTitle:"Add interfaces", needBoardHint:"Pick a board first ↓", ctxLabel:"Scenario (fixed)",
   ship:"SHIP", shipHint:"After shipping you see ten years: overpaying and field losses both cost points.",
   chips:["10 levels","5 industries","9 boards","6 specs"],
   dom:{retail:"Retail & Entertainment",factory:"Smart Factory",medical:"Medical",energy:"Energy",transport:"Transportation"},
@@ -1214,7 +1221,7 @@ function renderFF() {
     const cur = sel && sel.ff === ff ? sel : (FF_LAST[ff] ? SQ.BOARDS.find((b) => b.id === FF_LAST[ff]) : vars[0]);
     const sc = 62 / Math.max(CUR.maxLen, 305);
     const silW = Math.min(cur.len * sc * 1.9, 150), silH = Math.min(FFH[ff] * sc * 1.9, 70), lim = CUR.maxLen * sc * 1.9;
-    const badge = lock ? "" : `<span class="bd dim">${cur.len} × ${FFH[ff]} mm</span>`;
+    const badge = lock ? "" : `<span class="bd dim">${cur.len}<br>× ${FFH[ff]}<br>mm</span>`;
     const lockLine = lock ? `<div class="lockOut">${T("locked", {n: unlockLevel("custom")})}</div>` : "";
     const spec = cur.custom ? `<span>${T("comeIo")}</span>`
       : `<span>COM ${cur.com}</span><span>LAN ${cur.lan}</span><span>${T("slotX16")}${cur.x16}${cur.x4 ? "+" + T("slotX4") + cur.x4 : ""}</span><span>${T("m2")} ${cur.m2}</span>`;
