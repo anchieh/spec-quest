@@ -1072,7 +1072,7 @@ let MAP_MVIEW = "top";                         // 手機橫向：產業地圖 to
 let FORMAL = false;                            // 正式關（六項規格全解鎖）：設時限
 let TIME_LEFT = 0;
 let TIMER_ID = null;
-const TIME_BUDGET = { 6: 90, 7: 80, 8: 70, 9: 60, 10: 50 };
+const TIME_BUDGET = { 1: 150, 2: 140, 3: 130, 4: 120, 5: 110, 6: 90, 7: 80, 8: 70, 9: 60, 10: 50 };
 function starsOf(id) { return PROG[id] != null ? SQ.stars(PROG[id]) : 0; }
 function isOpen(id) { return id === 1 || PROG[id - 1] != null; }
 function show(id) { $$(".screen").forEach((s) => s.classList.toggle("on", s.id === id)); window.scrollTo(0, 0); }
@@ -1345,9 +1345,9 @@ function renderPager() {
   $("#bPagePrev").disabled = PAGE === 0; $("#bPageNext").disabled = PAGE === PAGE_COUNT - 1;
 }
 
-/* ---------- 正式關時限 ---------- */
+/* ---------- 關卡時限 ---------- */
 function startTimer() {
-  if (!FORMAL) return;
+  if (!TIME_LEFT) return;
   renderTimer();
   clearInterval(TIMER_ID);
   TIMER_ID = setInterval(() => {
@@ -1358,7 +1358,7 @@ function startTimer() {
 function stopTimer() { clearInterval(TIMER_ID); TIMER_ID = null; }
 function renderTimer() {
   const els = $$(".shipTimer"); if (!els.length) return;
-  if (!FORMAL) { els.forEach((el) => el.style.display = "none"); return; }
+  if (!TIME_LEFT) { els.forEach((el) => el.style.display = "none"); return; }
   const v = Math.max(0, TIME_LEFT), m = Math.floor(v / 60), s = v % 60;
   els.forEach((el) => { el.style.display = ""; el.textContent = `${m}:${String(s).padStart(2, "0")}`; el.classList.toggle("low", v <= 10); });
 }
@@ -1573,7 +1573,7 @@ function showFail(r) {
    <div class="row"><button class="btn ghost" id="bFailMap">${T("toMap")}</button><button class="btn" id="bFailRetry">${T("retry")}</button></div>`;
   $("#mSim").classList.add("on");
   $("#bFailMap").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); stopBgm(); show("map"); renderMap(); };
-  $("#bFailRetry").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); if (FORMAL) { TIME_LEFT = TIME_BUDGET[CUR.id] || 0; startTimer(); } };
+  $("#bFailRetry").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); TIME_LEFT = TIME_BUDGET[CUR.id] || 0; startTimer(); };
 }
 function buildResult(r) {
   const res = $("#res"), st = SQ.stars(r.score), best = r.best, t = L(CUR.id);
@@ -1592,7 +1592,7 @@ function buildResult(r) {
    <table class="cmp"><tr><th></th><th>${T("yourPick")}</th><th>${T("right")}</th><th>${T("diff")}</th><th class="w">${T("reason2")}</th></tr>${rows}</table>
    ${last && st >= 1 ? `<div class="newmech" style="margin-top:14px">${ic("badge", 34)}<div><b>${T("allDone")}</b><span>${T("allDoneSub", {s: SQ.LEVELS.reduce((s, l) => s + starsOf(l.id), 0)})}</span></div></div>` : ""}
    <div class="row"><button class="btn ghost" id="bMap2">${T("toMap")}</button><button class="btn ghost" id="bRetry">${T("retry")}</button>${nextOpen ? `<button class="btn" id="bNext">${T("next")}</button>` : ""}</div>`;
-  $("#bRetry").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); if (FORMAL) { TIME_LEFT = TIME_BUDGET[CUR.id] || 0; startTimer(); } };
+  $("#bRetry").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); TIME_LEFT = TIME_BUDGET[CUR.id] || 0; startTimer(); };
   $("#bMap2").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); stopBgm(); show("map"); renderMap(); };
   if (nextOpen) $("#bNext").onclick = () => { beep("click"); $("#mSim").classList.remove("on"); startLevel(CUR.id + 1); };
   renderHud();
