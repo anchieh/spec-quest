@@ -444,9 +444,9 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .modalBack{left:10px;top:10px}
  .globalBar{right:10px;top:10px;gap:6px}
  .tbar{right:126px}
- .ffbox .hd,.tiers .hd{flex-direction:column;align-items:flex-start;gap:2px;margin-bottom:6px}
- .ffbox .hd b,.tiers .hd b{font-size:24px}
- .ffbox .hd span,.tiers .hd span{font-size:11px;line-height:1.3;white-space:pre-line}
+ .ffbox .hd,.tiers .hd,.shelf .shelfhd{align-items:flex-start;gap:8px;margin-bottom:6px}
+ .ffbox .hd b,.tiers .hd b,.shelf .shelfhd b{font-size:24px}
+ .ffbox .hd span{flex:1 1 auto;min-width:0;font-size:11px;line-height:1.3;color:var(--mute)}
  .ffr{gap:6px}
  .ff,.ad,.tc{overflow-x:hidden;overflow-y:auto}
  .ff,.ad{padding:3px 4px}
@@ -545,7 +545,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
   <div class="pn stage3d" id="stage3d"></div>
   <div class="pn scn" id="scn"></div>
   <div class="pn shipbox"><div class="shipTimer" id="shipTimer" style="display:none"></div>
-   <div class="stepk" id="shipStep"><i class="stepno">4</i></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
+   <div class="stepk" id="shipStep"></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
    <div class="costBreak" id="costBreak"></div>
    <div class="why" id="why"></div><button class="btn shipbtn" id="bShip" data-t="ship"></button><div class="hint" data-t="shipHint"></div></div>
  </div>
@@ -617,7 +617,7 @@ const TXT = {
   trophyK:"全破關獎盃", claimBtn:"🏆 全部過關！點我拿證書",
   certTitle:"選型大挑戰 · 破關證書", certName:"輸入你的名字", certConfirm:"確認", certDownload:"下載證書圖片", certHint:"十個產業情境全部出貨完成，獲頒：",
   certLine1:"已完成全部 10 個產業情境的工業電腦選型挑戰", certLine2:"總星數 {s}/30", certClose:"關閉",
-  perUnit:"／台", pickFF:"選板型", pickFFsub:"虛線框＝機構上限；\n板子依實際比例", unitCost:"目前成本", addonTitle:"補介面", needBoardHint:"先選板型 ↓", ctxLabel:"情境（固定）",
+  perUnit:"／台", pickFF:"選板型", pickFFsub:"虛線框＝機構上限；板子依實際比例", unitCost:"目前成本", addonTitle:"補介面", needBoardHint:"先選板型 ↓", ctxLabel:"情境（固定）",
   ship:"出貨", shipHint:"出貨後看十年結算：多付的錢與現場損失都會扣分。",
   chips:["10 關卡","5 大產業","9 種板型","6 項規格"],
   dom:{retail:"零售與娛樂",factory:"智慧製造",medical:"醫療",energy:"能源",transport:"交通"},
@@ -669,7 +669,7 @@ const TXT = {
   trophyK:"Full-clear trophy", claimBtn:"🏆 All cleared! Claim your certificate",
   certTitle:"Spec Quest · Certificate of Completion", certName:"Enter your name", certConfirm:"Confirm", certDownload:"Download certificate", certHint:"Shipped all ten industry scenarios. Awarded to:",
   certLine1:"Completed the industrial-PC spec selection challenge across all 10 industry scenarios", certLine2:"Total stars {s}/30", certClose:"Close",
-  perUnit:"/ unit", pickFF:"Pick a form factor", pickFFsub:"Dashed box = enclosure limit;\nboards to scale", unitCost:"Cost now", addonTitle:"Add interfaces", needBoardHint:"Pick a board first ↓", ctxLabel:"Scenario (fixed)",
+  perUnit:"/ unit", pickFF:"Pick a form factor", pickFFsub:"Dashed box = enclosure limit; boards to scale", unitCost:"Cost now", addonTitle:"Add interfaces", needBoardHint:"Pick a board first ↓", ctxLabel:"Scenario (fixed)",
   ship:"SHIP", shipHint:"After shipping you see ten years: overpaying and field losses both cost points.",
   chips:["10 levels","5 industries","9 boards","6 specs"],
   dom:{retail:"Retail & Entertainment",factory:"Smart Factory",medical:"Medical",energy:"Energy",transport:"Transportation"},
@@ -784,7 +784,7 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.ad
 
 /* ---------- 狀態 ---------- */
 const PAGE_COUNT = 8;                        // 板型1＋補介面1＋六項規格6
-const OPT_COLS = PAGE_COUNT;  // 牌卡欄數＝步驟格數，讓上排步驟格跟下排選項卡的格寬完全一致
+const OPT_COLS = SQ.ADDON_ORDER.length;  // 牌卡欄數＝補介面（最多格）的張數，讓用量最大的那排用滿版寬，其餘排套同一張卡尺寸
 const TIER_ICON = {temp:"thermo_hot",power:"dc_power",prot:"surge",store:"ssd",supply:"cal10",cert:"cert"};
 let PROG = store.get("prog", {});            // {id: 最高分}
 let CUR = null;                                // 目前關卡
@@ -809,7 +809,7 @@ function i18n() {
   $$("[data-t]").forEach((el) => el.textContent = T(el.dataset.t));
   $$(".bLang").forEach((b) => b.textContent = LANG === "zh" ? "EN" : "中");
   $$(".bSnd").forEach((b) => b.textContent = MUTE ? "✕" : "♪");
-  const ss = $("#shipStep"); if (ss) ss.innerHTML = `<i class="stepno">4</i>${TXT[LANG].howto[3][0]}`;
+  const ss = $("#shipStep"); if (ss) ss.innerHTML = TXT[LANG].howto[3][0];
   renderHowto();
   $("#titleChips").innerHTML = TXT[LANG].chips.map((c, i) => `<span class="chip">${ic(["box","kiosk","card","cert"][i], 18)}${c}</span>`).join("");
   if ($("#map").classList.contains("on")) renderMap();
