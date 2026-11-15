@@ -1805,6 +1805,19 @@ let _rz; window.addEventListener("resize", () => { clearTimeout(_rz); _rz = setT
 i18n();
 // 測試用掛鉤（不影響遊玩）
 window.__sq = { startLevel, get B() { return B; }, set B(v) { B = v; }, renderAll, ship, show, renderMap, prog: () => PROG };
+// 暫時除錯用：顯示實際視窗尺寸跟斷點是否命中，排查完手機斷點問題後會拿掉
+(function () {
+  const dbg = document.createElement("div");
+  dbg.style.cssText = "position:fixed;left:4px;bottom:4px;z-index:999;font:700 11px monospace;color:#0f0;background:rgba(0,0,0,.7);padding:3px 6px;border-radius:4px;pointer-events:none";
+  document.body.appendChild(dbg);
+  const upd = () => {
+    const mq = window.matchMedia("(orientation:landscape) and (max-height:700px)").matches;
+    dbg.textContent = `${innerWidth}x${innerHeight} dpr${devicePixelRatio} mq:${mq ? "ON" : "off"}`;
+  };
+  upd();
+  window.addEventListener("resize", upd);
+  window.addEventListener("orientationchange", upd);
+})();
 </script>
 </body>
 </html>
