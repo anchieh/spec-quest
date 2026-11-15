@@ -56,7 +56,8 @@ svg.ic{display:block}
 .liLink{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-decoration:none;transition:opacity .15s}
 .liLink:hover{opacity:.85}
 .liLink .liText{font:700 15px var(--tc);color:var(--ink);letter-spacing:.5px}
-.liLink .liIc{width:80px;height:80px;border-radius:18px;background:#0a66c2;color:#fff;display:grid;place-items:center;font:900 32px var(--game);flex:none;box-shadow:0 6px 16px rgba(0,0,0,.4)}
+.liLink .liIc{width:80px;height:80px;border-radius:18px;background:#0a66c2;color:#fff;display:grid;place-items:center;font:900 32px var(--game);flex:none;box-shadow:0 6px 16px rgba(0,0,0,.4),0 0 0 0 rgba(10,102,194,.45);animation:liPulse 2.8s ease-in-out infinite}
+@keyframes liPulse{0%,100%{box-shadow:0 6px 16px rgba(0,0,0,.4),0 0 0 0 rgba(10,102,194,.45)}50%{box-shadow:0 6px 16px rgba(0,0,0,.4),0 0 0 9px rgba(10,102,194,0)}}
 .heroboard{position:relative;height:180px;margin:-10px auto 8px;width:360px;perspective:900px}
 .hb{position:absolute;left:50%;top:50%;width:276px;height:180px;margin:-90px 0 0 -138px;border-radius:10px;transform-style:preserve-3d;background:radial-gradient(circle at 30% 25%,#1f437a,#0d254a 60%,#081a35);box-shadow:0 30px 50px rgba(0,0,0,.7),0 0 40px rgba(63,127,224,.3);animation:spin 14s linear infinite}
 @keyframes spin{from{transform:rotateX(58deg) rotateZ(0)}to{transform:rotateX(58deg) rotateZ(360deg)}}
@@ -402,7 +403,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .k{margin:0}
  .logo{font-size:clamp(26px,5vw,38px);letter-spacing:2px}
  .logo2{font-size:clamp(13px,2.2vw,17px);margin-top:3px}
- .tag{font-size:11.5px;line-height:1.4;margin:5px auto 6px;max-width:92%}
+ .tag{font-size:13px;line-height:1.45;margin:6px auto 8px;max-width:780px}
  .chips{margin:0 0 8px;gap:6px}
  .chip{padding:5px 12px;font-size:12px}
  .tapHint{margin-top:6px;font-size:12px}
@@ -894,7 +895,7 @@ const fmt = (n) => Math.round(n).toLocaleString("en-US");
 /* ---------- 文字 ---------- */
 const TXT = {
  zh: {
-  kicker:"工業電腦選型遊戲", sub:"選型大挑戰", tag:"十個產業情境，選板型、補介面、挑規格。買多是浪費，買少是之後的派工與停機，剛好的規格才拿滿分。",
+  kicker:"工業電腦選型遊戲", sub:"選型大挑戰", tag:"十個產業情境，選板型、補介面、挑規格。\n買多是浪費，買少是之後的派工與停機，剛好的規格才拿滿分。",
   start:"開始遊戲 ▶", foot:"每一關是一個產業情境，涵蓋零售與娛樂、智慧製造、醫療、能源、交通五大領域。玩家先選板型，I/O 不足就加一張擴充卡，再為工作溫度、電源輸入、通訊埠防護、儲存、供貨年限、產業認證六項規格各選一級，選完看價格。計分只認一個中心：剛好的價格，買多是浪費，買少會變成之後的派工與停機，兩邊都扣分。示意遊戲：名詞依 PICMG、TIA、ISO、IEC、JEDEC 等標準機構用語；價格、損失與板型規格皆為遊戲簡化值，非真實報價或真實產品規格。 · AnChieh Tsai",
   mapTitle:"產業地圖", mark:"價格與損失為遊戲簡化值 · 名詞依標準機構定義",
   noStoreWarn:"瀏覽器儲存無法使用，進度不會保留，重新整理後會消失。",
@@ -946,7 +947,7 @@ const TXT = {
   howto:[["讀情境","環境、介面、空間、年量都藏在簡報裡。"],["選板型＋補介面","放得下的最小板；不夠再插卡或 M.2 模組。"],["挑六項規格","高一級多付錢，低一級日後派工停機。"],["出貨看十年","剛好 100 分；90 分三星，75 分兩星，50 分過關。"]],
  },
  en: {
-  kicker:"An industrial-PC spec game", sub:"Pick just enough", tag:"Ten industry scenarios. Pick a board, fill the I/O, choose the grades. Buying more is waste, buying less becomes service calls and downtime later. Just enough scores 100.",
+  kicker:"An industrial-PC spec game", sub:"Pick just enough", tag:"Ten industry scenarios. Pick a board, fill the I/O, choose the grades.\nBuying more is waste, buying less becomes service calls and downtime later. Just enough scores 100.",
   start:"Start ▶", foot:"Each level is an industry scenario across five domains: retail & entertainment, smart factory, medical, energy, and transportation. Pick a board, add an expansion card if the I/O falls short, then choose one grade for each of six specs — temperature, power input, port protection, storage, supply life, and certification — and see the price. Scoring has one center: the right price. Buying more is waste; buying less becomes service calls and downtime later. Illustrative game: terms follow PICMG, TIA, ISO, IEC and JEDEC; prices, losses and board specs are simplified game values, not real quotes or real product specs. · AnChieh Tsai",
   mapTitle:"Industry map", mark:"Prices and losses are simplified game values · Terms follow standards bodies",
   noStoreWarn:"Browser storage is unavailable — progress won't be saved and will disappear on reload.",
