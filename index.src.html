@@ -110,8 +110,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .modalBack{position:fixed;left:16px;top:16px;z-index:45}
 .globalBar{position:fixed;right:16px;top:16px;z-index:45;display:flex;gap:8px}
 .mhd,.hud{padding-right:164px}
-.hud .sp,.shipTop .sp{flex:1}
-.shipTop{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.hud .sp{flex:1}
 .costpill{display:flex;align-items:center;gap:10px;height:46px;padding:0 16px 0 10px;border-radius:12px;background:linear-gradient(180deg,#183626,#0a1c13);border:1px solid #2f5541}
 .costpill b{font:700 24px var(--game);font-variant-numeric:tabular-nums}.costpill small{font:600 12px var(--tc);color:var(--mute)}
 #play{height:100vh;overflow:hidden}
@@ -120,7 +119,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .stage3d,.scn,.shipbox{min-height:0;overflow-y:auto}
 .scn{padding:16px}.tierPage{padding:14px;height:100%;overflow-y:auto;display:flex;flex-direction:column}
 .tierPage .tr{display:flex;flex-direction:column}
-.ffbox{padding:14px}.shipbox{padding:14px;display:flex;flex-direction:column;gap:10px}
+.ffbox{padding:14px}.shipbox{position:relative;padding:14px;display:flex;flex-direction:column;gap:10px}
 .pager{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
 .pagerHd{display:flex;align-items:center;justify-content:center;gap:16px;flex:0 0 auto}
 .pslots{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
@@ -245,7 +244,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 /* 出貨 */
 .cost{display:flex;align-items:baseline;gap:10px}.cost b{font:700 34px var(--game);font-variant-numeric:tabular-nums}.cost small{font:13px var(--tc);color:var(--mute)}
 .costBreak{font:600 12px var(--mono);color:var(--mute);margin-top:-4px}
-.shipTimer{font:700 28px var(--game);color:var(--gold);text-align:center;letter-spacing:2px;font-variant-numeric:tabular-nums}
+.shipTimer{position:absolute;top:64px;right:14px;font:700 28px var(--game);color:var(--gold);text-align:right;letter-spacing:2px;font-variant-numeric:tabular-nums}
 #shipTimer2{display:none}
 .shipTimer.low{color:var(--red);animation:tpulse .6s infinite}
 @keyframes tpulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -317,7 +316,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .mviewBtn{display:grid;position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:8;animation:mviewFlash 1.6s ease-in-out infinite}
  .wrap[data-mview="top"] .pager{display:none}
  .wrap[data-mview="top"] .shipbox{display:none}
- .wrap[data-mview="top"] #shipTimer2{display:block;position:fixed;right:10px;bottom:10px;z-index:7;font-size:18px;background:#0f2a1f;border:1px solid #2f5541;border-radius:12px;padding:4px 10px}
+ .wrap[data-mview="top"] #shipTimer2{display:block}
  .wrap[data-mview="top"] .topRow{grid-template-columns:1fr 1fr}
  .wrap[data-mview="top"] .stage3d{cursor:pointer}
  .wrap[data-mview="bottom"] .topRow{display:contents}
@@ -331,6 +330,8 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .wrap[data-mview="bottom"] .shipbox .cost b{font-size:20px}
  .wrap[data-mview="bottom"] .shipbox .why{font-size:9.5px;min-height:0}
  .wrap[data-mview="bottom"] .shipbox .shipbtn{height:32px;font-size:12px}
+ #shipTimer{top:49px;right:20px;font-size:20px}
+ #shipTimer2{position:fixed;top:auto;right:29px;bottom:68px;font-size:20px;z-index:7}
  .wrap[data-mview="bottom"] .page{padding-right:130px}
  .topRow{flex:1 1 auto;min-height:0;grid-template-rows:none;margin-bottom:0;gap:8px;overflow-y:auto}
  #map .wrap{height:100vh;overflow:hidden;display:flex;flex-direction:column}
@@ -518,7 +519,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  <div class="topRow">
   <div class="pn stage3d" id="stage3d"></div>
   <div class="pn scn" id="scn"></div>
-  <div class="pn shipbox"><div class="shipTop"><button class="icon-btn" id="bBrief" aria-label="brief">?</button><div class="sp"></div><div class="shipTimer" id="shipTimer" style="display:none"></div></div>
+  <div class="pn shipbox"><div class="shipTimer" id="shipTimer" style="display:none"></div>
    <div class="stepk" id="shipStep"><i class="stepno">4</i></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
    <div class="costBreak" id="costBreak"></div>
    <div class="why" id="why"></div><button class="btn shipbtn" id="bShip" data-t="ship"></button><div class="hint" data-t="shipHint"></div></div>
@@ -1316,7 +1317,6 @@ $("#bMapMView").onclick = () => { beep("click"); setMapMView(MAP_MVIEW === "top"
 enableSwipeMView($("#map .wrap"), () => MAP_MVIEW, setMapMView);
 $$(".bFs").forEach((x) => x.onclick = () => { beep("click"); toggleFullscreen(); });
 enableSwipeMView($("#play .wrap"), () => MVIEW, setMView);
-$("#bBrief").onclick = () => { beep("click"); openBrief(); };
 $("#bShip").onclick = ship;
 $("#bPagePrev").onclick = () => { if (PAGE > 0) { PAGE--; beep("click"); renderPager(); } };
 $("#bPageNext").onclick = () => { if (PAGE < PAGE_COUNT - 1) { PAGE++; beep("click"); renderPager(); } };
