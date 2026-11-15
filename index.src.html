@@ -246,6 +246,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .cost{display:flex;align-items:baseline;gap:10px}.cost b{font:700 34px var(--game);font-variant-numeric:tabular-nums}.cost small{font:13px var(--tc);color:var(--mute)}
 .costBreak{font:600 12px var(--mono);color:var(--mute);margin-top:-4px}
 .shipTimer{font:700 28px var(--game);color:var(--gold);text-align:center;letter-spacing:2px;font-variant-numeric:tabular-nums}
+#shipTimer2{display:none}
 .shipTimer.low{color:var(--red);animation:tpulse .6s infinite}
 @keyframes tpulse{0%,100%{opacity:1}50%{opacity:.4}}
 .why{font:13px/1.5 var(--tc);color:#ff9a90;min-height:20px}.why.ok{color:var(--green)}
@@ -316,6 +317,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .mviewBtn{display:grid;position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:8;animation:mviewFlash 1.6s ease-in-out infinite}
  .wrap[data-mview="top"] .pager{display:none}
  .wrap[data-mview="top"] .shipbox{display:none}
+ .wrap[data-mview="top"] #shipTimer2{display:block;position:fixed;right:10px;bottom:10px;z-index:7;font-size:18px;background:#0f2a1f;border:1px solid #2f5541;border-radius:12px;padding:4px 10px}
  .wrap[data-mview="top"] .topRow{grid-template-columns:1fr 1fr}
  .wrap[data-mview="top"] .stage3d{cursor:pointer}
  .wrap[data-mview="bottom"] .topRow{display:contents}
@@ -512,11 +514,12 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
   <div class="dots" id="hudDots"></div>
   <button class="icon-btn mviewBtn" id="bMView" aria-label="switch view">⇅</button>
   <p class="mark playMark" data-t="mark"></p></div>
+ <div class="shipTimer" id="shipTimer2" style="display:none"></div>
  <div class="topRow">
   <div class="pn stage3d" id="stage3d"></div>
   <div class="pn scn" id="scn"></div>
-  <div class="pn shipbox"><div class="shipTop"><button class="icon-btn" id="bBrief" aria-label="brief">?</button><div class="sp"></div></div>
-   <div class="stepk" id="shipStep"><i class="stepno">4</i></div><div class="shipTimer" id="shipTimer" style="display:none"></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
+  <div class="pn shipbox"><div class="shipTop"><button class="icon-btn" id="bBrief" aria-label="brief">?</button><div class="sp"></div><div class="shipTimer" id="shipTimer" style="display:none"></div></div>
+   <div class="stepk" id="shipStep"><i class="stepno">4</i></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
    <div class="costBreak" id="costBreak"></div>
    <div class="why" id="why"></div><button class="btn shipbtn" id="bShip" data-t="ship"></button><div class="hint" data-t="shipHint"></div></div>
  </div>
@@ -1054,12 +1057,10 @@ function startTimer() {
 }
 function stopTimer() { clearInterval(TIMER_ID); TIMER_ID = null; }
 function renderTimer() {
-  const el = $("#shipTimer"); if (!el) return;
-  if (!FORMAL) { el.style.display = "none"; return; }
-  el.style.display = "";
+  const els = $$(".shipTimer"); if (!els.length) return;
+  if (!FORMAL) { els.forEach((el) => el.style.display = "none"); return; }
   const v = Math.max(0, TIME_LEFT), m = Math.floor(v / 60), s = v % 60;
-  el.textContent = `${m}:${String(s).padStart(2, "0")}`;
-  el.classList.toggle("low", v <= 10);
+  els.forEach((el) => { el.style.display = ""; el.textContent = `${m}:${String(s).padStart(2, "0")}`; el.classList.toggle("low", v <= 10); });
 }
 function timeUp() {
   if (!B.board) { toast(T("timeUp")); beep("err"); return; }
