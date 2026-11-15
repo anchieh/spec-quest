@@ -244,7 +244,9 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .prRow{display:flex;align-items:center;justify-content:flex-end;gap:3px;margin-top:auto;padding-top:3px;font:700 13px var(--game);color:#c8ced6;flex:none}
 .prRow .coin{width:11px;height:11px}
 .var{display:flex;gap:3px;margin-top:3px}.var button{flex:1;height:28px;padding:0 4px;border-radius:6px;font:700 13px var(--tc);background:#0a111c;border:1px solid #212d40;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.specOut{display:flex;flex-direction:column;gap:2px;margin-top:4px;font:700 12.5px var(--game);color:#c8ced6}.specOut span{padding:1px 2px}
+.specOut{display:flex;flex-direction:column;gap:2px;margin-top:4px;font:700 12.5px var(--game);color:#c8ced6}.specOut span{padding:1px 2px;border-radius:4px}
+.specOut span.flash{animation:specFlash .9s ease-out}
+@keyframes specFlash{0%{color:var(--gold);background:rgba(255,198,90,.25);text-shadow:0 0 8px rgba(255,198,90,.7)}100%{color:#c8ced6;background:transparent;text-shadow:none}}
 .lockOut{margin-top:3px;display:flex;align-items:center;justify-content:center;gap:4px;padding:3px 0;border-radius:6px;border:1px solid var(--gold);color:var(--gold);font:700 12px var(--tc);text-align:center}
 .var button.on{background:#1f3f6e;border-color:var(--teal);color:var(--ink)}
 /* 出貨 */
@@ -450,8 +452,8 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .ffbox .hd span{flex:1 1 auto;min-width:0;font-size:11px;line-height:1.3;color:var(--mute)}
  .ffr{gap:6px}
  .ff,.ad,.tc{overflow-x:hidden;overflow-y:auto}
- .ff,.ad{padding:3px 4px}
- .ff .h{min-height:46px;gap:2px}
+ .ff,.ad{padding:2px 4px}
+ .ff .h{min-height:40px;gap:1px}
  .box{height:10px;margin:1px 0}
  .ad .box{height:30px;margin:0}
  .ad .ctRow{margin:3px 0}
@@ -460,7 +462,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .ad .why{font-size:9.5px;line-height:1.25}
  .tc .box{height:40px;margin:0 0 5px}
  .ff .h b,.ad .h b{font-size:9.5px}
- .bd{font-size:7.5px;padding:0 3px}
+ .bd{font-size:7.5px;padding:0 3px;line-height:1.05}
  .spec{font-size:8px;gap:2px;line-height:1.15}
  .prRow{font-size:9px;margin-top:1px;padding-top:1px}
  .var{gap:3px;margin-top:3px}.var button{height:22px;padding:0 3px;font-size:10px}
@@ -1216,6 +1218,7 @@ function renderTierPages() {
 
 function renderFF() {
   const sel = B.board ? SQ.BOARDS.find((x) => x.id === B.board) : null;
+  const prevSpecSpans = $$(".specOut").map((el) => [...el.querySelectorAll("span")].map((s) => s.textContent));
   $("#ffr").style.width = `calc(${SQ.FORMS.length}/${OPT_COLS}*100%)`;
   $("#ffr").style.gridTemplateColumns = `repeat(${SQ.FORMS.length},minmax(0,1fr))`;
   $("#ffr").innerHTML = SQ.FORMS.map((ff) => {
@@ -1235,6 +1238,10 @@ function renderFF() {
       <div class="h"><b>${T("ff." + ff)}</b>${badge}</div><div class="box"><div class="lim" style="width:${lim}px;height:${lim}px"></div><div class="sil" style="width:${silW}px;height:${silH}px"></div></div>
       <div class="prRow"><i class="coin"></i>${price}</div></div>${varBtns}${specOut}${note}${lockLine}</div>`;
   }).join("");
+  $$(".specOut").forEach((el, i) => {
+    const prev = prevSpecSpans[i]; if (!prev) return;
+    [...el.querySelectorAll("span")].forEach((s, j) => { if (prev[j] !== undefined && prev[j] !== s.textContent) s.classList.add("flash"); });
+  });
   $$("#ffr .ffCell").forEach((cell) => { const x = cell.querySelector(".ff");
     const pick = (id) => { if (x.classList.contains("lock")) { beep("err"); toast(T("needToast", {n: unlockLevel("custom")})); return; }
       const nb = SQ.BOARDS.find((b) => b.id === id); if (id !== B.board && Object.keys(B.add).length) { B.add = {}; toast(T("addonReset")); } B.board = id; FF_LAST[nb.ff] = id; beep("add"); flyToSlot(x, 0); renderAll(); };
