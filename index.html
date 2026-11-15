@@ -266,8 +266,12 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .failReasons{margin:10px 0 0;padding-left:20px;color:#ffb0a8;font:14.5px/1.7 var(--tc)}
 .newmech{display:flex;gap:14px;align-items:center;padding:14px 16px;margin:10px 0;border-radius:14px;background:linear-gradient(90deg,rgba(255,198,90,.16),rgba(255,198,90,.03));border:1.5px solid rgba(255,198,90,.6);box-shadow:0 0 22px rgba(255,198,90,.12)}
 .newmech .nmic{flex:none;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:rgba(255,198,90,.16);border:1px solid rgba(255,198,90,.55)}
-.newmech b{display:block;font:700 17px var(--tc);color:var(--gold)}.newmech span{font:14.5px/1.6 var(--tc);color:#e1e5eb}
+.newmech b{display:block;font:700 17px var(--tc);color:var(--gold)}.newmech span{display:block;min-height:3.2em;font:14.5px/1.6 var(--tc);color:#e1e5eb}
 .row{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px}
+.lessonRow{display:flex;gap:16px;align-items:flex-end;margin-top:12px}
+.lessonBoxes{flex:1;min-width:0;display:flex;flex-direction:column}
+.lessonBoxes:empty{display:none}
+.lessonRow:has(.lessonBoxes:empty){justify-content:flex-end}
 /* 十年結算 */
 .years{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:10px 0 6px}
 .yr{position:relative;height:62px;border-radius:12px;background:#0a1019;border:1.5px solid #212d40;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:5px;font:700 12px var(--game);color:var(--mute);transition:all .25s}
@@ -365,16 +369,19 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .lvl small .star{width:10px;height:10px}
  .mapBottom .mark{margin-top:6px;font-size:10.5px}
  .card{padding:16px 18px}
- #mBrief .card{padding-top:56px;padding-bottom:8px}
+ #mBrief .card{padding-top:56px;padding-bottom:8px;padding-left:64px}
  .card h2{font-size:18px;margin:0 0 2px}
  #mBrief .hex{width:56px !important;height:62px !important}
  #mBrief .hex .in{width:47px !important;height:53px !important}
  #mBrief .hex .in .ic{width:32px !important;height:32px !important}
  .briefHd{margin-top:4px;gap:10px}
  .briefHdText h2{font-size:17px;margin:0 0 3px}
- .newmech{padding:5px 7px;margin:4px 0 0;gap:7px}
- .newmech .nmic{width:24px;height:24px;border-radius:7px}
- .newmech b{font-size:12px}.newmech span{font-size:10.5px}
+ .newmech{padding:6px 9px;margin:4px 0 0;gap:8px}
+ .newmech .nmic{width:27px;height:27px;border-radius:8px}
+ .newmech span{min-height:3.2em}
+ .lessonRow{gap:10px}
+ .goBtn{width:86px;height:auto;padding:8px 6px;font-size:11px;line-height:1.3;white-space:normal;text-align:center;flex:none}
+ .newmech b{font-size:13px}.newmech span{font-size:11.5px}
  .card .k{margin-bottom:2px}
  .years{gap:3px;margin:2px 0 4px}
  .yr{height:32px;font-size:9px;padding-bottom:3px}
@@ -1295,8 +1302,7 @@ function openBrief() {
   $("#briefCard").innerHTML = `<div class="k">${T("lv", {n: CUR.id})} · ${T("dom." + CUR.dom)}${CUR.boss ? " · " + T("boss") : ""}</div>
    <div class="briefHd"><div class="hex" style="width:76px;height:84px"><div class="in" style="width:64px;height:72px">${ic(CUR.icon, 44)}</div></div>
     <div class="briefHdText"><h2>${t.n}</h2><div class="briefCtx"><p class="story">${t.s}</p>${t.c.map((c) => `<div class="clue"><i></i>${c}</div>`).join("")}</div></div></div>
-   ${mechBlock}
-   <div class="row"><button class="btn" id="bGo">${T("briefGo")}</button></div>`;
+   <div class="lessonRow"><div class="lessonBoxes">${mechBlock}</div><button class="btn goBtn" id="bGo">${T("briefGo")}</button></div>`;
   $("#mBrief").classList.add("on"); $("#bGo").onclick = () => { beep("click"); $("#mBrief").classList.remove("on"); startTimer(); };
   $("#bBriefBack").onclick = () => { beep("click"); $("#mBrief").classList.remove("on"); stopBgm(); show("map"); renderMap(); };
 }
