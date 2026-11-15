@@ -262,6 +262,62 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 #shipTimer2{display:none}
 .shipTimer.low{color:var(--red);animation:tpulse .5s steps(1) infinite}
 @keyframes tpulse{0%,49%{opacity:1}50%,100%{opacity:.1}}
+
+/* 倒數壓力特效：十種故障情境的畫面提示，疊在 #play 畫面上方 */
+#riskFx{position:fixed;inset:0;pointer-events:none;z-index:6;overflow:hidden}
+.ov{position:absolute;inset:0;opacity:0}
+.ov-temp{position:absolute;inset:0;transform-origin:100% 0%}
+.ov-temp .heat{position:absolute;inset:0;background:radial-gradient(80% 100% at 100% 0%,rgba(255,245,220,.55) 0%,rgba(255,190,100,.5) 32%,rgba(255,150,65,.35) 60%,rgba(255,120,40,.15) 82%,rgba(255,120,40,0) 100%)}
+.ov-temp.on{animation:tempGrow 2s linear forwards}
+@keyframes tempGrow{0%{opacity:0;transform:scale(.03)}30%{opacity:.08;transform:scale(.4)}55%{opacity:.25;transform:scale(.68)}100%{opacity:.85;transform:scale(1.35)}}
+.ov-power{background:radial-gradient(140% 120% at 50% 50%,rgba(220,236,255,.9),rgba(150,190,255,.35) 55%,transparent 80%)}
+.ov-power.on{animation:fxFlicker 2s steps(1,end) forwards}
+@keyframes fxFlicker{0%{opacity:0}4%{opacity:.9}9%{opacity:.1}14%{opacity:.8}20%{opacity:.05}30%{opacity:.7}36%{opacity:.1}44%{opacity:.75}50%{opacity:.08}58%{opacity:.85}62%{opacity:.15}68%{opacity:.9}71%{opacity:.1}76%{opacity:.95}78%{opacity:.15}82%{opacity:1}84%{opacity:.2}87%{opacity:1}89%{opacity:.25}92%{opacity:1}94%{opacity:.3}96%{opacity:1}98%{opacity:.4}100%{opacity:.9}}
+.ov-prot svg{width:100%;height:100%}
+.ov-prot path{fill:none;stroke:#bfe0ff;stroke-width:2;filter:drop-shadow(0 0 6px rgba(150,210,255,.9));stroke-dasharray:420;stroke-dashoffset:420}
+.ov-prot.on{animation:fxProtFlash 2s steps(1,end) forwards}
+.ov-prot.on path{animation:fxDrawCrack 2s steps(1,end) forwards}
+@keyframes fxDrawCrack{0%{stroke-dashoffset:420}6%{stroke-dashoffset:40}100%{stroke-dashoffset:40}}
+@keyframes fxProtFlash{0%{opacity:0}3%{opacity:1}8%{opacity:.12}27%{opacity:.12}30%{opacity:1}34%{opacity:.12}37%{opacity:1}41%{opacity:.12}44%{opacity:1}48%{opacity:.25}100%{opacity:.25}}
+.ov-protusb{background:radial-gradient(circle at 88% 85%,rgba(255,255,255,.95) 0%,rgba(190,225,255,.7) 10%,transparent 24%)}
+.ov-protusb.on{animation:fxSpark 2s steps(1,end) forwards}
+@keyframes fxSpark{0%,100%{opacity:0}6%{opacity:1}10%{opacity:0}30%{opacity:1}33%{opacity:0}50%{opacity:1}53%{opacity:0}64%{opacity:1}67%{opacity:0}76%{opacity:1}78%{opacity:0}85%{opacity:1}87%{opacity:0}92%{opacity:1}94%{opacity:0}97%{opacity:1}99%{opacity:0}}
+.ov-store{background-image:repeating-linear-gradient(0deg,rgba(90,255,160,.5) 0 1px,transparent 1px 3px),repeating-linear-gradient(90deg,rgba(90,255,160,.35) 0 1px,transparent 1px 4px);background-size:100% 6px,6px 100%;mix-blend-mode:screen;clip-path:inset(100% 0 0 0)}
+.ov-store.on{animation:fxRiseNoise 2s ease-in forwards,fxFlickerNoise .12s steps(1,end) infinite}
+@keyframes fxRiseNoise{0%{opacity:0;clip-path:inset(100% 0 0 0)}20%{opacity:.9}100%{opacity:.9;clip-path:inset(0% 0 0 0)}}
+@keyframes fxFlickerNoise{0%{filter:brightness(1)}50%{filter:brightness(1.6)}100%{filter:brightness(1)}}
+.ov-supply{backdrop-filter:grayscale(0) brightness(1);clip-path:inset(0 100% 0 0)}
+.ov-supply.on{animation:fxSupplyWipe 2s linear forwards}
+@keyframes fxSupplyWipe{0%{clip-path:inset(0 100% 0 0);backdrop-filter:grayscale(1) brightness(.78)}100%{clip-path:inset(0 0 0 0);backdrop-filter:grayscale(1) brightness(.78)}}
+.ov-cert.on{opacity:1}
+.ov-cert .strip{position:absolute;opacity:0;background:repeating-linear-gradient(45deg,rgba(255,70,70,.95) 0 14px,rgba(20,8,8,.92) 14px 28px);box-shadow:0 0 16px rgba(255,60,60,.65)}
+.ov-cert .strip.top{top:0;left:0;right:0;height:0}
+.ov-cert .strip.bottom{bottom:0;left:0;right:0;height:0}
+.ov-cert .strip.left{top:0;bottom:0;left:0;width:0}
+.ov-cert .strip.right{top:0;bottom:0;right:0;width:0}
+.ov-cert.on .strip.top,.ov-cert.on .strip.bottom{animation:fxCertGrowH 2s ease-out forwards}
+.ov-cert.on .strip.left,.ov-cert.on .strip.right{animation:fxCertGrowV 2s ease-out forwards}
+@keyframes fxCertGrowH{0%{height:0;opacity:0}15%{opacity:1}100%{height:13px;opacity:1}}
+@keyframes fxCertGrowV{0%{width:0;opacity:0}15%{opacity:1}100%{width:13px;opacity:1}}
+#play .wrap.shakeSm{animation:fxShakeSm .15s linear infinite}
+#play .wrap.shakeLg{animation:fxShakeLg .11s linear infinite}
+@keyframes fxShakeSm{0%{transform:translate(0,0)}25%{transform:translate(3px,-3px)}50%{transform:translate(-3px,3px)}75%{transform:translate(3px,3px)}100%{transform:translate(0,0)}}
+@keyframes fxShakeLg{0%{transform:translate(0,0) rotate(0deg)}20%{transform:translate(11px,-9px) rotate(.7deg)}40%{transform:translate(-13px,7px) rotate(-.9deg)}60%{transform:translate(9px,11px) rotate(.7deg)}80%{transform:translate(-9px,-7px) rotate(-.5deg)}100%{transform:translate(0,0) rotate(0deg)}}
+.ov-shaketint{background:radial-gradient(120% 100% at 50% 100%,rgba(255,80,40,.4),transparent 62%)}
+.ov-shaketint.on{animation:fxShakeTint 2s ease-in-out infinite}
+@keyframes fxShakeTint{0%,100%{opacity:.18}50%{opacity:.5}}
+.ov-ulte{display:flex;align-items:flex-end;justify-content:flex-end;padding:18px}
+.ov-ulte .sigbars{display:flex;align-items:flex-end;gap:3px;height:28px}
+.ov-ulte .sigbars i{display:block;width:6px;background:#bfe0ff;border-radius:1px;box-shadow:0 0 6px rgba(190,224,255,.8)}
+.ov-ulte .sigbars i:nth-child(1){height:30%}
+.ov-ulte .sigbars i:nth-child(2){height:55%}
+.ov-ulte .sigbars i:nth-child(3){height:75%}
+.ov-ulte .sigbars i:nth-child(4){height:100%}
+.ov-ulte.on .sigbars{animation:fxSigDrop 2s steps(1,end) forwards}
+@keyframes fxSigDrop{0%{opacity:1}8%{opacity:.15}16%{opacity:1}24%{opacity:.15}34%{opacity:1}40%{opacity:.1}48%{opacity:1}53%{opacity:.1}60%{opacity:1}64%{opacity:.1}70%{opacity:1}73%{opacity:.1}78%{opacity:1}80%{opacity:.1}84%{opacity:1}86%{opacity:.1}90%{opacity:1}92%{opacity:.1}96%{opacity:1}98%{opacity:.1}100%{opacity:.3}}
+.ov-ultenoise{position:absolute;left:0;right:0;height:20px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.9) 0 2px,transparent 2px 5px);mix-blend-mode:overlay;opacity:0}
+.ov-ultenoise.on{animation:fxNoiseBar 2s steps(1,end) forwards}
+@keyframes fxNoiseBar{0%{top:10%;opacity:0}10%{opacity:.8}14%{opacity:0}30%{top:40%;opacity:.8}34%{opacity:0}50%{top:65%;opacity:.9}54%{opacity:0}70%{top:25%;opacity:.9}74%{opacity:0}88%{top:55%;opacity:1}93%{opacity:0}100%{opacity:0}}
 .why{font:14px/1.5 var(--tc);color:#ff9a90;min-height:20px}.why.ok{color:var(--green)}
 .shipbtn{height:74px;font-size:26px;letter-spacing:2px;width:100%}
 .hint{font:13px/1.5 var(--tc);color:var(--mute)}
@@ -630,7 +686,22 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  </div>
 </div></section>
 
-<section class="screen" id="play"><div class="wrap" data-mview="top">
+<section class="screen" id="play"><div class="riskFx" id="riskFx">
+ <div class="ov ov-temp" id="fxTemp"><div class="heat"></div></div>
+ <div class="ov ov-power" id="fxPower"></div>
+ <div class="ov ov-prot" id="fxProt"><svg viewBox="0 0 960 445" preserveAspectRatio="none">
+  <path d="M0,0 L140,90 L95,140 L210,205 L160,260"/>
+  <path d="M0,445 L130,360 L80,300 L190,250"/>
+  <path d="M960,222 L800,185 L850,235 L740,210"/>
+ </svg></div>
+ <div class="ov ov-protusb" id="fxProtUsb"></div>
+ <div class="ov ov-store" id="fxStore"></div>
+ <div class="ov ov-supply" id="fxSupply"></div>
+ <div class="ov ov-cert" id="fxCert"><div class="strip top"></div><div class="strip bottom"></div><div class="strip left"></div><div class="strip right"></div></div>
+ <div class="ov ov-ulte" id="fxUlte"><div class="sigbars"><i></i><i></i><i></i><i></i></div></div>
+ <div class="ov ov-ultenoise" id="fxUlteNoise"></div>
+ <div class="ov ov-shaketint" id="fxShakeTint"></div>
+</div><div class="wrap" data-mview="top">
  <div class="hud"><button class="icon-btn modalBack" id="bToMap" aria-label="map">≡</button>
   <div class="hex"><div class="in" id="hudIc"></div></div><div class="ttl"><small id="hudNo"></small><b id="hudName"></b></div>
   <div class="dots" id="hudDots"></div>
@@ -1382,16 +1453,64 @@ function renderPager() {
 }
 
 /* ---------- 關卡時限 ---------- */
+/* 倒數壓力特效：遊玩倒數時每10秒隨機觸發一種(2秒)，結算揭曉缺點時依事件id觸發對應效果(較短) */
+const RISK_FX = ["temp", "power", "prot", "protusb", "store", "supply", "cert", "ucom", "ucan", "ulte"];
+let riskFxLoopId = null, riskFxClearId = null, riskFxLast = null;
+function clearRiskFx() {
+  clearTimeout(riskFxClearId);
+  $$("#riskFx .ov, #riskFx .ov *").forEach((el) => {
+    el.classList.remove("on"); el.style.animationDuration = ""; el.style.animation = "none"; void el.offsetWidth; el.style.animation = "";
+  });
+  $("#play .wrap").classList.remove("shakeSm", "shakeLg");
+}
+const RISK_FX_DUR = {
+  temp: [["#fxTemp", 1]], power: [["#fxPower", 1]],
+  prot: [["#fxProt", 1], ["#fxProt path", 1]],
+  protusb: [["#fxProtUsb", 1]],
+  store: [["#fxStore", 2]],
+  supply: [["#fxSupply", 1]],
+  cert: [["#fxCert .strip", 1]],
+  ulte: [["#fxUlte .sigbars", 1], ["#fxUlteNoise", 1]],
+};
+function playRiskFx(id, dur) {
+  clearRiskFx();
+  const d = dur || 2000;
+  if (id === "temp") $("#fxTemp").classList.add("on");
+  else if (id === "power") $("#fxPower").classList.add("on");
+  else if (id === "prot") $("#fxProt").classList.add("on");
+  else if (id === "protusb") $("#fxProtUsb").classList.add("on");
+  else if (id === "store") $("#fxStore").classList.add("on");
+  else if (id === "supply") $("#fxSupply").classList.add("on");
+  else if (id === "cert") $("#fxCert").classList.add("on");
+  else if (id === "ucom") { $("#play .wrap").classList.add("shakeSm"); $("#fxShakeTint").classList.add("on"); }
+  else if (id === "ucan") { $("#play .wrap").classList.add("shakeLg"); $("#fxShakeTint").classList.add("on"); }
+  else if (id === "ulte") { $("#fxUlte").classList.add("on"); $("#fxUlteNoise").classList.add("on"); }
+  (RISK_FX_DUR[id] || []).forEach(([sel, animCount]) => {
+    $$(sel).forEach((el) => { el.style.animationDuration = animCount > 1 ? (d + "ms, 120ms") : d + "ms"; });
+  });
+  riskFxClearId = setTimeout(clearRiskFx, d);
+}
+function startRiskFxLoop() {
+  stopRiskFxLoop();
+  riskFxLoopId = setInterval(() => {
+    const pool = RISK_FX.filter((x) => x !== riskFxLast);
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    riskFxLast = pick;
+    playRiskFx(pick, 2000);
+  }, 10000);
+}
+function stopRiskFxLoop() { clearInterval(riskFxLoopId); riskFxLoopId = null; clearRiskFx(); }
 function startTimer() {
   if (!TIME_LEFT) return;
   renderTimer();
   clearInterval(TIMER_ID);
   TIMER_ID = setInterval(() => {
     TIME_LEFT--; renderTimer();
-    if (TIME_LEFT <= 0) { clearInterval(TIMER_ID); TIMER_ID = null; timeUp(); }
+    if (TIME_LEFT <= 0) { clearInterval(TIMER_ID); TIMER_ID = null; stopRiskFxLoop(); timeUp(); }
   }, 1000);
+  startRiskFxLoop();
 }
-function stopTimer() { clearInterval(TIMER_ID); TIMER_ID = null; }
+function stopTimer() { clearInterval(TIMER_ID); TIMER_ID = null; stopRiskFxLoop(); }
 function renderTimer() {
   const els = $$(".shipTimer"); if (!els.length) return;
   if (!TIME_LEFT) { els.forEach((el) => el.style.display = "none"); return; }
@@ -1595,7 +1714,8 @@ function ship(force) {
     if (done) return; y++;
     const evs = events.filter((x) => x.y === y), cell = $("#y" + y);
     if (evs.length) { cell.classList.add("hit"); cell.querySelector(".ev").innerHTML = ic("bolt", 26); beep("hit");
-      evs.forEach((x) => $("#evlog").insertAdjacentHTML("beforeend", `<div><b style="color:#ff8a80">${T("year", {n: y})}</b>　${TXT[LANG].ev[x.id]}　<b style="color:#ff8a80">−${fmt(x.v)}</b></div>`)); }
+      evs.forEach((x) => $("#evlog").insertAdjacentHTML("beforeend", `<div><b style="color:#ff8a80">${T("year", {n: y})}</b>　${TXT[LANG].ev[x.id]}　<b style="color:#ff8a80">−${fmt(x.v)}</b></div>`));
+      playRiskFx(evs[0].id.replace("_", ""), 480); }
     else { cell.classList.add("lit"); cell.querySelector(".ev").innerHTML = ic("badge", 22); }
     if (y < 10) step._t = setTimeout(step, evs.length ? 650 : 260); else finish();
   };
