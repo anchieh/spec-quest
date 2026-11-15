@@ -1037,6 +1037,7 @@ function setMView(v) {
   MVIEW = v;
   $("#play .wrap").dataset.mview = v;
   $("#bMView").textContent = v === "top" ? "⇩" : "⇧";
+  if (v === "bottom") sizeFFShapes(); // 切到下頁(選項區)才真的看得到，之前被 data-mview=top 蓋住量到的是0
 }
 function setMapMView(v) {
   MAP_MVIEW = v;
@@ -1167,6 +1168,7 @@ function renderPager() {
   });
   $$("#pageSlots .pslot").forEach((x) => x.onclick = () => { PAGE = +x.dataset.i; beep("click"); renderPager(); });
   $("#bPagePrev").disabled = PAGE === 0; $("#bPageNext").disabled = PAGE === PAGE_COUNT - 1;
+  sizeFFShapes();
 }
 
 /* ---------- 關卡時限 ---------- */
