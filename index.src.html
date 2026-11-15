@@ -1105,7 +1105,18 @@ function openBrief() {
   $("#bBriefBack").onclick = () => { beep("click"); $("#mBrief").classList.remove("on"); stopBgm(); show("map"); renderMap(); };
 }
 
-function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTierPages(); renderFF(); renderShip(); renderFocus(); renderPager(); renderTimer(); }
+// 比例縮圖要照box實際量到的大小算，不然跟手機斷點各種字級/高度調整後的真實空間對不上，會整個被裁切掉；
+// 必須在 renderPager() 把 .page 的 on 狀態定下來之後才能量，不然這張卡可能根本還沒顯示，量到的是 0
+function sizeFFShapes() {
+  $$("#ffr .ffshape").forEach((shape) => {
+    const box = shape.parentElement, br = box.getBoundingClientRect();
+    const len = +shape.dataset.len, h = +shape.dataset.h;
+    const scale = Math.min((br.width - 10) / 305, br.height / 244);
+    shape.style.width = Math.max(len * scale, 4) + "px";
+    shape.style.height = Math.max(h * scale, 3) + "px";
+  });
+}
+function renderAll() { renderHud(); renderScn(); renderScene(); renderShelf(); renderTierPages(); renderFF(); renderShip(); renderFocus(); renderPager(); renderTimer(); sizeFFShapes(); }
 function slotLabel(i) {
   if (i === 0) { if (!B.board) return ""; const b = SQ.BOARDS.find((x) => x.id === B.board); return T("ff." + b.ff); }
   if (i === 1) { const n = Object.values(B.add || {}).reduce((s, c) => s + c, 0); return n ? "×" + n : ""; }
@@ -1365,8 +1376,6 @@ function renderFF() {
   $("#ffr").innerHTML = SQ.FORMS.map((ff) => {
     const vars = SQ.BOARDS.filter((b) => b.ff === ff), lock = ff === "come" && !isUnlocked("custom");
     const cur = sel && sel.ff === ff ? sel : (FF_LAST[ff] ? SQ.BOARDS.find((b) => b.id === FF_LAST[ff]) : vars[0]);
-    const sc = 62 / Math.max(CUR.maxLen, 305);
-    const silW = Math.min(cur.len * sc * 1.9, 150), silH = Math.min(FFH[ff] * sc * 1.9, 70);
     const badge = lock ? "" : `<span class="bd dim">${cur.len}<br>× ${FFH[ff]}<br>mm</span>`;
     const lockLine = lock ? `<div class="lockOut">${T("locked", {n: unlockLevel("custom")})}</div>` : "";
     const specOut = lock ? "" : cur.custom ? `<div class="specOut"><span>${T("comeIo")}</span></div>`
@@ -1376,7 +1385,7 @@ function renderFF() {
     const note = cur.custom ? `<div class="hint" style="margin-top:4px">${T("comeNote", {nre: fmt(SQ.COME_NRE), vol: fmt(CUR.vol)})}</div>` : "";
     return `<div class="ffCell">
       <div class="ff ${sel && sel.ff === ff ? "sel" : ""} ${lock ? "lock" : ""}" data-b="${cur.id}" role="button" tabindex="0">
-      <div class="h"><b>${T("ff." + ff)}</b>${badge}</div><div class="box"><div class="ffshape" style="width:${silW}px;height:${silH}px"></div></div>
+      <div class="h"><b>${T("ff." + ff)}</b>${badge}</div><div class="box"><div class="ffshape" data-len="${cur.len}" data-h="${FFH[ff]}"></div></div>
       <div class="prRow"><i class="coin"></i>${price}</div></div>${varBtns}${specOut}${note}${lockLine}</div>`;
   }).join("");
   $$(".specOut").forEach((el, i) => {
