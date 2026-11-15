@@ -52,7 +52,7 @@ svg.ic{display:block}
 .tag{max-width:740px;margin:22px auto 30px;font:17px/1.75 var(--tc);color:#c1d2c8;white-space:pre-line}
 .chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:-10px 0 28px}
 .chip{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;background:#0e2419;border:1px solid #2f5541;font:700 15px var(--tc)}
-.tbar{position:absolute;top:14px;right:16px;display:flex;gap:8px;z-index:5}
+.tbar{position:absolute;top:14px;right:172px;display:flex;gap:8px;z-index:5}
 .heroboard{position:relative;height:150px;margin:-10px auto 6px;width:300px;perspective:900px}
 .hb{position:absolute;left:50%;top:50%;width:230px;height:150px;margin:-75px 0 0 -115px;border-radius:10px;transform-style:preserve-3d;background:radial-gradient(circle at 30% 25%,#1f7a52,#0d4a31 60%,#083522);box-shadow:0 30px 50px rgba(0,0,0,.7),0 0 40px rgba(63,224,187,.3);animation:spin 14s linear infinite}
 @keyframes spin{from{transform:rotateX(58deg) rotateZ(0)}to{transform:rotateX(58deg) rotateZ(360deg)}}
@@ -108,8 +108,8 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .dots{display:flex;gap:5px}.dots i{width:24px;height:7px;border-radius:4px;background:#1d3a2c;transform:skewX(-20deg)}.dots i.d{background:var(--green)}.dots i.c{background:var(--gold);box-shadow:0 0 10px var(--gold)}
 .mviewBtn{display:none}
 .modalBack{position:fixed;left:16px;top:16px;z-index:45}
-.bFs{position:fixed;right:16px;top:16px;z-index:45}
-.tbar,.mhd,.hud{padding-right:60px}
+.globalBar{position:fixed;right:16px;top:16px;z-index:45;display:flex;gap:8px}
+.mhd,.hud{padding-right:164px}
 .hud .sp,.shipTop .sp{flex:1}
 .shipTop{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .costpill{display:flex;align-items:center;gap:10px;height:46px;padding:0 16px 0 10px;border-radius:12px;background:linear-gradient(180deg,#183626,#0a1c13);border:1px solid #2f5541}
@@ -418,8 +418,9 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .pslot{max-height:120px}
  .pslot b{font-size:8.5px}
  .icon-btn{width:32px;height:32px}
- .tbar,.mhd,.hud{padding-right:46px}
- .bFs{right:10px;top:10px}
+ .mhd,.hud{padding-right:116px}
+ .globalBar{right:10px;top:10px;gap:6px}
+ .tbar{right:126px}
  .ffr{gap:6px}
  .ff,.ad,.tc{overflow-x:hidden;overflow-y:auto}
  .ff,.ad{padding:3px 4px}
@@ -562,7 +563,9 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 <path d="M15 8.5 L33 17.5 V24" stroke="#eef2f6" stroke-width="2.2" fill="none"/></symbol></svg>
 <div class="rotateLock" id="rotateLock"><div class="rl-ic"></div><div class="rl-t">請將手機橫向，獲得最佳遊戲體驗</div><div class="rl-t2">Please rotate your device to landscape</div></div>
 
-<section class="screen on" id="title"><div class="tbar"><button class="icon-btn" id="bInfo" aria-label="info">i</button><button class="icon-btn bFs" aria-label="fullscreen">⛶</button><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div><div class="hero" id="heroTap" role="button" tabindex="0"><div>
+<div class="globalBar"><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button><button class="icon-btn bFs" aria-label="fullscreen">⛶</button></div>
+
+<section class="screen on" id="title"><div class="tbar"><button class="icon-btn" id="bInfo" aria-label="info">i</button></div><div class="hero" id="heroTap" role="button" tabindex="0"><div>
  <div class="heroboard" aria-hidden="true"><div class="hb"><div class="trace"></div><div class="cpu" style="left:38%;top:26%;width:70px;height:70px"><div class="fins"></div></div><div class="m2s used" style="left:62%;top:70%"><b>LTE</b></div><div class="slot x16" style="left:8%;top:70%;width:46%"></div><div class="stand mine" style="left:8%;top:74%;width:46%"><div class="face" style="width:100%;height:60px;transform:rotateX(-90deg) translateY(-60px)">COM ×4</div></div></div></div>
  <div class="k" data-t="kicker"></div>
  <div class="logo">SPEC QUEST</div><div class="logo2" data-t="sub"></div>
@@ -574,7 +577,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 <section class="screen" id="map"><div class="wrap" data-mview="top">
  <button class="icon-btn mviewBtn" id="bMapMView" aria-label="switch view">⇩</button>
  <div class="mapTop">
-  <div class="mhd"><button class="icon-btn" id="bMapBack" aria-label="back">←</button><h2 data-t="mapTitle"></h2><div class="tot"><span class="star on"></span><span id="totStars">0</span>/30</div><button class="icon-btn bFs" aria-label="fullscreen">⛶</button><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div>
+  <div class="mhd"><button class="icon-btn" id="bMapBack" aria-label="back">←</button><h2 data-t="mapTitle"></h2><div class="tot"><span class="star on"></span><span id="totStars">0</span>/30</div></div>
   <p class="mark" id="storeWarn" style="display:none;color:var(--red)" data-t="noStoreWarn"></p>
   <div class="pn trophyRow" id="trophyRow"></div>
   <div class="pn howto" id="howto"></div>
@@ -590,12 +593,11 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
   <div class="hex"><div class="in" id="hudIc"></div></div><div class="ttl"><small id="hudNo"></small><b id="hudName"></b></div>
   <div class="dots" id="hudDots"></div>
   <button class="icon-btn mviewBtn" id="bMView" aria-label="switch view">⇅</button>
-  <button class="icon-btn bFs" aria-label="fullscreen">⛶</button>
   <p class="mark playMark" data-t="mark"></p></div>
  <div class="topRow">
   <div class="pn stage3d" id="stage3d"></div>
   <div class="pn scn" id="scn"></div>
-  <div class="pn shipbox"><div class="shipTop"><button class="icon-btn" id="bBrief" aria-label="brief">?</button><div class="sp"></div><button class="icon-btn bLang" aria-label="language">EN</button><button class="icon-btn bSnd" aria-label="sound">♪</button></div>
+  <div class="pn shipbox"><div class="shipTop"><button class="icon-btn" id="bBrief" aria-label="brief">?</button><div class="sp"></div></div>
    <div class="stepk" id="shipStep"><i class="stepno">4</i></div><div class="shipTimer" id="shipTimer" style="display:none"></div><div class="k" data-t="unitCost"></div><div class="cost"><b id="costBig">0</b><small data-t="perUnit"></small></div>
    <div class="costBreak" id="costBreak"></div>
    <div class="why" id="why"></div><button class="btn shipbtn" id="bShip" data-t="ship"></button><div class="hint" data-t="shipHint"></div></div>
