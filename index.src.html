@@ -244,8 +244,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .bd.dim{border:1px solid var(--line);color:var(--mute);font:600 12px var(--mono)}.bd.lk{border:1px solid var(--gold);color:var(--gold)}
 .box{position:relative;height:30px;margin:4px 0 4px;display:grid;place-items:center;border-radius:8px;background:#060b12;overflow:hidden}
 .ff .box{align-items:end;justify-items:center;padding-bottom:1px}
-.lim{position:absolute;border:2px dashed rgba(255,198,90,.75);border-radius:4px}
-.sil{position:relative;border-radius:3px;background:linear-gradient(135deg,#2a579a,#0e264a);box-shadow:0 0 0 1px #4f83d1}
+.ffshape{position:relative;border:1.5px solid #bfe0ff;border-radius:3px;background:rgba(63,127,224,.22);opacity:.7}
 .spec{display:flex;flex-wrap:wrap;gap:3px;font:700 12.5px var(--game);color:#c8ced6}.spec span{padding:1px 4px;border-radius:5px;background:#0a111c}
 .prRow{display:flex;align-items:center;justify-content:flex-start;gap:3px;margin-top:auto;padding-top:3px;font:700 13px var(--game);color:#c8ced6;flex:none}
 .prRow .coin{width:11px;height:11px}
@@ -1138,15 +1137,6 @@ function renderPager() {
   const sr = liveCardSize();
   $$("#pageSlots .pslot").forEach((el, i) => {
     const vis = el.querySelector(".pslotVis");
-    if (i === 0 && B.board) {
-      const b = SQ.BOARDS.find((x) => x.id === B.board);
-      const pr = vis.getBoundingClientRect();
-      const scale = (pr.width - 10) / 305; // 305=ATX長邊，當作最大版型比例尺基準
-      const w = b.len * scale, h = FFH[b.ff] * scale;
-      vis.classList.remove("ic");
-      vis.innerHTML = `<div style="position:absolute;left:50%;top:50%;width:${w}px;height:${h}px;transform:translate(-50%,-50%);border:1.5px solid #bfe0ff;border-radius:3px;background:rgba(63,127,224,.22);opacity:.7"></div>`;
-      return;
-    }
     const src = slotSourceCard(i);
     const onscreen = src && src.closest(".page")?.classList.contains("on");
     if (onscreen) { const c = src.cloneNode(true);
@@ -1376,7 +1366,7 @@ function renderFF() {
     const vars = SQ.BOARDS.filter((b) => b.ff === ff), lock = ff === "come" && !isUnlocked("custom");
     const cur = sel && sel.ff === ff ? sel : (FF_LAST[ff] ? SQ.BOARDS.find((b) => b.id === FF_LAST[ff]) : vars[0]);
     const sc = 62 / Math.max(CUR.maxLen, 305);
-    const silW = Math.min(cur.len * sc * 1.9, 150), silH = Math.min(FFH[ff] * sc * 1.9, 70), lim = CUR.maxLen * sc * 1.9;
+    const silW = Math.min(cur.len * sc * 1.9, 150), silH = Math.min(FFH[ff] * sc * 1.9, 70);
     const badge = lock ? "" : `<span class="bd dim">${cur.len}<br>× ${FFH[ff]}<br>mm</span>`;
     const lockLine = lock ? `<div class="lockOut">${T("locked", {n: unlockLevel("custom")})}</div>` : "";
     const specOut = lock ? "" : cur.custom ? `<div class="specOut"><span>${T("comeIo")}</span></div>`
@@ -1386,7 +1376,7 @@ function renderFF() {
     const note = cur.custom ? `<div class="hint" style="margin-top:4px">${T("comeNote", {nre: fmt(SQ.COME_NRE), vol: fmt(CUR.vol)})}</div>` : "";
     return `<div class="ffCell">
       <div class="ff ${sel && sel.ff === ff ? "sel" : ""} ${lock ? "lock" : ""}" data-b="${cur.id}" role="button" tabindex="0">
-      <div class="h"><b>${T("ff." + ff)}</b>${badge}</div><div class="box"><div class="lim" style="width:${lim}px;height:${lim}px"></div><div class="sil" style="width:${silW}px;height:${silH}px"></div></div>
+      <div class="h"><b>${T("ff." + ff)}</b>${badge}</div><div class="box"><div class="ffshape" style="width:${silW}px;height:${silH}px"></div></div>
       <div class="prRow"><i class="coin"></i>${price}</div></div>${varBtns}${specOut}${note}${lockLine}</div>`;
   }).join("");
   $$(".specOut").forEach((el, i) => {
