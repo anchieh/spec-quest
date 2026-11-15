@@ -87,7 +87,7 @@ svg.ic{display:block}
 .certForm input:focus{outline:2px solid var(--gold)}
 .certForm .row,.certFinal .row{display:flex;gap:10px;justify-content:flex-end}
 .mhd{display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin:6px 0 16px}
-.mhd h2{margin:0;font:900 56px var(--tc);letter-spacing:2px}.mhd .tot{margin-left:auto;display:flex;align-items:center;gap:8px;font:700 18px var(--game)}
+.mhd h2{margin:0;min-width:0;font:900 56px var(--tc);letter-spacing:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mhd .tot{margin-left:auto;display:flex;align-items:center;gap:8px;font:700 18px var(--game);flex:none}
 .zones{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
 .zone{padding:16px;border-radius:18px;position:relative;overflow:hidden}
 .zone h3{margin:0 0 4px;font:900 22px/1.25 var(--tc);display:flex;align-items:center;gap:8px}.zone h3 span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zone .zs{font:14px/1.4 var(--tc);color:var(--mute);margin-bottom:12px;min-height:2.8em}
@@ -108,12 +108,12 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .hud{position:relative;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px}
 .hex{width:56px;height:62px;flex:none;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:linear-gradient(160deg,#fff0b0,#e08a18 60%,#8a4d06);display:grid;place-items:center}
 .hex .in{width:47px;height:53px;clip-path:inherit;background:radial-gradient(circle at 50% 35%,#1d293a,#070c14);display:grid;place-items:center}
-.ttl small{display:block;font:700 13px var(--game);letter-spacing:3px;color:var(--gold)}.ttl b{font:900 52px/1.05 var(--tc);letter-spacing:1px}
+.ttl{min-width:0}.ttl small{display:block;font:700 13px var(--game);letter-spacing:3px;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ttl b{display:block;font:900 52px/1.05 var(--tc);letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dots{display:flex;gap:5px}.dots i{width:24px;height:7px;border-radius:4px;background:#1d293a;transform:skewX(-20deg)}.dots i.d{background:var(--green)}.dots i.c{background:var(--gold);box-shadow:0 0 10px var(--gold)}
 .mviewBtn{display:none}
 .modalBack{position:fixed;left:16px;top:16px;z-index:45}
 .globalBar{position:fixed;right:16px;top:16px;z-index:45;display:flex;gap:8px}
-.mhd,.hud{padding-right:184px;padding-left:76px}
+.mhd,.hud{padding-right:184px;padding-left:84px}
 .hud .sp{flex:1}
 .costpill{display:flex;align-items:center;gap:10px;height:46px;padding:0 16px 0 10px;border-radius:12px;background:linear-gradient(180deg,#182436,#0a111c);border:1px solid #2f3e55}
 .costpill b{font:700 24px var(--game);font-variant-numeric:tabular-nums}.costpill small{font:600 13px var(--tc);color:var(--mute)}
@@ -429,7 +429,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .pslot{max-height:120px}
  .pslot b{font-size:8.5px}
  .icon-btn{width:32px;height:32px}
- .mhd,.hud{padding-right:136px;padding-left:58px}
+ .mhd,.hud{padding-right:136px;padding-left:64px}
  .modalBack{left:10px;top:10px}
  .globalBar{right:10px;top:10px;gap:6px}
  .tbar{right:126px}
