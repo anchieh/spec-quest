@@ -1164,7 +1164,7 @@ let riskFxLoopId = null, riskFxClearId = null, riskFxLast = null;
 function clearRiskFx() {
   clearTimeout(riskFxClearId);
   $$("#riskFx .ov, #riskFx .ov *").forEach((el) => {
-    el.classList.remove("on"); el.style.animationDuration = ""; el.style.animation = "none"; void el.offsetWidth; el.style.animation = "";
+    el.classList.remove("on"); el.style.animationDuration = ""; el.style.animationDelay = ""; el.style.animation = "none"; void el.offsetWidth; el.style.animation = "";
   });
   $("#play .wrap").classList.remove("shakeSm", "shakeLg");
 }
@@ -1190,8 +1190,15 @@ function playRiskFx(id, dur) {
   else if (id === "ucom") { $("#play .wrap").classList.add("shakeSm"); $("#fxShakeTint").classList.add("on"); }
   else if (id === "ucan") { $("#play .wrap").classList.add("shakeLg"); $("#fxShakeTint").classList.add("on"); }
   else if (id === "ulte") { $("#fxUlte").classList.add("on"); $("#fxUlteNoise").classList.add("on"); }
+  const FULL = 2000;
   (RISK_FX_DUR[id] || []).forEach(([sel, animCount]) => {
-    $$(sel).forEach((el) => { el.style.animationDuration = animCount > 1 ? (d + "ms, 120ms") : d + "ms"; });
+    $$(sel).forEach((el) => {
+      if (d >= FULL) { el.style.animationDuration = animCount > 1 ? (d + "ms, 120ms") : d + "ms"; return; }
+      // 短版(結算揭曉用)：時長維持原本2秒的曲線不變，用負延遲直接跳到「已經很明顯」的那段，只播出剩下 d 毫秒，
+      // 不然把整條慢慢堆疊的曲線硬壓縮進 d 毫秒，畫面根本還沒堆到看得出來就被切掉了
+      el.style.animationDuration = animCount > 1 ? (FULL + "ms, 120ms") : FULL + "ms";
+      el.style.animationDelay = animCount > 1 ? (-(FULL - d) + "ms, 0ms") : -(FULL - d) + "ms";
+    });
   });
   riskFxClearId = setTimeout(clearRiskFx, d);
 }
