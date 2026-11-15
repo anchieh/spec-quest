@@ -235,7 +235,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 /* 板型 */
 .ffr{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;align-items:start}
 .ffCell{display:flex;flex-direction:column;min-width:0}
-.ff{position:relative;min-width:0;aspect-ratio:1;overflow:hidden;display:flex;flex-direction:column;border-radius:12px;padding:6px 7px;background:linear-gradient(180deg,#0f1724,#080e16);border:1.5px solid #243144;text-align:left;transition:all .12s}
+.ff{position:relative;z-index:0;min-width:0;aspect-ratio:1;overflow:hidden;display:flex;flex-direction:column;border-radius:12px;padding:6px 7px;background:linear-gradient(180deg,#0f1724,#080e16);border:1.5px solid #243144;text-align:left;transition:all .12s}
 .ff:hover:not(.lock){border-color:#3f577a;transform:translateY(-2px)}
 .ff.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal),0 0 24px rgba(63,127,224,.4);background:linear-gradient(180deg,#142640,#0a121d)}
 .ff.lock{opacity:.4;cursor:not-allowed}
@@ -243,8 +243,7 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
 .bd{margin-left:auto;min-width:0;font:700 12px var(--tc);padding:1px 6px;border-radius:5px;text-align:right}
 .bd.dim{border:1px solid var(--line);color:var(--mute);font:600 12px var(--mono)}.bd.lk{border:1px solid var(--gold);color:var(--gold)}
 .box{position:relative;height:30px;margin:4px 0 4px;display:grid;place-items:center;border-radius:8px;background:#060b12;overflow:hidden}
-.ff .box{align-items:center;justify-items:center}
-.ffshape{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:2px;background:#bfe0ff;opacity:.7}
+.ffshape{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:-1;border-radius:2px;background:#bfe0ff;opacity:.7}
 .spec{display:flex;flex-wrap:wrap;gap:3px;font:700 12.5px var(--game);color:#c8ced6}.spec span{padding:1px 4px;border-radius:5px;background:#0a111c}
 .prRow{display:flex;align-items:center;justify-content:flex-start;gap:3px;margin-top:auto;padding-top:3px;font:700 13px var(--game);color:#c8ced6;flex:none}
 .prRow .coin{width:11px;height:11px}
@@ -522,7 +521,6 @@ html[lang="en"] .lvl b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orie
  .ff{aspect-ratio:1/1.12}
  .ff .h{min-height:40px;gap:1px}
  .box{height:10px;margin:1px 0}
- .ff .box{height:auto;flex:1;margin:2px 0}
  .ad .box{height:30px;margin:0}
  .ad .ctRow{margin:3px 0}
  .ad .ctRow button{width:22px;height:24px;font-size:13px}
@@ -1685,7 +1683,8 @@ function renderFF() {
     const note = cur.custom ? `<div class="hint" style="margin-top:4px">${T("comeNote", {nre: fmt(SQ.COME_NRE), vol: fmt(CUR.vol)})}</div>` : "";
     return `<div class="ffCell">
       <div class="ff ${sel && sel.ff === ff ? "sel" : ""} ${lock ? "lock" : ""}" data-b="${cur.id}" role="button" tabindex="0">
-      <div class="h"><b>${T("ff." + ff)}</b>${badge}</div><div class="box"><div class="ffshape" data-len="${cur.len}" data-h="${FFH[ff]}"></div></div>
+      <div class="ffshape" data-len="${cur.len}" data-h="${FFH[ff]}"></div>
+      <div class="h"><b>${T("ff." + ff)}</b>${badge}</div>
       <div class="prRow"><i class="coin"></i>${price}</div></div>${varBtns}${specOut}${note}${lockLine}</div>`;
   }).join("");
   $$(".specOut").forEach((el, i) => {
