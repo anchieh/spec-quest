@@ -1350,7 +1350,7 @@ function setMView(v) {
   MVIEW = v;
   $("#play .wrap").dataset.mview = v;
   $("#bMView").textContent = v === "top" ? "⇩" : "⇧";
-  if (v === "bottom") sizeFFShapes(); // 切到下頁(選項區)才真的看得到，之前被 data-mview=top 蓋住量到的是0
+  if (v === "bottom") renderPager(); // 切到下頁(選項區)才真的看得到；之前在上頁點選時 liveCardSize()/sizeFFShapes() 量到的是0，連帶把快取的小圖示也錯殺成0尺寸，要在真正看得到時重新跑一次
 }
 function setMapMView(v) {
   MAP_MVIEW = v;
