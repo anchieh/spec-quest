@@ -4,6 +4,8 @@ A browser game about industrial-PC specs: ten industry scenarios, pick the board
 
 工業電腦選型小遊戲：十個產業情境，選板型、補介面、挑六項規格。買多是浪費，買少是之後的現場損失，剛好才拿滿分。
 
+![Spec Quest preview](preview.png)
+
 ## Play
 
 Open `index.html` in any modern browser. No install, no build step, no server.
