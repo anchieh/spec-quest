@@ -30,3 +30,11 @@ All three tracks are MP3 only (re-encoded at a lower bitrate to keep the page li
 - `bgm-practice.mp3` — a 35-second excerpt of "Exploration Theme" by Cleyton Kauffman ([soundcloud.com/cleytonkauffman](https://soundcloud.com/cleytonkauffman)), [CC0](https://opengameart.org/content/exploration-theme), cut at a natural quiet point for a clean loop. Title screen music. Attribution not required.
 - `bgm-practice2.mp3` — "Cozy Puzzle In-Game 2" by MintoDog, [CC0](https://opengameart.org/content/cozy-puzzle-in-game-2). Practice-level music. Attribution not required.
 - `bgm-formal.mp3` — "Tense Future Loop" by gmason, [CC0](https://opengameart.org/content/tense-future-loop). Formal-level music. Attribution not required.
+
+## License
+
+Copyright © AnChieh Tsai. All rights reserved.
+
+The source code of this game (`index.src.html`, `index.html`, `engine.js`, `build.mjs`, `test_engine.mjs` and related files) is viewable on GitHub but is **not** licensed for reuse, modification or redistribution without the author's permission. The three `bgm-*.mp3` tracks are CC0 (public domain) under their original authors' terms — see Music credits above.
+
+原始碼（`index.src.html`、`index.html`、`engine.js`、`build.mjs`、`test_engine.mjs` 及相關檔案）版權所有，公開於 GitHub 僅供瀏覽，未經作者同意不得重製、修改或散布。三首 `bgm-*.mp3` 音樂依原作者條款為 CC0（公共領域），詳見上方 Music credits。
